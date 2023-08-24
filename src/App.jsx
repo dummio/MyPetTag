@@ -1,26 +1,26 @@
-import { useState, useEffect } from "react";
+/**
+ * MyPetTag - All rights reserved (c) 2023
+ * Maintainers: Ashton Foulger, Kevin Xue, Sameer Khan
+ */
+
+// Import React Modules
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+
+// Import Pages
+import Login from "./components/pages/login";
+
+// Import CSS
 import "./App.css";
-import { db } from "./firebase-config";
-import { collection, getDocs } from "firebase/firestore";
 
-function App() {
-  const [users, setUsers] = useState();
-  const usersCollection = collection(db, "users");
-
-  useEffect(() => {
-    const getUsers = async () => {
-      const data = await getDocs(usersCollection);
-      let user = [];
-      data.docs.forEach((doc) => {
-        user.push({ ...doc.data(), id: doc.id });
-      });
-      console.log(user);
-    };
-
-    getUsers();
-  }, []);
-
-  return <div className="App">Hello World</div>;
-}
+const App = () => {
+  return (
+    <div className="body-wrapper">
+      <Routes>
+        <Route path="/" element={<Login />} />
+      </Routes>
+    </div>
+  );
+};
 
 export default App;

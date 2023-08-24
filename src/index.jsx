@@ -1,13 +1,25 @@
+/**
+ * MyPetTag - All rights reserved (c) 2023
+ * Maintainers: Ashton Foulger, Kevin Xue, Sameer Khan
+ */
+
+// Import React Modules
 import React from "react";
-import ReactDOM from "react-dom/client";
+import ReactDOM from "react-dom";
+import { BrowserRouter as Router } from "react-router-dom";
+
+// Import Pages
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
-  <React.StrictMode>
+// Import CSS
+import "./index.css";
+
+ReactDOM.render(
+  <Router>
     <App />
-  </React.StrictMode>
+  </Router>,
+  document.getElementById("root")
 );
 
 reportWebVitals();
