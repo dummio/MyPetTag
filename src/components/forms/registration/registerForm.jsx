@@ -13,11 +13,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleQuestion } from "@fortawesome/free-solid-svg-icons";
 
 const RegisterForm = () => {
-  const [userNameReg, setUserNameReg] = useState("");
-  const [passwordReg, setPasswordReg] = useState("");
-  const [passwordConfirmReg, setPasswordConfirmReg] = useState("");
   const [firstNameReg, setFirstNameReg] = useState("");
   const [lastNameReg, setLastNameReg] = useState("");
+  const [passwordReg, setPasswordReg] = useState("");
+  const [passwordConfirmReg, setPasswordConfirmReg] = useState("");
   const [emailReg, setEmailReg] = useState("");
   const [emailConfirmReg, setEmailConfirmReg] = useState("");
   const [canSubmit, setCanSubmit] = useState(false);
@@ -26,12 +25,11 @@ const RegisterForm = () => {
     let isValid = false;
 
     if (
-      userNameReg &&
+      firstNameReg &&
+      lastNameReg &&
       passwordReg &&
       passwordConfirmReg &&
       passwordReg === passwordConfirmReg &&
-      firstNameReg &&
-      lastNameReg &&
       emailReg &&
       emailConfirmReg &&
       emailReg === emailConfirmReg &&
@@ -102,7 +100,6 @@ const RegisterForm = () => {
   };
 
   useEffect(ValidateForm, [
-    userNameReg,
     passwordReg,
     passwordConfirmReg,
     firstNameReg,
@@ -129,13 +126,7 @@ const RegisterForm = () => {
       />
       <form id="register-form">
         <label>Username</label>
-        <input
-          className="form-input"
-          type="text"
-          onChange={(e) => {
-            setUserNameReg(e.target.value);
-          }}
-        />
+        <input className="form-input" type="text" onChange={(e) => {}} />
         <label>Email</label>
         <input
           className="form-input"
