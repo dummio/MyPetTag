@@ -5,6 +5,7 @@
 
 // Import React Modules
 import React, { useEffect, useState } from "react";
+import { addNewUserToDatabase } from "../../../firebase-config"
 
 // Import CSS
 import logo from "../../../images/paw.png";
@@ -189,7 +190,7 @@ const RegisterForm = () => {
           id="register-btn"
           type="submit"
           value="Register"
-          onClick={() => {}}
+          onClick={async () => await addNewUserToDatabase(firstNameReg, lastNameReg, emailReg, passwordReg)}
           disabled={!canSubmit}
         />
         <div className="register-links">
