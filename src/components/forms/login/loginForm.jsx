@@ -8,11 +8,18 @@ import React from "react";
 
 // Import CSS
 import "./loginForm.css";
+import logo from "../../../images/paw.png";
 
 const LoginForm = () => {
   return (
     <div id="login-container">
-      <img className="logo" src="" alt="MyPetTag" width={250} height={250} />
+      <img
+        className="logo"
+        src={logo}
+        alt="MyPetTag"
+        width={250}
+        height={250}
+      />
       <form id="login-form">
         <label>Username</label>
         <input className="form-input" type="text" onChange={(e) => {}} />

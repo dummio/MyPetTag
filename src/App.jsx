@@ -7,7 +7,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 
-// Import Pages
+// Import Layout & Pages
 import Login from "./components/pages/login";
 
 // Import CSS

@@ -68,7 +68,8 @@
 
 .login-links {
   display: flex;
-  gap: 110px;
+  justify-content: space-between;
+  width: 300px;
 }
 
 .login-links a {
@@ -95,5 +96,9 @@
 @media (min-width: 48em) {
   #login-form {
     width: 500px;
+  }
+
+  .login-links {
+    width: 300px;
   }
 }
