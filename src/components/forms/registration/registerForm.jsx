@@ -5,7 +5,7 @@
 
 // Import React Modules
 import React, { useEffect, useState } from "react";
-import { addNewUserToDatabase } from "../../../firebase-config"
+import { addNewUserToDatabase } from "../../../firebaseCommands"
 
 // Import CSS
 import logo from "../../../images/paw.png";

@@ -1,5 +1,7 @@
-import { db } from "./firebase-config";
+import { firebaseConfig } from "./firebase-config";
 import { collection, getDocs, addDoc } from "firebase/firestore";
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "@firebase/firestore";
 
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
@@ -10,13 +12,21 @@ import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
  * @param {*} email
  * @param {*} password
  */
-export function addNewUserToDatabase(firstname_, lastname_, email, password) {
-    console.log("HELLO_WORLD");
-    const colRef = collection(db, "database");
-    addDoc(colRef, {
+export async function addNewUserToDatabase(firstname_, lastname_, email, password) {
+    const tempApp = await initializeApp(firebaseConfig);
+    const tempDb = await getFirestore(tempApp);
+    const colRef = await collection(tempDb, "database");
+    console.log(firstname_);
+    try {
+      const docId = await addDoc(colRef, {
         firstname: firstname_,
         lastname: lastname_,
-    })
+      });
+      console.log(docId);
+    }
+    catch(err) {
+      console.error("failed to write because :", err);
+    }
     // const auth = getAuth();
     // createUserWithEmailAndPassword(auth, email, password)
     //     .then((userCredential) => {
