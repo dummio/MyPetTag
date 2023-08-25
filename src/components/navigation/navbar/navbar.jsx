@@ -19,8 +19,8 @@ const NavBar = () => {
         <div className="navbar-dot" />
         {hide && (
           <div className="nav-menu">
-            <a href="/">
-              <h1 className="nav-menu-item">Home</h1>
+            <a href="/shop">
+              <h1 className="nav-menu-item">Shop</h1>
             </a>
             <a href="/">
               <h1 className="nav-menu-item">Login</h1>

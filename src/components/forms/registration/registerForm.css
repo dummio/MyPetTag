@@ -1,0 +1,159 @@
+/**
+ * MyPetTag - All rights reserved (c) 2023
+ * Maintainers: Ashton Foulger, Kevin Xue, Kyle Charlton, Sameer Khan
+ */
+
+#register-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.logo {
+  background-color: #75af96;
+  border-radius: 50%;
+}
+
+#register-form {
+  display: flex;
+  flex-direction: column;
+  padding-top: 30px;
+  width: 300px;
+}
+
+#register-form {
+  display: flex;
+  flex-direction: column;
+  padding-top: 30px;
+  width: 300px;
+}
+
+#register-form label {
+  font-size: 20px;
+  padding-bottom: 8px;
+}
+
+.form-input {
+  height: 50px;
+  background-color: #75af96;
+  border-radius: 16px;
+  border: none;
+  box-shadow: 0px 8px 10px 0px rgba(0, 0, 0, 0.25);
+  margin-bottom: 23px;
+  padding: 0px 10px;
+  font-family: inherit;
+  font-size: 16px;
+}
+
+.form-input:focus {
+  outline: none;
+  background-color: transparent;
+  border: solid 2px #0f5738;
+  transition: border 0.15s ease-in;
+}
+
+#register-checkbox-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: auto;
+  margin-bottom: 23px;
+}
+
+#register-checkbox-container input {
+  width: 25px;
+  height: 25px;
+}
+
+#register-checkbox-container input:checked {
+  accent-color: #0f5738;
+}
+
+#register-checkbox-container p {
+  font-size: 14px;
+  margin: 0px;
+}
+
+#register-btn {
+  height: 50px;
+  background-color: #0f5738;
+  border-radius: 16px;
+  border: none;
+  box-shadow: 0px 8px 10px 0px rgba(0, 0, 0, 0.25);
+  color: #f0f0f0;
+  font-size: 24px;
+  font-family: inherit;
+  margin-bottom: 23px;
+  transition: transform 0.1s;
+}
+
+#register-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 2px 2px 18px 0px rgba(0, 0, 0, 0.75);
+}
+
+.register-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 23px;
+}
+
+.register-links p {
+  margin: 0px;
+}
+
+.register-links a {
+  text-decoration: none;
+  color: #000000;
+  position: relative;
+}
+
+.register-links a::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 100%;
+  min-width: 0;
+  border-bottom: 2px solid #0f5738;
+  transition: 0.2s;
+}
+
+.register-links a:hover::after {
+  min-width: 100%;
+}
+
+#error-container {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  color: red;
+  margin-bottom: 23px;
+  visibility: hidden;
+}
+
+/* 48em = 768px */
+@media (min-width: 48em) {
+  #register-container {
+    flex: 1 1 auto;
+  }
+  #register-form {
+    width: 500px;
+  }
+}
+
+/* 48em = 768px */
+@media (max-width: 48em) {
+  #register-container {
+    padding-top: 93px;
+  }
+
+  .register-links a {
+    text-decoration: underline;
+    text-decoration-color: #0f5738;
+    text-decoration-thickness: 2px;
+  }
+}

@@ -5,10 +5,11 @@
 
 // Import React Modules
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 // Import Layout & Pages
 import Login from "./components/pages/login";
+import Register from "./components/pages/register";
 
 // Import CSS
 import "./App.css";
@@ -17,7 +18,9 @@ const App = () => {
   return (
     <div className="body-wrapper">
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<Navigate replace to="/login" />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </div>
   );
