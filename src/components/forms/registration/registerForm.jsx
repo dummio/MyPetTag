@@ -5,7 +5,10 @@
 
 // Import React Modules
 import React, { useEffect, useState } from "react";
-import { addNewUserToDatabase } from "../../../firebaseCommands";
+import {
+  addNewUserToDatabase,
+  tempAddNewUser,
+} from "../../../firebaseCommands";
 
 // Import CSS
 import logo from "../../../images/paw.png";
@@ -57,6 +60,13 @@ const RegisterForm = () => {
     return /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/.test(
       password
     );
+  };
+
+  const SubmitRegistration = (e) => {
+    e.preventDefault();
+    if (canSubmit) {
+      tempAddNewUser(firstNameReg, lastNameReg, emailReg, passwordReg);
+    }
   };
 
   const ErrorHandle = () => {
@@ -190,14 +200,7 @@ const RegisterForm = () => {
           id="register-btn"
           type="submit"
           value="Register"
-          onClick={async () =>
-            await addNewUserToDatabase(
-              firstNameReg,
-              lastNameReg,
-              emailReg,
-              passwordReg
-            )
-          }
+          onClick={SubmitRegistration}
           disabled={!canSubmit}
         />
         <div className="register-links">
