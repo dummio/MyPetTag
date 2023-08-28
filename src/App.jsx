@@ -7,12 +7,14 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 
+// Import CSS
+import "./App.css";
+
 // Import Layout & Pages
 import Login from "./components/pages/login";
 import Register from "./components/pages/register";
-
-// Import CSS
-import "./App.css";
+import ForgotPassword from "./components/pages/forgotPassword";
+import ResetForm from "./components/forms/forgotPassword/resetForm";
 
 const App = () => {
   return (
@@ -21,6 +23,8 @@ const App = () => {
         <Route path="/" element={<Navigate replace to="/login" />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetForm />} />
       </Routes>
     </div>
   );
