@@ -7,7 +7,6 @@
 import React, { useEffect, useState } from "react";
 import {
   addNewUserToDatabase,
-  tempAddNewUser,
 } from "../../../firebaseCommands";
 
 // Import CSS
@@ -65,7 +64,7 @@ const RegisterForm = () => {
   const SubmitRegistration = (e) => {
     e.preventDefault();
     if (canSubmit) {
-      tempAddNewUser(firstNameReg, lastNameReg, emailReg, passwordReg);
+      addNewUserToDatabase(firstNameReg, lastNameReg, emailReg, passwordReg);
     }
   };
 

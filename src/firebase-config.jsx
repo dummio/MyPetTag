@@ -13,14 +13,7 @@ export const firebaseConfig = {
   measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
 
-const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
-
-// const colRef = collection(db, "database");
-
-// const docId = await addDoc(colRef, {
-//   firstname: "Lebron",
-//   lastname: "James",
-// });
+const app = await initializeApp(firebaseConfig);
+export const db = await getFirestore(app);
 
 //const analytics = getAnalytics(app);
