@@ -19,6 +19,8 @@ import User from "./components/user/user";
 import UserId from "./components/user/userId";
 import Account from "./components/pages/account";
 import NotFound from "./components/pages/404";
+import PetProfile from "./components/pages/petProfile";
+import PetId from "./components/pets/petId";
 
 const App = () => {
   return (
@@ -31,6 +33,11 @@ const App = () => {
         <Route path="/reset-password" element={<ResetForm />} />
         <Route path="/user" element={<User />}>
           <Route path=":userId" element={<UserId />}>
+            <Route path="profile" element={<PetProfile />}>
+              <Route path=":petId" element={<PetId />}>
+                {/* edit pet */}
+              </Route>
+            </Route>
             <Route path="account" element={<Account />} />
           </Route>
         </Route>
