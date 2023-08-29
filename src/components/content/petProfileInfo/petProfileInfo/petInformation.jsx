@@ -4,22 +4,14 @@
  */
 
 // Import React Modules
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 
 // Import CSS
-import PetImg from "../../../images/orange-cat.png";
-import "./petInformation.css";
-
-// Import Axios Modules
-import Axios from "axios";
-
-const SERVER_URI = process.env.REACT_APP_API_URL
-  ? process.env.REACT_APP_API_URL
-  : "http://localhost:3001";
+// import PetImg from "../../../images/orange-cat.png";
+// import "./petInformation.css";
 
 const PetInformation = () => {
   const [pet, setPet] = useState({
-    Image: PetImg,
     Name: "Tommy",
     Breed: "Domestic Longhair",
     Description:
@@ -28,20 +20,6 @@ const PetInformation = () => {
     Weight: 8,
     Sex: "Male",
   });
-
-  useEffect(() => {
-    Axios.get(SERVER_URI + "/profile").then((response) => {
-      setPet({
-        ...pet,
-        Name: response.data[0].name,
-        Breed: response.data[0].breed ? response.data[0].breed : "",
-        Description: response.data[0].descr ? response.data[0].descr : "",
-        Age: response.data[0].birthYear ? 2023 - response.data[0].birthYear : 0,
-        Weight: response.data[0].weight ? response.data[0].weight : 0,
-        Sex: response.data[0].sex ? response.data[0].sex : "",
-      });
-    });
-  }, []);
 
   return (
     <div id="pet-information-container">

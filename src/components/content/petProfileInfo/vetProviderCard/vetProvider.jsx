@@ -4,14 +4,12 @@
  */
 
 // Import React Modules
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 // Import CSS
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./vetProvider.css";
-
-import Axios from "axios";
 
 const SERVER_URI = process.env.REACT_APP_API_URL
   ? process.env.REACT_APP_API_URL
@@ -35,21 +33,6 @@ const VetProvider = () => {
     License: "8569872290",
     Microchip: "21876859009",
   });
-
-  useEffect(() => {
-    Axios.get(SERVER_URI + "/profile").then((response) => {
-      setVet({
-        ...vet,
-        Name: response.data[0].vetName,
-        Phone: response.data[0].vetPhone ? response.data[0].vetPhone : "",
-        Address: response.data[0].vetAddr ? response.data[0].vetAddr : "",
-        License: response.data[0].liscenceID ? response.data[0].liscenceID : "",
-        Microchip: response.data[0].microchipID
-          ? response.data[0].microchipID
-          : "",
-      });
-    });
-  }, []);
 
   const ExpandTile = () => {
     show(!hide);

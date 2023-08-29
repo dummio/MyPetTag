@@ -4,34 +4,18 @@
  */
 
 // Import React Modules
-import React, { useEffect, useState } from "react";
-
-import Axios from "axios";
+import React, { useState } from "react";
 
 // Import CSS
 import { faPhone } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./contacts.css";
 
-const SERVER_URI = process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL : "http://localhost:3001";
-
 const Contacts = () => {
   const [contact, setContact] = useState({
     Name: "Tommy",
     Phone: "801-858-6969",
   });
-
-  useEffect(() => {
-    Axios.get(SERVER_URI + "/profile").then((response) => {
-      setContact({
-        ...contact,
-        Name: response.data[0].nickname,
-        Phone: response.data[0].contactPhone
-          ? response.data[0].contactPhone
-          : "",
-      });
-    });
-  }, []);
 
   // const contact2 = {
   //   Name: "Pet Sitter",
