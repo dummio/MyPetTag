@@ -5,15 +5,14 @@
 
 // Import React Modules
 import React, { useEffect, useState } from "react";
-import {
-  addNewUserToDatabase,
-} from "../../../firebaseCommands";
+import { addNewUserToDatabase } from "../../../firebaseCommands";
 
 // Import CSS
 import logo from "../../../images/paw.png";
 import "./registerForm.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleQuestion } from "@fortawesome/free-solid-svg-icons";
+import PasswordModal from "../../modals/passwordModal";
 
 const RegisterForm = () => {
   const [firstNameReg, setFirstNameReg] = useState("");
@@ -23,6 +22,7 @@ const RegisterForm = () => {
   const [emailReg, setEmailReg] = useState("");
   const [emailConfirmReg, setEmailConfirmReg] = useState("");
   const [canSubmit, setCanSubmit] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const ValidateForm = () => {
     let isValid = false;
@@ -109,6 +109,10 @@ const RegisterForm = () => {
     }
   };
 
+  const OpenPasswordModal = () => {
+    setShowModal((prev) => !prev);
+  };
+
   useEffect(ValidateForm, [
     passwordReg,
     passwordConfirmReg,
@@ -171,7 +175,10 @@ const RegisterForm = () => {
         />
         <label>
           Password{" "}
-          <FontAwesomeIcon icon={faCircleQuestion} onClick={() => {}} />
+          <FontAwesomeIcon
+            icon={faCircleQuestion}
+            onClick={OpenPasswordModal}
+          />
         </label>
         <input
           className="form-input"
@@ -208,6 +215,7 @@ const RegisterForm = () => {
           </p>
         </div>
       </form>
+      <PasswordModal showModal={showModal} setShowModal={setShowModal} />
     </div>
   );
 };
