@@ -139,24 +139,6 @@ const RegisterForm = () => {
         height={250}
       />
       <form id="register-form">
-        <label>Username</label>
-        <input className="form-input" type="text" onChange={(e) => {}} />
-        <label>Email</label>
-        <input
-          className="form-input"
-          type="text"
-          onChange={(e) => {
-            setEmailReg(e.target.value);
-          }}
-        />
-        <label>Confirm Email</label>
-        <input
-          className="form-input"
-          type="text"
-          onChange={(e) => {
-            setEmailConfirmReg(e.target.value);
-          }}
-        />
         <label>First Name</label>
         <input
           className="form-input"
@@ -171,6 +153,22 @@ const RegisterForm = () => {
           type="text"
           onChange={(e) => {
             setLastNameReg(e.target.value);
+          }}
+        />
+        <label>Email</label>
+        <input
+          className="form-input"
+          type="text"
+          onChange={(e) => {
+            setEmailReg(e.target.value);
+          }}
+        />
+        <label>Confirm Email</label>
+        <input
+          className="form-input"
+          type="text"
+          onChange={(e) => {
+            setEmailConfirmReg(e.target.value);
           }}
         />
         <label>
