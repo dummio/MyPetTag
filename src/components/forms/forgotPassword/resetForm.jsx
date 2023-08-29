@@ -13,11 +13,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleQuestion } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../../navigation/navbar/navbar";
+import PasswordModal from "../../modals/passwordModal";
 
 const ResetForm = () => {
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordConf, setNewPasswordConf] = useState("");
   const [canSubmit, setCanSubmit] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const ValidateForm = () => {
     let isValid = false;
@@ -70,6 +72,10 @@ const ResetForm = () => {
   useEffect(ValidateForm, [newPassword, newPasswordConf]);
   useEffect(ErrorHandle, [newPassword, newPasswordConf]);
 
+  const OpenPasswordModal = () => {
+    setShowModal((prev) => !prev);
+  };
+
   const navigate = useNavigate();
   const resetSubmit = (e) => {
     e.preventDefault();
@@ -89,7 +95,10 @@ const ResetForm = () => {
       <form id="reset-form">
         <label>
           New Password{" "}
-          <FontAwesomeIcon icon={faCircleQuestion} onClick={() => {}} />
+          <FontAwesomeIcon
+            icon={faCircleQuestion}
+            onClick={OpenPasswordModal}
+          />
         </label>
         <input
           className="form-input"
@@ -117,6 +126,7 @@ const ResetForm = () => {
           disabled={!canSubmit}
         />
       </form>
+      <PasswordModal showModal={showModal} setShowModal={setShowModal} />
     </div>
   );
 };
