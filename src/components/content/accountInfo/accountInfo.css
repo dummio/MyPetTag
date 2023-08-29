@@ -1,0 +1,155 @@
+#account-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+#company-name-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 300px;
+}
+
+#company-name-container h1 {
+  margin: 0px;
+  font-size: 36px;
+}
+
+#user-information-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+#user-name-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  width: 300px;
+  border-bottom: 5px solid #0f5738;
+}
+
+#user-name-container h1 {
+  margin: 10px 0px 0px 0px;
+  font-size: 30px;
+}
+
+#user-container {
+  width: 300px;
+}
+
+#user-info {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+#user-info p {
+  margin: 0px 0px 10px 0px;
+}
+
+#user-options-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+#checkbox-container {
+  display: flex;
+  flex-direction: column;
+}
+
+#checkbox-container input {
+  margin-right: 20px;
+  margin-bottom: 20px;
+  width: 25px;
+  height: 25px;
+}
+
+#checkbox-container input:checked {
+  accent-color: #0f5738;
+}
+
+#checkbox-text-container p {
+  margin: 0px 0px 10px 0px;
+  font-size: 14px;
+}
+
+#pet-profiles-container {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  margin-bottom: 65px;
+}
+
+#pet-container-name {
+  border-bottom: 5px solid #0f5738;
+}
+
+#pet-profiles-container h2 {
+  margin: 0px 0px 20px 0px;
+}
+
+.pet-profile-button {
+  width: 300px;
+  height: 50px;
+  border-radius: 16px;
+  background: #75af96;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.pet-profile-button p {
+  font-size: 20px;
+  margin: 0px 0px 0px 15px;
+}
+
+/**
+* Testing CSS for Desktop and Tablet, Decided that the look
+* did not feel good, commenting out this for now.
+*/
+/* @media (min-width: 48em) {
+  #company-name-container {
+    width: 500px;
+  }
+
+  #user-information-container {
+    width: 500px;
+  }
+
+  #user-name-container {
+    width: 500px;
+    flex-direction: row;
+  }
+
+  #welcome-text {
+    padding-right: 15px;
+  }
+
+  #user-information-container {
+    width: 500px;
+  }
+
+  #pet-profiles-container {
+    width: 300px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #pet-container-name {
+    width: 300px;
+  }
+} */
