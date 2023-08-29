@@ -21,6 +21,7 @@ import Account from "./components/pages/account";
 import NotFound from "./components/pages/404";
 import PetProfile from "./components/pages/petProfile";
 import PetId from "./components/pets/petId";
+import PetProfileEdit from "./components/pages/petProfileEdit";
 
 const App = () => {
   return (
@@ -35,7 +36,7 @@ const App = () => {
           <Route path=":userId" element={<UserId />}>
             <Route path="profile" element={<PetProfile />}>
               <Route path=":petId" element={<PetId />}>
-                {/* edit pet */}
+                <Route path="edit" element={<PetProfileEdit />} />
               </Route>
             </Route>
             <Route path="account" element={<Account />} />
