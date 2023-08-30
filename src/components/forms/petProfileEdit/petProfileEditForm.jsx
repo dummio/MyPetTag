@@ -84,8 +84,8 @@ const PetProfileEditForm = () => {
         descriptionReg,
         petNameReg,
         sexReg,
-        [[contactNameReg, contactPhoneReg]],
-        [[]]
+        {'Name': contactNameReg, 'Phone': contactPhoneReg},
+        {}
       );
       console.log("added pet");
       // .then((response) => {

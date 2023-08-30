@@ -2,7 +2,7 @@ import { db } from "./firebase-config";
 import {
   doc,
   updateDoc,
-  addDoc,
+  setDoc,
   collection,
   getDoc,
   arrayUnion,
@@ -32,7 +32,6 @@ export async function addNewUserToDatabase(
 ) {
   //change to point to database
   try {
-    const colRef = collection(db, "users");
     const userCredential = await createUserWithEmailAndPassword(
       auth,
       email,
@@ -40,14 +39,14 @@ export async function addNewUserToDatabase(
     );
     const _uid = userCredential.user.uid;
     uid = _uid;
-    const docId = await addDoc(colRef, {
+
+    await setDoc(doc(db, "users", uid), {
       firstname: firstname_,
       lastname: lastname_,
       uid: _uid,
-      pets: [],
     });
     return uid;
-    console.log(docId.id);
+
   } catch (error) {
     console.log("Error occurred writing new user to firebase : ", error);
   }
@@ -80,9 +79,10 @@ export async function addPetToDatabase(
 ) {
   try {
     const userDocRef = doc(db, "users", uid);
-    const userDocSnap = await getDoc(userDocRef);
+    // const userDocSnap = await getDoc(userDocRef);
 
-    // const petID_ = userDocSnap.data().pets.length;
+    //console.log(userDocSnap.data());
+    //var petID_ = userDocSnap.data().pets.length;
 
     const pet = {
       petID: 1,
@@ -97,9 +97,8 @@ export async function addPetToDatabase(
       // images: [],
     };
 
-    await updateDoc(userDocRef, {
-      pets: arrayUnion(pet),
-    });
+    console.log(pet);
+    setDoc(userDocRef, { pets: [pet] }, { merge: true });
 
     // console.log(userDocSnap.data().pets);
   } catch (error) {
