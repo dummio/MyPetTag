@@ -4,14 +4,15 @@
  */
 
 // Import React Modules
-import React, {  useState } from "react";
+import React, { useState } from "react";
 
 // Import CSS
-// import PetImg from "../../../images/orange-cat.png";
-// import "./petInformation.css";
+import PetImg from "../../../../images/orange-cat.png";
+import "./petInformation.css";
 
 const PetInformation = () => {
   const [pet, setPet] = useState({
+    Image: PetImg,
     Name: "Tommy",
     Breed: "Domestic Longhair",
     Description:
