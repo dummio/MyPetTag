@@ -70,7 +70,7 @@ const RegisterForm = () => {
       addNewUserToDatabase(firstNameReg, lastNameReg, emailReg, passwordReg)
         .then((response) => {
           var uid = response;
-          var path = `/user/${uid}/1/edit`;
+          var path = `/user/${uid}/pet/1/edit`;
           navigate(path, { replace: true });
         })
         .catch((err) => {
