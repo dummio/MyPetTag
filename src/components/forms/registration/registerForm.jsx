@@ -6,6 +6,7 @@
 // Import React Modules
 import React, { useEffect, useState } from "react";
 import { addNewUserToDatabase } from "../../../firebaseCommands";
+import { useNavigate } from "react-router-dom";
 
 // Import CSS
 import logo from "../../../images/paw.png";
@@ -61,10 +62,20 @@ const RegisterForm = () => {
     );
   };
 
+  const navigate = useNavigate();
+
   const SubmitRegistration = (e) => {
     e.preventDefault();
     if (canSubmit) {
-      addNewUserToDatabase(firstNameReg, lastNameReg, emailReg, passwordReg);
+      addNewUserToDatabase(firstNameReg, lastNameReg, emailReg, passwordReg)
+        .then((response) => {
+          var uid = response;
+          var path = `/user/${uid}/pet/1/edit`;
+          navigate(path, { replace: true });
+        })
+        .catch((err) => {
+          console.debug(err);
+        });
     }
   };
 

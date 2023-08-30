@@ -39,6 +39,7 @@ export async function addNewUserToDatabase(
       uid: _uid,
       pets: [],
     });
+    return uid;
     console.log(docId.id);
   } catch (error) {
     console.log("Error occurred writing new user to firebase : ", error);
