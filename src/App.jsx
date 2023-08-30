@@ -34,10 +34,9 @@ const App = () => {
         <Route path="/reset-password" element={<ResetForm />} />
         <Route path="/user" element={<User />}>
           <Route path=":userId" element={<UserId />}>
-            <Route path="profile" element={<PetProfile />}>
-              <Route path=":petId" element={<PetId />}>
-                <Route path="edit" element={<PetProfileEdit />} />
-              </Route>
+            <Route path="pet/:petId" element={<PetId />}>
+              <Route path="profile" element={<PetProfile />} />
+              <Route path="edit" element={<PetProfileEdit />} />
             </Route>
             <Route path="account" element={<Account />} />
           </Route>
