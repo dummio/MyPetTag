@@ -1,5 +1,12 @@
 import { db } from "./firebase-config";
-import { doc, updateDoc, addDoc, collection } from "firebase/firestore";
+import {
+  doc,
+  updateDoc,
+  addDoc,
+  collection,
+  getDoc,
+  arrayUnion,
+} from "firebase/firestore";
 
 import {
   getAuth,
@@ -73,11 +80,12 @@ export async function addPetToDatabase(
 ) {
   try {
     const userDocRef = doc(db, "users", uid);
+    const userDocSnap = await getDoc(userDocRef);
 
-    const petID_ = userDocRef.data().pets.length;
+    // const petID_ = userDocSnap.data().pets.length;
 
     const pet = {
-      petID: petID_,
+      petID: 1,
       name: name_,
       addr: addr_,
       breed: breed_,
@@ -86,15 +94,16 @@ export async function addPetToDatabase(
       behavior: behavior_,
       contacts: contacts_,
       vets: vets_,
-      images: [],
+      // images: [],
     };
 
     await updateDoc(userDocRef, {
-      pets: [...userDocRef.data().pets, pet],
+      pets: arrayUnion(pet),
     });
 
-    console.log(userDocRef.data().pets);
+    // console.log(userDocSnap.data().pets);
   } catch (error) {
     console.log("Error occured during pet registration: ", error);
+    console.log(uid);
   }
 }

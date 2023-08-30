@@ -5,6 +5,7 @@
 
 // Import React Modules
 import React, { useEffect, useState } from "react";
+import { addPetToDatabase } from "../../../firebaseCommands";
 import { useNavigate } from "react-router-dom";
 
 // Import CSS
@@ -73,7 +74,28 @@ const PetProfileEditForm = () => {
 
   const navigate = useNavigate();
 
-  const UpdateProfile = (e) => {};
+  const UpdateProfile = (e) => {
+    e.preventDefault();
+    if (canSubmit) {
+      addPetToDatabase(
+        addressReg,
+        "",
+        breedReg,
+        descriptionReg,
+        petNameReg,
+        sexReg,
+        [[contactNameReg, contactPhoneReg]],
+        [[]]
+      );
+      console.log("added pet");
+      // .then((response) => {
+      //   navigate("/", { replace: true });
+      // })
+      // .catch((err) => {
+      //   console.debug(err);
+      // });
+    }
+  };
 
   return (
     <div id="register-container">
