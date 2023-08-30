@@ -73,7 +73,10 @@ export async function addPetToDatabase(
   try {
     const userDocRef = doc(db, "users", uid);
 
+    const petID_ = userDocRef.data().pets.length;
+
     const pet = {
+      petID: petID_,
       name: name_,
       addr: addr_,
       breed: breed_,
