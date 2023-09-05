@@ -59,10 +59,9 @@ export async function login(_email, _password) {
       _password
     );
     uid = userCredential.user.uid;
-    console.log("login success! ");
-    console.log("uid : ", uid);
+    return uid;
   } catch (error) {
-    console.log("Error occurred during login : ", error);
+    console.debug("Error logging in: " + error);
   }
 }
 

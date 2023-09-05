@@ -48,6 +48,15 @@
   transition: border 0.15s ease-in;
 }
 
+#error-container {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  color: red;
+  margin-bottom: 23px;
+  visibility: hidden;
+}
+
 #login-btn {
   height: 50px;
   background-color: #0f5738;
