@@ -70,8 +70,10 @@ const RegisterForm = () => {
       addNewUserToDatabase(firstNameReg, lastNameReg, emailReg, passwordReg)
         .then((response) => {
           var uid = response;
-          var path = `/user/${uid}/pet/1/edit`;
-          navigate(path, { replace: true });
+          if (uid) {
+            var path = `/user/${uid}/pet/1/edit`;
+            navigate(path, { replace: true });
+          }
         })
         .catch((err) => {
           console.debug(err);

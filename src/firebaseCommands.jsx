@@ -46,7 +46,6 @@ export async function addNewUserToDatabase(
       uid: _uid,
     });
     return uid;
-
   } catch (error) {
     console.log("Error occurred writing new user to firebase : ", error);
   }
@@ -98,11 +97,29 @@ export async function addPetToDatabase(
     };
 
     console.log(pet);
-    setDoc(userDocRef, { pets: [pet] }, { merge: true });
+    // setDoc(userDocRef, { pets: [pet] }, { merge: true });
+    await updateDoc(userDocRef, {
+      pets: arrayUnion(pet),
+    });
 
     // console.log(userDocSnap.data().pets);
   } catch (error) {
     console.log("Error occured during pet registration: ", error);
     console.log(uid);
+  }
+}
+
+export async function getPetData() {
+  try {
+    const userDocRef = doc(db, "users", uid);
+    const userDocSnap = await getDoc(userDocRef);
+
+    if (userDocSnap.exists) {
+      return userDocSnap.data().pets;
+    } else {
+      return [];
+    }
+  } catch (error) {
+    console.log("Error occurred getting pet data: ", error);
   }
 }
