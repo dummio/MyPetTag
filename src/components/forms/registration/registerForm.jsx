@@ -24,6 +24,7 @@ const RegisterForm = () => {
   const [emailConfirmReg, setEmailConfirmReg] = useState("");
   const [canSubmit, setCanSubmit] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [phoneNumReg, setPhoneNum] = useState("");
 
   const ValidateForm = () => {
     let isValid = false;
@@ -38,7 +39,8 @@ const RegisterForm = () => {
       emailConfirmReg &&
       emailReg === emailConfirmReg &&
       ValidateEmail(emailReg) &&
-      ValidateEmail(emailConfirmReg)
+      ValidateEmail(emailConfirmReg) &&
+      ValidatePhone(phoneNumReg)
     )
       isValid = true;
 
@@ -60,6 +62,13 @@ const RegisterForm = () => {
     return /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/.test(
       password
     );
+  };
+
+  const ValidatePhone = (phone) => {
+    if(phone === "") {
+      return true;
+    }
+    return /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/.test(phone);
   };
 
   const navigate = useNavigate();
@@ -111,6 +120,12 @@ const RegisterForm = () => {
     } else if (passwordReg !== passwordConfirmReg) {
       if (errorText !== null) {
         errorText.innerHTML = "Passwords do not match!";
+        errorText.style.display = "flex";
+        errorText.style.visibility = "visible";
+      }
+    } else if(!ValidatePhone(phoneNumReg)) {
+      if (errorText !== null) {
+        errorText.innerHTML = "Phone number not valid";
         errorText.style.display = "flex";
         errorText.style.visibility = "visible";
       }
@@ -166,6 +181,14 @@ const RegisterForm = () => {
           type="text"
           onChange={(e) => {
             setLastNameReg(e.target.value);
+          }}
+        />
+        <label>Phone Number</label>
+        <input
+          className="form-input"
+          type="text"
+          onChange={(e) => {
+            setPhoneNum(e.target.value);
           }}
         />
         <label>Email</label>
