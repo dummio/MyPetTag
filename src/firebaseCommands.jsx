@@ -80,10 +80,13 @@ export async function addPetToDatabase(
     const userDocSnap = await getDoc(userDocRef);
 
     //console.log(userDocSnap.data());
-    //var petID_ = userDocSnap.data().pets.length;
+    var petID_ = userDocSnap.data().pets?.length + 1;
+    if(petID_ == undefined) {
+      petID_ = 1;
+    }
 
     const pet = {
-      petID: 1,
+      petID: petID_,
       name: name_,
       addr: addr_,
       breed: breed_,
