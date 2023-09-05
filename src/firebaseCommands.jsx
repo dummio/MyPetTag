@@ -61,7 +61,8 @@ export async function login(_email, _password) {
     uid = userCredential.user.uid;
     return uid;
   } catch (error) {
-    return false;
+    console.log("Error in login function");
+    // return false;
   }
 }
 

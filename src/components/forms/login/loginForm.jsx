@@ -23,18 +23,15 @@ const LoginForm = () => {
 
   const submitLogin = (e) => {
     e.preventDefault();
-    login(email, password)
-      .then((response) => {
-        let userId = response;
-        if (userId) {
-          setAuthState(true);
-          navigate(`/user/${userId}/account`, { replace: true });
-        }
-      })
-      .catch((error) => {
-        setAuthState(error);
-        ErrorHandle();
-      });
+    login(email, password).then((response) => {
+      let userId = response;
+      if (userId) {
+        setAuthState(true);
+        navigate(`/user/${userId}/account`, { replace: true });
+      } else {
+        console.log("userID was false");
+      }
+    });
   };
 
   const ErrorHandle = () => {
