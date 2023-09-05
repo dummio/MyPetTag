@@ -46,7 +46,6 @@ export async function addNewUserToDatabase(
       uid: _uid,
     });
     return uid;
-
   } catch (error) {
     console.log("Error occurred writing new user to firebase : ", error);
   }
@@ -60,10 +59,9 @@ export async function login(_email, _password) {
       _password
     );
     uid = userCredential.user.uid;
-    console.log("login success! ");
-    console.log("uid : ", uid);
+    return uid;
   } catch (error) {
-    console.log("Error occurred during login : ", error);
+    return false;
   }
 }
 
