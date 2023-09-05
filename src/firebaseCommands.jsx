@@ -78,7 +78,7 @@ export async function addPetToDatabase(
 ) {
   try {
     const userDocRef = doc(db, "users", uid);
-    // const userDocSnap = await getDoc(userDocRef);
+    const userDocSnap = await getDoc(userDocRef);
 
     //console.log(userDocSnap.data());
     //var petID_ = userDocSnap.data().pets.length;
@@ -97,12 +97,15 @@ export async function addPetToDatabase(
     };
 
     console.log(pet);
-    // setDoc(userDocRef, { pets: [pet] }, { merge: true });
-    await updateDoc(userDocRef, {
-      pets: arrayUnion(pet),
-    });
 
-    // console.log(userDocSnap.data().pets);
+    if(userDocSnap.get('pets') == null) {
+      setDoc(userDocRef, { pets: [pet] }, { merge: true });
+    }
+    else {
+      await updateDoc(userDocRef, {
+        pets: arrayUnion(pet),
+      });
+    }
   } catch (error) {
     console.log("Error occured during pet registration: ", error);
     console.log(uid);
