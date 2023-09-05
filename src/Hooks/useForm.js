@@ -50,7 +50,7 @@ function useForm(callback) {
             phone: "Enter a valid phone number",
           });
         } else {
-          let newObj = omit(errors, "password");
+          let newObj = omit(errors, "phone");
           setErrors(newObj);
         }
         break;
@@ -67,28 +67,6 @@ function useForm(callback) {
           });
         } else {
           let newObj = omit(errors, "password");
-          setErrors(newObj);
-        }
-        break;
-      case "firstname":
-        if (!new RegExp(/^.+$/).test(value)) {
-          setErrors({
-            ...errors,
-            firstname: "Enter a first name",
-          });
-        } else {
-          let newObj = omit(errors, "firstname");
-          setErrors(newObj);
-        }
-        break;
-      case "lastname":
-        if (!new RegExp(/^.+$/).test(value)) {
-          setErrors({
-            ...errors,
-            lastname: "Enter a last name",
-          });
-        } else {
-          let newObj = omit(errors, "lastname");
           setErrors(newObj);
         }
         break;
@@ -116,8 +94,6 @@ function useForm(callback) {
 
     if (Object.keys(errors).length === 0 && Object.keys(values).length !== 0) {
       callback();
-    } else {
-      alert("There is an Error!");
     }
   }
 
