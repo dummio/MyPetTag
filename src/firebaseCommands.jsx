@@ -97,10 +97,9 @@ export async function addPetToDatabase(
 
     console.log(pet);
 
-    if(userDocSnap.get('pets') == null) {
+    if (userDocSnap.get("pets") == null) {
       setDoc(userDocRef, { pets: [pet] }, { merge: true });
-    }
-    else {
+    } else {
       await updateDoc(userDocRef, {
         pets: arrayUnion(pet),
       });
@@ -124,4 +123,12 @@ export async function getPetData() {
   } catch (error) {
     console.log("Error occurred getting pet data: ", error);
   }
+}
+
+export function isUserAuthenticated() {
+  // const currAuth = getAuth();
+  // const currUser = currAuth.currentUser;
+  // console.log("curr user:", currUser);
+  console.log("curr user id: ", uid);
+  return uid != -1;
 }
