@@ -29,7 +29,8 @@ const LoginForm = () => {
         setAuthState(true);
         navigate(`/user/${userId}/account`, { replace: true });
       } else {
-        console.log("userID was false");
+        setAuthState(false);
+        ErrorHandle();
       }
     });
   };
@@ -38,7 +39,7 @@ const LoginForm = () => {
     let errorText = document.getElementById("error-container");
 
     if (!authState) {
-      if (errorText !== null && errorText === "") {
+      if (errorText !== null) {
         errorText.innerHTML = "Email or Password is Incorrect!";
         errorText.style.display = "flex";
         errorText.style.visibility = "visible";
@@ -50,9 +51,6 @@ const LoginForm = () => {
         errorText.style.visibility = "hidden";
       }
     }
-    // If false
-    // Password or Email is Incorrect
-    // Else error text is empty
   };
 
   return (
