@@ -13,17 +13,6 @@ function useForm(callback) {
   function validate(event, name, value) {
     //A function to validate each input values
     switch (name) {
-      case "username":
-        if (value.length <= 4) {
-          setErrors({
-            ...errors,
-            username: "Username atleast have 5 letters",
-          });
-        } else {
-          let newObj = omit(errors, "username");
-          setErrors(newObj);
-        }
-        break;
       case "email":
         if (
           !new RegExp(
