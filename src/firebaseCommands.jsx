@@ -28,7 +28,8 @@ export async function addNewUserToDatabase(
   firstname_,
   lastname_,
   email,
-  password
+  password,
+  phone
 ) {
   //change to point to database
   try {
@@ -44,6 +45,7 @@ export async function addNewUserToDatabase(
       firstname: firstname_,
       lastname: lastname_,
       uid: _uid,
+      phone: phone, // TODO: Verify if number is valid
     });
     return uid;
   } catch (error) {

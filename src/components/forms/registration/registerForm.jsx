@@ -76,7 +76,7 @@ const RegisterForm = () => {
   const SubmitRegistration = (e) => {
     e.preventDefault();
     if (canSubmit) {
-      addNewUserToDatabase(firstNameReg, lastNameReg, emailReg, passwordReg)
+      addNewUserToDatabase(firstNameReg, lastNameReg, emailReg, passwordReg, phoneNumReg)
         .then((response) => {
           var uid = response;
           if (uid) {
