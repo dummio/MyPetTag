@@ -5,7 +5,7 @@
 
 // Import React Modules
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import { BrowserRouter as Router } from "react-router-dom";
 
 // Import Pages
@@ -15,11 +15,13 @@ import reportWebVitals from "./reportWebVitals";
 // Import CSS
 import "./index.css";
 
-ReactDOM.render(
+const container = document.getElementById("root");
+const root = createRoot(container);
+
+root.render(
   <Router>
     <App />
-  </Router>,
-  document.getElementById("root")
+  </Router>
 );
 
 reportWebVitals();
