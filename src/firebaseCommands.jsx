@@ -83,7 +83,7 @@ export async function addPetToDatabase(
 
     //console.log(userDocSnap.data());
     var petID_ = userDocSnap.data().pets?.length;
-    if(petID_ == undefined) {
+    if (petID_ == undefined) {
       petID_ = 0;
     }
 
@@ -115,6 +115,22 @@ export async function addPetToDatabase(
   }
 }
 
+export async function getUserData() {
+  try {
+    const userDocRef = doc(db, "users", uid);
+    const userDocSnap = await getDoc(userDocRef);
+    if (userDocSnap.exists()) {
+      console.log("USER DATA FROM getUserData:", userDocSnap.data());
+      return [userDocSnap.data(), auth.currentUser.email];
+    } else {
+      console.log("User not found");
+      return null;
+    }
+  } catch (error) {
+    console.log("Error getting user data: ", error);
+  }
+}
+
 export async function getPetData() {
   try {
     const userDocRef = doc(db, "users", uid);
@@ -133,7 +149,15 @@ export async function getPetData() {
 export function isUserAuthenticated() {
   // const currAuth = getAuth();
   // const currUser = currAuth.currentUser;
-  // console.log("curr user:", currUser);
+  // if (currUser != null) {
+  //   console.log("curr user id:", currUser.uid);
+  //   console.log("curr user:", currUser);
+  //   return true;
+  // } else {
+  //   console.log("curr user id:", -1);
+  //   return false;
+  // }
+
   console.log("curr user id: ", uid);
   return uid != -1;
 }

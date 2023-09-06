@@ -86,6 +86,9 @@ const RegisterForm = () => {
         width={250}
         height={250}
       />
+      <div className="company-title">
+        My<span style={{ color: "#75af96" }}>PetTag</span>
+      </div>
       <form id="register-form" onSubmit={handleSubmit}>
         <label>First Name</label>
         <input

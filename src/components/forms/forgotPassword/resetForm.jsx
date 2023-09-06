@@ -64,6 +64,9 @@ const ResetForm = () => {
         width={250}
         height={250}
       />
+      <div className="company-title">
+        My<span style={{ color: "#75af96" }}>PetTag</span>
+      </div>
       <form id="reset-form" onSubmit={handleSubmit}>
         <label>
           New Password{" "}
