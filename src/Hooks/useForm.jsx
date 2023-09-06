@@ -52,7 +52,7 @@ function useForm(callback) {
           setErrors({
             ...errors,
             password:
-              "Password should contains at least 8 characters and containing uppercase, lowercase, numbers, and a special character",
+              "Password should contain at least 8 characters consisting of uppercase, lowercase, numbers, and a special characters",
           });
         } else {
           let newObj = omit(errors, "password");

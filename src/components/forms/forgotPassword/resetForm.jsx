@@ -5,6 +5,7 @@
 
 // Import React Modules
 import React, { useEffect, useState } from "react";
+import useForm from "../../../Hooks/useForm";
 
 // Import CSS
 import logo from "../../../images/paw.png";
@@ -12,75 +13,46 @@ import "./resetForm.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleQuestion } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
-import NavBar from "../../navigation/navbar/navbar";
 import PasswordModal from "../../modals/passwordModal";
 
 const ResetForm = () => {
-  const [newPassword, setNewPassword] = useState("");
-  const [newPasswordConf, setNewPasswordConf] = useState("");
   const [canSubmit, setCanSubmit] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
 
-  const ValidateForm = () => {
-    let isValid = false;
-
-    if (
-      newPassword &&
-      newPasswordConf &&
-      newPassword === newPasswordConf &&
-      ValidatePassword(newPassword) &&
-      ValidatePassword(newPasswordConf)
-    )
-      isValid = true;
-
-    setCanSubmit(isValid);
-  };
-
-  const ValidatePassword = (password) => {
-    if (password === "") {
-      return true;
+  const formSubmit = () => {
+    if (canSubmit) {
+      // TODO: Reset Password in Firebase
+      navigate("/", { replace: true });
     }
-    // min 8 char, 1 num char, 1 lowercase, 1 uppercase, 1 special
-    return /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/.test(
-      password
-    );
   };
 
-  const ErrorHandle = () => {
+  const { handleChange, values, errors, handleSubmit } = useForm(formSubmit);
+
+  useEffect(() => {
     let errorText = document.getElementById("error-container");
-
-    if (!ValidatePassword(newPassword)) {
-      if (errorText !== null) {
-        errorText.innerHTML = "Password does not meet requirements!";
-        errorText.style.display = "flex";
-        errorText.style.visibility = "visible";
-      }
-    } else if (newPassword !== newPasswordConf) {
-      if (errorText !== null) {
-        errorText.innerHTML = "Passwords do not match!";
-        errorText.style.display = "flex";
-        errorText.style.visibility = "visible";
-      }
+    if (
+      Object.keys(errors).length === 0 &&
+      Object.keys(values).length !== 0 &&
+      values.password === values.passwordConfirm
+    ) {
+      setCanSubmit(true);
+      errorText.innerHTML = "";
+      errorText.style.display = "flex";
+      errorText.style.visibility = "hidden";
     } else {
-      if (errorText !== null) {
-        errorText.style.display = "none";
-        errorText.style.visibility = "hidden";
-      }
+      setCanSubmit(false);
+      errorText.innerHTML = "";
+      for (let key in errors) errorText.innerHTML += errors[key] + "<br/>";
+      if (values.password !== values.passwordConfirm)
+        errorText.innerHTML += "Passwords do not match<br/>";
+      errorText.style.display = "flex";
+      errorText.style.visibility = "visible";
     }
-  };
-
-  useEffect(ValidateForm, [newPassword, newPasswordConf]);
-  useEffect(ErrorHandle, [newPassword, newPasswordConf]);
+  }, [values, errors]);
 
   const OpenPasswordModal = () => {
     setShowModal((prev) => !prev);
-  };
-
-  const navigate = useNavigate();
-  const resetSubmit = (e) => {
-    e.preventDefault();
-    navigate("/", { replace: true });
-    // Todo: Reset Password in Firebase
   };
 
   return (
@@ -95,7 +67,7 @@ const ResetForm = () => {
       <div className="company-title">
         My<span style={{ color: "#75af96" }}>PetTag</span>
       </div>
-      <form id="reset-form">
+      <form id="reset-form" onSubmit={handleSubmit}>
         <label>
           New Password{" "}
           <FontAwesomeIcon
@@ -106,26 +78,22 @@ const ResetForm = () => {
         <input
           className="form-input"
           type="password"
-          onChange={(e) => {
-            setNewPassword(e.target.value);
-          }}
+          name="password"
+          required
+          onChange={handleChange}
         />
         <label>Confirm New Password</label>
         <input
           className="form-input"
           type="password"
-          onChange={(e) => {
-            setNewPasswordConf(e.target.value);
-          }}
+          name="passwordConfirm"
+          onChange={handleChange}
         />
-        <div id="error-container">
-          <p>test</p>
-        </div>
+        <div id="error-container"></div>
         <input
           id="reset-btn"
           type="submit"
           value="Submit"
-          onClick={resetSubmit}
           disabled={!canSubmit}
         />
       </form>
