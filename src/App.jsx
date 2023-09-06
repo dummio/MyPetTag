@@ -15,6 +15,7 @@ import Login from "./components/pages/login";
 import Register from "./components/pages/register";
 import ForgotPassword from "./components/pages/forgotPassword";
 import ResetForm from "./components/forms/forgotPassword/resetForm";
+import Shop from "./components/pages/shop";
 import User from "./components/user/user";
 import UserId from "./components/user/userId";
 import Account from "./components/pages/account";
@@ -32,6 +33,7 @@ const App = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/forgot" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetForm />} />
+        <Route path="/shop" element={<Shop />} />
         <Route path="/user" element={<User />}>
           <Route path=":userId" element={<UserId />}>
             <Route path="pet/:petId" element={<PetId />}>
