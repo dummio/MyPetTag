@@ -5,6 +5,7 @@
 
 // Import React Modules
 import React, { useEffect, useState } from "react";
+import { sendPasswordReset } from "../../../firebaseCommands";
 
 // Import CSS
 import logo from "../../../images/paw.png";
@@ -18,7 +19,7 @@ const ForgotForm = () => {
 
   const formReset = () => {
     if (canSubmit) {
-      // TODO: Actually do something before setting this
+      sendPasswordReset(values.email);
       setIsSubmitted(canSubmit);
     }
   };

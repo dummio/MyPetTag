@@ -12,6 +12,7 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  sendPasswordResetEmail
 } from "firebase/auth";
 
 const auth = getAuth();
@@ -160,4 +161,16 @@ export function isUserAuthenticated() {
 
   console.log("curr user id: ", uid);
   return uid != -1;
+}
+
+export function sendPasswordReset(email) {
+  sendPasswordResetEmail(auth, email)
+  .then(() => {
+    console.log("Sent password reset");
+    return null;
+  })
+  .catch((error) => {
+
+    return error;
+  });
 }
