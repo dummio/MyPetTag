@@ -12,10 +12,8 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signOut,
 } from "firebase/auth";
-
-const auth = getAuth();
-var uid = -1;
 
 /**
  * This function is to be used when a new user registers
@@ -24,6 +22,9 @@ var uid = -1;
  * @param {*} email
  * @param {*} password
  */
+
+const auth = getAuth();
+
 export async function addNewUserToDatabase(
   firstname_,
   lastname_,
@@ -31,6 +32,7 @@ export async function addNewUserToDatabase(
   password,
   phone
 ) {
+  //const auth = getAuth();
   //change to point to database
   try {
     const userCredential = await createUserWithEmailAndPassword(
@@ -39,7 +41,7 @@ export async function addNewUserToDatabase(
       password
     );
     const _uid = userCredential.user.uid;
-    uid = _uid;
+    const uid = _uid;
 
     await setDoc(doc(db, "users", uid), {
       firstname: firstname_,
@@ -54,17 +56,29 @@ export async function addNewUserToDatabase(
 }
 
 export async function login(_email, _password) {
+  //const auth = getAuth();
   try {
     const userCredential = await signInWithEmailAndPassword(
       auth,
       _email,
       _password
     );
-    uid = userCredential.user.uid;
+    const uid = userCredential.user.uid;
     return uid;
   } catch (error) {
     console.debug("Error logging in: " + error);
   }
+}
+
+export async function logout() {
+  //const auth = getAuth();
+  signOut(auth)
+    .then(() => {
+      console.log("logout successful");
+    })
+    .catch((error) => {
+      console.log("Error occurred logging out : ", error);
+    });
 }
 
 export async function addPetToDatabase(
@@ -77,6 +91,8 @@ export async function addPetToDatabase(
   contacts_,
   vets_
 ) {
+  //const auth = getAuth();
+  const uid = auth?.currentUser?.uid;
   try {
     const userDocRef = doc(db, "users", uid);
     const userDocSnap = await getDoc(userDocRef);
@@ -116,6 +132,8 @@ export async function addPetToDatabase(
 }
 
 export async function getUserData() {
+  //const auth = getAuth();
+  const uid = auth?.currentUser?.uid;
   try {
     const userDocRef = doc(db, "users", uid);
     const userDocSnap = await getDoc(userDocRef);
@@ -131,15 +149,21 @@ export async function getUserData() {
   }
 }
 
-export async function getPetData() {
+export async function getPetData(keys) {
+  //const auth = getAuth();
+  const uid = auth?.currentUser?.uid;
   try {
     const userDocRef = doc(db, "users", uid);
     const userDocSnap = await getDoc(userDocRef);
 
+    let petData = {};
     if (userDocSnap.exists) {
-      return userDocSnap.data().pets;
+      keys.forEach(element => {
+        petData[element] = userDocSnap.get(element);
+      });
+      return petData;
     } else {
-      return [];
+      throw new Error("User does not have any pets!");
     }
   } catch (error) {
     console.log("Error occurred getting pet data: ", error);
@@ -157,7 +181,8 @@ export function isUserAuthenticated() {
   //   console.log("curr user id:", -1);
   //   return false;
   // }
-
+  //const auth = getAuth();
+  const uid = auth?.currentUser?.uid;
   console.log("curr user id: ", uid);
-  return uid != -1;
+  return uid != null;
 }

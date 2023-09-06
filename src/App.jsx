@@ -22,6 +22,7 @@ import NotFound from "./components/pages/404";
 import PetProfile from "./components/pages/petProfile";
 import PetId from "./components/pets/petId";
 import PetProfileEdit from "./components/pages/petProfileEdit";
+import LogOut from "./components/logout/logout";
 
 const App = () => {
   return (
@@ -29,6 +30,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Navigate replace to="/login" />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/logout" element={<LogOut />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetForm />} />

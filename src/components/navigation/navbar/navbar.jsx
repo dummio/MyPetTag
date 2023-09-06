@@ -27,13 +27,13 @@ const NavBar = () => {
     if (isAuthed) {
       return (
         <div className="nav-menu">
-          <a href="/shop">
+          <a href="shop">
             <h1 className="nav-menu-item">Shop</h1>
           </a>
-          <a href="/">
+          <a href="/logout">
             <h1 className="nav-menu-item">Logout</h1>
           </a>
-          <a href="/account">
+          <a href="account">
             <h1 className="nav-menu-item">Account</h1>
           </a>
         </div>
