@@ -7,6 +7,7 @@
 import React, { useEffect, useState } from "react";
 import { addNewUserToDatabase } from "../../../firebaseCommands";
 import { useNavigate } from "react-router-dom";
+import useForm from "../../../Hooks/useForm";
 
 // Import CSS
 import logo from "../../../images/paw.png";
@@ -16,74 +17,19 @@ import { faCircleQuestion } from "@fortawesome/free-solid-svg-icons";
 import PasswordModal from "../../modals/passwordModal";
 
 const RegisterForm = () => {
-  const [firstNameReg, setFirstNameReg] = useState("");
-  const [lastNameReg, setLastNameReg] = useState("");
-  const [passwordReg, setPasswordReg] = useState("");
-  const [passwordConfirmReg, setPasswordConfirmReg] = useState("");
-  const [emailReg, setEmailReg] = useState("");
-  const [emailConfirmReg, setEmailConfirmReg] = useState("");
   const [canSubmit, setCanSubmit] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [phoneNumReg, setPhoneNum] = useState("");
-
-  const ValidateForm = () => {
-    let isValid = false;
-
-    if (
-      firstNameReg &&
-      lastNameReg &&
-      passwordReg &&
-      passwordConfirmReg &&
-      passwordReg === passwordConfirmReg &&
-      emailReg &&
-      emailConfirmReg &&
-      emailReg === emailConfirmReg &&
-      ValidateEmail(emailReg) &&
-      ValidateEmail(emailConfirmReg) &&
-      ValidatePhone(phoneNumReg)
-    )
-      isValid = true;
-
-    setCanSubmit(isValid);
-  };
-
-  const ValidateEmail = (email) => {
-    if (email === "" && canSubmit === false) {
-      return true;
-    }
-    return /\S+@\S+\.\S+/.test(email);
-  };
-
-  const ValidatePassword = (password) => {
-    if (password === "") {
-      return true;
-    }
-    // min 8 char, 1 num char, 1 lowercase, 1 uppercase, 1 special
-    return /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/.test(
-      password
-    );
-  };
-
-  const ValidatePhone = (phone) => {
-    if (phone === "") {
-      return true;
-    }
-    return /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/.test(
-      phone
-    );
-  };
 
   const navigate = useNavigate();
 
-  const SubmitRegistration = (e) => {
-    e.preventDefault();
+  const formRegister = () => {
     if (canSubmit) {
       addNewUserToDatabase(
-        firstNameReg,
-        lastNameReg,
-        emailReg,
-        passwordReg,
-        phoneNumReg
+        values.firstname,
+        values.lastname,
+        values.email,
+        values.password,
+        values.phone
       )
         .then((response) => {
           var uid = response;
@@ -98,72 +44,38 @@ const RegisterForm = () => {
     }
   };
 
-  const ErrorHandle = () => {
-    let errorText = document.getElementById("error-container");
+  const { handleChange, values, errors, handleSubmit } = useForm(formRegister);
 
-    if (!ValidateEmail(emailReg)) {
-      if (errorText !== null) {
-        errorText.innerHTML = "Email is invalid!";
-        errorText.style.display = "flex";
-        errorText.style.visibility = "visible";
-      }
-    } else if (!ValidateEmail(emailConfirmReg)) {
-      if (errorText !== null) {
-        errorText.innerHTML = "Confirm Email is invalid!";
-        errorText.style.display = "flex";
-        errorText.style.visibility = "visible";
-      }
-    } else if (emailReg !== emailConfirmReg) {
-      if (errorText !== null) {
-        errorText.innerHTML = "Emails do not match!";
-        errorText.style.display = "flex";
-        errorText.style.visibility = "visible";
-      }
-    } else if (!ValidatePassword(passwordReg)) {
-      if (errorText !== null) {
-        errorText.innerHTML = "Password does not meet requirements!";
-        errorText.style.display = "flex";
-        errorText.style.visibility = "visible";
-      }
-    } else if (passwordReg !== passwordConfirmReg) {
-      if (errorText !== null) {
-        errorText.innerHTML = "Passwords do not match!";
-        errorText.style.display = "flex";
-        errorText.style.visibility = "visible";
-      }
-    } else if (!ValidatePhone(phoneNumReg)) {
-      if (errorText !== null) {
-        errorText.innerHTML = "Phone number not valid";
-        errorText.style.display = "flex";
-        errorText.style.visibility = "visible";
-      }
+  useEffect(() => {
+    let errorText = document.getElementById("error-container");
+    if (
+      Object.keys(errors).length === 0 &&
+      Object.keys(values).length !== 0 &&
+      values.email === values.emailConfirm &&
+      values.password === values.passwordConfirm
+    ) {
+      setCanSubmit(true);
+      errorText.innerHTML = "";
+      errorText.style.display = "flex";
+      errorText.style.visibility = "hidden";
     } else {
-      if (errorText !== null) {
-        errorText.style.display = "none";
-        errorText.style.visibility = "hidden";
-      }
+      setCanSubmit(false);
+
+      errorText.innerHTML = "";
+      for (let key in errors) errorText.innerHTML += errors[key] + "<br/>";
+      if (values.email !== values.emailConfirm)
+        errorText.innerHTML += "Emails do not match<br/>";
+      if (values.password !== values.passwordConfirm)
+        errorText.innerHTML += "Passwords do not match<br/>";
+
+      errorText.style.display = "flex";
+      errorText.style.visibility = "visible";
     }
-  };
+  }, [values, errors]);
 
   const OpenPasswordModal = () => {
     setShowModal((prev) => !prev);
   };
-
-  useEffect(ValidateForm, [
-    passwordReg,
-    passwordConfirmReg,
-    firstNameReg,
-    lastNameReg,
-    emailReg,
-    emailConfirmReg,
-  ]);
-
-  useEffect(ErrorHandle, [
-    emailReg,
-    emailConfirmReg,
-    passwordReg,
-    passwordConfirmReg,
-  ]);
 
   return (
     <div id="register-container">
@@ -177,46 +89,46 @@ const RegisterForm = () => {
       <div className="company-title">
         My<span style={{ color: "#75af96" }}>PetTag</span>
       </div>
-      <form id="register-form">
+      <form id="register-form" onSubmit={handleSubmit}>
         <label>First Name</label>
         <input
           className="form-input"
           type="text"
-          onChange={(e) => {
-            setFirstNameReg(e.target.value);
-          }}
+          name="firstname"
+          required
+          onChange={handleChange}
         />
         <label>Last Name</label>
         <input
           className="form-input"
           type="text"
-          onChange={(e) => {
-            setLastNameReg(e.target.value);
-          }}
+          name="lastname"
+          required
+          onChange={handleChange}
         />
         <label>Phone Number</label>
         <input
           className="form-input"
           type="text"
-          onChange={(e) => {
-            setPhoneNum(e.target.value);
-          }}
+          name="phone"
+          required
+          onChange={handleChange}
         />
         <label>Email</label>
         <input
           className="form-input"
-          type="text"
-          onChange={(e) => {
-            setEmailReg(e.target.value);
-          }}
+          type="email"
+          name="email"
+          required
+          onChange={handleChange}
         />
         <label>Confirm Email</label>
         <input
           className="form-input"
-          type="text"
-          onChange={(e) => {
-            setEmailConfirmReg(e.target.value);
-          }}
+          type="email"
+          name="emailConfirm"
+          required
+          onChange={handleChange}
         />
         <label>
           Password{" "}
@@ -228,17 +140,17 @@ const RegisterForm = () => {
         <input
           className="form-input"
           type="password"
-          onChange={(e) => {
-            setPasswordReg(e.target.value);
-          }}
+          name="password"
+          required
+          onChange={handleChange}
         />
         <label>Confirm Password</label>
         <input
           className="form-input"
           type="password"
-          onChange={(e) => {
-            setPasswordConfirmReg(e.target.value);
-          }}
+          name="passwordConfirm"
+          required
+          onChange={handleChange}
         />
         <div id="register-checkbox-container">
           <input className="form-checkbox" type="checkbox" />
@@ -251,7 +163,6 @@ const RegisterForm = () => {
           id="register-btn"
           type="submit"
           value="Register"
-          onClick={SubmitRegistration}
           disabled={!canSubmit}
         />
         <div className="register-links">
