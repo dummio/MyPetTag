@@ -13,6 +13,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  onAuthStateChanged,
 } from "firebase/auth";
 
 /**
@@ -24,6 +25,20 @@ import {
  */
 
 const auth = getAuth();
+let uid = -1;
+
+
+async function authStateChangedWrapper() {
+  await onAuthStateChanged(auth, (user) => {
+  if (user) {
+    uid = user.uid;
+    console.log(uid);
+  } else {
+    console.log("user auth not found");
+  }
+});
+}
+
 
 export async function addNewUserToDatabase(
   firstname_,
@@ -133,7 +148,8 @@ export async function addPetToDatabase(
 
 export async function getUserData() {
   //const auth = getAuth();
-  const uid = auth?.currentUser?.uid;
+  // const uid = auth?.currentUser?.uid;
+  await authStateChangedWrapper();
   try {
     const userDocRef = doc(db, "users", uid);
     const userDocSnap = await getDoc(userDocRef);
