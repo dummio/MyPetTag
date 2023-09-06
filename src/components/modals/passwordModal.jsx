@@ -15,7 +15,12 @@ const PasswordModal = ({ showModal, setShowModal }) => {
   return (
     <>
       {showModal ? (
-        <div className="modal">
+        <div
+          className="modal"
+          onClick={(e) => {
+            setShowModal((prev) => !prev);
+          }}
+        >
           <div className="overlay"></div>
           <div className="modal-content">
             <h2>Password Requirements</h2>

@@ -27,6 +27,9 @@ const ForgotConfirmation = () => {
           width={250}
           height={250}
         />
+        <div className="company-title">
+          My<span style={{ color: "#75af96" }}>PetTag</span>
+        </div>
         <p style={{ width: "300px", fontSize: "24px" }}>
           An email has been sent to <b>{email}</b> please check your inbox for a
           reset password confirmation email.
