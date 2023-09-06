@@ -18,9 +18,8 @@ const ForgotForm = () => {
 
   const formReset = () => {
     if (canSubmit) {
-      console.log("Success");
       // TODO: Actually do something before setting this
-      setIsSubmitted(true);
+      setIsSubmitted(canSubmit);
     }
   };
 
