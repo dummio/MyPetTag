@@ -4,7 +4,7 @@
  */
 
 // Import React Modules
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PetProfileButton from "./petProfileButton";
 
 // Import CSS
@@ -13,12 +13,38 @@ import logo from "../../../images/paw.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 
+//import firebase helper function
+import { getUserData } from "../../../firebaseCommands";
+
 const AccountInformation = () => {
   const [user] = useState({
-    Name: "Maria Juarez",
-    Email: "mjuarez@yahoo.com",
-    Phone: "801-855-2197",
+    Name: "Loading...",
+    Email: "Loading...",
+    Phone: "Loading...",
   });
+  const [realUser, setUser] = useState(null);
+  const [realEmail, setEmail] = useState(null);
+  const [realPet, setRealPet] = useState(null);
+
+  useEffect(() => {
+    // Fetch user data when the component mounts
+    async function fetchUserData() {
+      const userData = await getUserData();
+      if (userData) {
+        setUser(userData[0]);
+        setEmail(userData[1]);
+        const userPets = userData[0].pets.map((pet) => ({
+          Key: pet.petID,
+          Name: pet.name,
+        }));
+        setRealPet(userPets);
+      }
+    }
+
+    fetchUserData();
+  });
+  console.log("USER 2 DATA: ", realUser);
+  console.log("rEaL pEt DaTa: ", realPet);
 
   const pet = [
     { Key: 0, Name: "Tommy" },
@@ -46,7 +72,7 @@ const AccountInformation = () => {
         <div id="user-name-container">
           <h1 id="welcome-text">Welcome</h1>
           <h1>
-            {user.Name.split(" ").splice(0, 1)}
+            {realUser ? realUser.firstname : user.Name.split(" ").splice(0, 1)}
             <FontAwesomeIcon
               style={{
                 fontSize: "20px",
@@ -61,9 +87,14 @@ const AccountInformation = () => {
 
         <div id="user-container">
           <div id="user-info">
-            <p>Name: {user.Name}</p>
-            <p>Email: {user.Email}</p>
-            <p>Phone: {user.Phone}</p>
+            <p>
+              Name:{" "}
+              {realUser
+                ? `${realUser.firstname} ${realUser.lastname}`
+                : user.Name}
+            </p>
+            <p>Email: {realEmail ? realEmail : user.Email}</p>
+            <p>Phone: {realUser ? realUser.phone : user.Phone}</p>
           </div>
 
           <div id="user-options-container">
@@ -85,9 +116,17 @@ const AccountInformation = () => {
         <div id="pet-container-name">
           <h2>Pet Profiles</h2>
         </div>
-        {pet.map((pet) => (
-          <PetProfileButton key={pet.Key} petId={pet.Key} name={pet.Name} />
-        ))}
+        {realPet ? (
+          realPet.map((userPet) => (
+            <PetProfileButton
+              key={userPet.Key}
+              petId={userPet.Key}
+              name={userPet.Name}
+            />
+          ))
+        ) : (
+          <p>Loading pets...</p>
+        )}
       </div>
     </div>
   );
