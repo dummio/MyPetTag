@@ -16,6 +16,12 @@
   border-radius: 50%;
 }
 
+.company-title {
+  font-size: 48px;
+  font-weight: bold;
+  max-width: 500px;
+}
+
 #register-form {
   display: flex;
   flex-direction: column;

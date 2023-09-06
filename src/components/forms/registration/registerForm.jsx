@@ -65,10 +65,12 @@ const RegisterForm = () => {
   };
 
   const ValidatePhone = (phone) => {
-    if(phone === "") {
+    if (phone === "") {
       return true;
     }
-    return /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/.test(phone);
+    return /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/.test(
+      phone
+    );
   };
 
   const navigate = useNavigate();
@@ -76,7 +78,13 @@ const RegisterForm = () => {
   const SubmitRegistration = (e) => {
     e.preventDefault();
     if (canSubmit) {
-      addNewUserToDatabase(firstNameReg, lastNameReg, emailReg, passwordReg, phoneNumReg)
+      addNewUserToDatabase(
+        firstNameReg,
+        lastNameReg,
+        emailReg,
+        passwordReg,
+        phoneNumReg
+      )
         .then((response) => {
           var uid = response;
           if (uid) {
@@ -123,7 +131,7 @@ const RegisterForm = () => {
         errorText.style.display = "flex";
         errorText.style.visibility = "visible";
       }
-    } else if(!ValidatePhone(phoneNumReg)) {
+    } else if (!ValidatePhone(phoneNumReg)) {
       if (errorText !== null) {
         errorText.innerHTML = "Phone number not valid";
         errorText.style.display = "flex";
@@ -166,6 +174,9 @@ const RegisterForm = () => {
         width={250}
         height={250}
       />
+      <div className="company-title">
+        My<span style={{ color: "#75af96" }}>PetTag</span>
+      </div>
       <form id="register-form">
         <label>First Name</label>
         <input

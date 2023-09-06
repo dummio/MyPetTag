@@ -9,7 +9,7 @@ import React from "react";
 // Import CSS
 import logo from "../../images/paw.png";
 
-// Import Componenets
+// Import Components
 import NavBar from "../navigation/navbar/navbar";
 
 const Shop = () => {

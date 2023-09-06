@@ -65,6 +65,9 @@ const ForgotForm = () => {
         width={250}
         height={250}
       />
+      <div className="company-title">
+        My<span style={{ color: "#75af96" }}>PetTag</span>
+      </div>
       <form id="forgot-form">
         <label>Email</label>
         <input

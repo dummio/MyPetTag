@@ -30,7 +30,9 @@ const AccountInformation = () => {
   return (
     <div id="account-container">
       <div id="company-name-container">
-        <h1>MyPetTag</h1>
+        <h1>
+          My<span style={{ color: "#75af96" }}>PetTag</span>
+        </h1>
         <img
           className="logo"
           src={logo}
