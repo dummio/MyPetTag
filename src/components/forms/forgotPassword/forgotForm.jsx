@@ -10,83 +10,68 @@ import React, { useEffect, useState } from "react";
 import logo from "../../../images/paw.png";
 import "./forgotForm.css";
 import ForgotConfirmation from "./forgotConfirm";
+import useForm from "../../../Hooks/useForm";
 
 const ForgotForm = () => {
   const [canSubmit, setCanSubmit] = useState(false);
-  const [confirmSubmit, setConfirmSubmit] = useState(false);
-  const [email, setEmail] = useState("");
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const ValidateEmail = (email) => {
-    if (email === "" && canSubmit === false) {
-      return true;
+  const formReset = () => {
+    if (canSubmit) {
+      console.log("Success");
+      // TODO: Actually do something before setting this
+      setIsSubmitted(true);
     }
-    return /\S+@\S+\.\S+/.test(email);
   };
 
-  const ValidateForm = () => {
-    let isValid = false;
-    if (ValidateEmail(email)) isValid = true;
-    setCanSubmit(isValid);
-  };
+  const { handleChange, values, errors, handleSubmit } = useForm(formReset);
 
-  const ErrorHandle = () => {
+  useEffect(() => {
     let errorText = document.getElementById("error-container");
-    if (!ValidateEmail(email)) {
-      if (errorText !== null) {
-        errorText.innerHTML = "Email is invalid!";
-        errorText.style.display = "flex";
-        errorText.style.visibility = "visible";
-      }
+    if (Object.keys(errors).length === 0 && Object.keys(values).length !== 0) {
+      setCanSubmit(true);
+      errorText.innerHTML = "";
+      errorText.style.display = "flex";
+      errorText.style.visibility = "hidden";
     } else {
-      if (errorText !== null) {
-        errorText.style.display = "none";
-        errorText.style.visibility = "hidden";
-      }
+      setCanSubmit(false);
+
+      errorText.innerHTML = "";
+      for (let key in errors) errorText.innerHTML += errors[key] + "<br/>";
+
+      errorText.style.display = "flex";
+      errorText.style.visibility = "visible";
     }
-  };
+  }, [values, errors]);
 
-  const forgotSubmit = (e) => {
-    e.preventDefault();
-    setConfirmSubmit(true);
-  };
 
-  useEffect(ValidateForm, [email]);
-  useEffect(ErrorHandle, [email]);
-
-  if (confirmSubmit) {
+  if (isSubmitted) {
     return <ForgotConfirmation />;
+  } else {
+    return (
+      <div id="forgot-container">
+        <img
+          className="logo"
+          src={logo}
+          alt="MyPetTag"
+          width={250}
+          height={250}
+        />
+        <form id="forgot-form" onSubmit={handleSubmit}>
+          <label>Email</label>
+          <input
+            className="form-input"
+            type="email"
+            name="email"
+            required
+            onChange={handleChange}
+          />
+          <div id="error-container"></div>
+          <input id="forgot-btn" type="submit" value="Submit" />
+        </form>
+      </div>
+    );
   }
-  return (
-    <div id="forgot-container">
-      <img
-        className="logo"
-        src={logo}
-        alt="MyPetTag"
-        width={250}
-        height={250}
-      />
-      <form id="forgot-form">
-        <label>Email</label>
-        <input
-          className="form-input"
-          type="text"
-          onChange={(e) => {
-            setEmail(e.target.value);
-            localStorage.setItem("userEmail", e.target.value);
-          }}
-        />
-        <div id="error-container">
-          <p></p>
-        </div>
-        <input
-          id="forgot-btn"
-          type="submit"
-          value="Submit"
-          onClick={forgotSubmit}
-        />
-      </form>
-    </div>
-  );
 };
 
 export default ForgotForm;
