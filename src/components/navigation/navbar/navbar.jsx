@@ -21,7 +21,7 @@ const NavBar = () => {
     //   setIsAuthed(false);
     // }
     setIsAuthed(isUserAuthenticated());
-  });
+  }, []);
 
   const AuthLinks = () => {
     if (isAuthed) {
