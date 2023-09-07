@@ -24,9 +24,7 @@ import {
  * @param {*} password
  */
 
-let uid = -1;
-
-async function authStateChangedWrapper() {
+export async function authStateChangedWrapper() {
   return new Promise((resolve, reject) => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -37,14 +35,6 @@ async function authStateChangedWrapper() {
       }
     });
   });
-//   await onAuthStateChanged(auth, (user) => {
-//   if (user) {
-//     uid = user.uid;
-//     console.log(uid);
-//   } else {
-//     console.log("user auth not found");
-//   }
-// });
 }
 
 
@@ -79,14 +69,13 @@ export async function addNewUserToDatabase(
 }
 
 export async function login(_email, _password) {
-  //const auth = getAuth();
   try {
     const userCredential = await signInWithEmailAndPassword(
       auth,
       _email,
       _password
     );
-    const uid = userCredential.user.uid;
+    const uid = await authStateChangedWrapper();
     console.log(uid);
     return uid;
   } catch (error) {
@@ -95,7 +84,6 @@ export async function login(_email, _password) {
 }
 
 export async function logout() {
-  //const auth = getAuth();
   signOut(auth)
     .then(() => {
       console.log("logout successful");
@@ -115,8 +103,7 @@ export async function addPetToDatabase(
   contacts_,
   vets_
 ) {
-  //const auth = getAuth();
-  const uid = auth?.currentUser?.uid;
+  const uid = await authStateChangedWrapper();
   try {
     const userDocRef = doc(db, "users", uid);
     const userDocSnap = await getDoc(userDocRef);
@@ -156,7 +143,6 @@ export async function addPetToDatabase(
 }
 
 export async function getUserData() {
-  //const auth = getAuth();
   const uid_t = await authStateChangedWrapper();
   try {
     console.log(uid_t);
@@ -175,8 +161,7 @@ export async function getUserData() {
 }
 
 export async function getPetData(keys) {
-  //const auth = getAuth();
-  const uid = auth?.currentUser?.uid;
+  const uid = authStateChangedWrapper();
   try {
     const userDocRef = doc(db, "users", uid);
     const userDocSnap = await getDoc(userDocRef);
@@ -196,23 +181,11 @@ export async function getPetData(keys) {
 }
 
 export async function isUserAuthenticated() {
-  // const currAuth = getAuth();
-  // const currUser = currAuth.currentUser;
-  // if (currUser != null) {
-  //   console.log("curr user id:", currUser.uid);
-  //   console.log("curr user:", currUser);
-  //   return true;
-  // } else {
-  //   console.log("curr user id:", -1);
-  //   return false;
-  // }
-  //const auth = getAuth();
   try {
     const uid_t = await authStateChangedWrapper();
     console.log("curr user id: ", uid_t);
     return uid_t != null;
-  }
-  catch(error) {
+  } catch(error) {
     console.log(error);
     return false;
   }

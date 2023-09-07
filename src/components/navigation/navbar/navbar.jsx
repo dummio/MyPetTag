@@ -15,23 +15,18 @@ const NavBar = () => {
   const [isAuthed, setIsAuthed] = useState(false);
 
   useEffect(() => {
-    // if (isUserAuthenticated) {
-    //   setIsAuthed(true);
-    // } else {
-    //   setIsAuthed(false);
-    // }
     const getAuthState = async () => {
       const data = await isUserAuthenticated();
       console.log(data);
-      return data;
+      setIsAuthed(data);
     };
 
-    setIsAuthed(getAuthState());
+    getAuthState();
   }, []);
 
   const AuthLinks = () => {
     console.log("helloworld", isAuthed);
-    if (isAuthed) {
+    if (isAuthed == true) {
       return (
         <div className="nav-menu">
           <a href="shop">
