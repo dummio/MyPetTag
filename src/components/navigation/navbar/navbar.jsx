@@ -20,10 +20,17 @@ const NavBar = () => {
     // } else {
     //   setIsAuthed(false);
     // }
-    setIsAuthed(isUserAuthenticated());
+    const getAuthState = async () => {
+      const data = await isUserAuthenticated();
+      console.log(data);
+      return data;
+    };
+
+    setIsAuthed(getAuthState());
   }, []);
 
   const AuthLinks = () => {
+    console.log("helloworld", isAuthed);
     if (isAuthed) {
       return (
         <div className="nav-menu">

@@ -1,4 +1,4 @@
-import { db } from "./firebase-config";
+import { db, auth } from "./firebase-config";
 import {
   doc,
   updateDoc,
@@ -24,19 +24,27 @@ import {
  * @param {*} password
  */
 
-const auth = getAuth();
 let uid = -1;
 
-
 async function authStateChangedWrapper() {
-  await onAuthStateChanged(auth, (user) => {
-  if (user) {
-    uid = user.uid;
-    console.log(uid);
-  } else {
-    console.log("user auth not found");
-  }
-});
+  return new Promise((resolve, reject) => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        resolve(user.uid);
+        console.log(user.uid);
+      } else {
+        reject("No User Found");
+      }
+    });
+  });
+//   await onAuthStateChanged(auth, (user) => {
+//   if (user) {
+//     uid = user.uid;
+//     console.log(uid);
+//   } else {
+//     console.log("user auth not found");
+//   }
+// });
 }
 
 
@@ -79,6 +87,7 @@ export async function login(_email, _password) {
       _password
     );
     const uid = userCredential.user.uid;
+    console.log(uid);
     return uid;
   } catch (error) {
     console.debug("Error logging in: " + error);
@@ -148,10 +157,10 @@ export async function addPetToDatabase(
 
 export async function getUserData() {
   //const auth = getAuth();
-  // const uid = auth?.currentUser?.uid;
-  await authStateChangedWrapper();
+  const uid_t = await authStateChangedWrapper();
   try {
-    const userDocRef = doc(db, "users", uid);
+    console.log(uid_t);
+    const userDocRef = doc(db, "users", uid_t);
     const userDocSnap = await getDoc(userDocRef);
     if (userDocSnap.exists()) {
       console.log("USER DATA FROM getUserData:", userDocSnap.data());
@@ -186,7 +195,7 @@ export async function getPetData(keys) {
   }
 }
 
-export function isUserAuthenticated() {
+export async function isUserAuthenticated() {
   // const currAuth = getAuth();
   // const currUser = currAuth.currentUser;
   // if (currUser != null) {
@@ -198,7 +207,13 @@ export function isUserAuthenticated() {
   //   return false;
   // }
   //const auth = getAuth();
-  const uid = auth?.currentUser?.uid;
-  console.log("curr user id: ", uid);
-  return uid != null;
+  try {
+    const uid_t = await authStateChangedWrapper();
+    console.log("curr user id: ", uid_t);
+    return uid_t != null;
+  }
+  catch(error) {
+    console.log(error);
+    return false;
+  }
 }

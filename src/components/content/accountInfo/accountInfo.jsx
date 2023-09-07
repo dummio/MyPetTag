@@ -40,9 +40,8 @@ const AccountInformation = () => {
         setRealPet(userPets);
       }
     }
-
     fetchUserData();
-  });
+  }, []);
   console.log("USER 2 DATA: ", realUser);
   console.log("rEaL pEt DaTa: ", realPet);
 
