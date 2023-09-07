@@ -1,4 +1,4 @@
-import { db } from "./firebase-config";
+import { db, auth } from "./firebase-config";
 import {
   doc,
   updateDoc,
@@ -13,10 +13,9 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   sendPasswordResetEmail
+  signOut,
+  onAuthStateChanged,
 } from "firebase/auth";
-
-const auth = getAuth();
-var uid = -1;
 
 /**
  * This function is to be used when a new user registers
@@ -25,6 +24,21 @@ var uid = -1;
  * @param {*} email
  * @param {*} password
  */
+
+export async function authStateChangedWrapper() {
+  return new Promise((resolve, reject) => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        resolve(user.uid);
+        console.log(user.uid);
+      } else {
+        reject("No User Found");
+      }
+    });
+  });
+}
+
+
 export async function addNewUserToDatabase(
   firstname_,
   lastname_,
@@ -32,6 +46,7 @@ export async function addNewUserToDatabase(
   password,
   phone
 ) {
+  //const auth = getAuth();
   //change to point to database
   try {
     const userCredential = await createUserWithEmailAndPassword(
@@ -40,7 +55,7 @@ export async function addNewUserToDatabase(
       password
     );
     const _uid = userCredential.user.uid;
-    uid = _uid;
+    const uid = _uid;
 
     await setDoc(doc(db, "users", uid), {
       firstname: firstname_,
@@ -61,11 +76,22 @@ export async function login(_email, _password) {
       _email,
       _password
     );
-    uid = userCredential.user.uid;
+    const uid = await authStateChangedWrapper();
+    console.log(uid);
     return uid;
   } catch (error) {
     console.debug("Error logging in: " + error);
   }
+}
+
+export async function logout() {
+  signOut(auth)
+    .then(() => {
+      console.log("logout successful");
+    })
+    .catch((error) => {
+      console.log("Error occurred logging out : ", error);
+    });
 }
 
 export async function addPetToDatabase(
@@ -78,6 +104,7 @@ export async function addPetToDatabase(
   contacts_,
   vets_
 ) {
+  const uid = await authStateChangedWrapper();
   try {
     const userDocRef = doc(db, "users", uid);
     const userDocSnap = await getDoc(userDocRef);
@@ -117,8 +144,10 @@ export async function addPetToDatabase(
 }
 
 export async function getUserData() {
+  const uid_t = await authStateChangedWrapper();
   try {
-    const userDocRef = doc(db, "users", uid);
+    console.log(uid_t);
+    const userDocRef = doc(db, "users", uid_t);
     const userDocSnap = await getDoc(userDocRef);
     if (userDocSnap.exists()) {
       console.log("USER DATA FROM getUserData:", userDocSnap.data());
@@ -132,35 +161,35 @@ export async function getUserData() {
   }
 }
 
-export async function getPetData() {
+export async function getPetData(keys) {
+  const uid = authStateChangedWrapper();
   try {
     const userDocRef = doc(db, "users", uid);
     const userDocSnap = await getDoc(userDocRef);
 
+    let petData = {};
     if (userDocSnap.exists) {
-      return userDocSnap.data().pets;
+      keys.forEach(element => {
+        petData[element] = userDocSnap.get(element);
+      });
+      return petData;
     } else {
-      return [];
+      throw new Error("User does not have any pets!");
     }
   } catch (error) {
     console.log("Error occurred getting pet data: ", error);
   }
 }
 
-export function isUserAuthenticated() {
-  // const currAuth = getAuth();
-  // const currUser = currAuth.currentUser;
-  // if (currUser != null) {
-  //   console.log("curr user id:", currUser.uid);
-  //   console.log("curr user:", currUser);
-  //   return true;
-  // } else {
-  //   console.log("curr user id:", -1);
-  //   return false;
-  // }
-
-  console.log("curr user id: ", uid);
-  return uid != -1;
+export async function isUserAuthenticated() {
+  try {
+    const uid_t = await authStateChangedWrapper();
+    console.log("curr user id: ", uid_t);
+    return uid_t != null;
+  } catch(error) {
+    console.log(error);
+    return false;
+  }
 }
 
 export function sendPasswordReset(email) {
