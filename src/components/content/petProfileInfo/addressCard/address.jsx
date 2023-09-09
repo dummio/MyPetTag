@@ -15,12 +15,13 @@ import "./address.css";
 import { getPetData } from "../../../../firebaseCommands";
 
 const Address = () => {
-  let petAddr = getPetData(["addr"]);
-  console.log(petAddr);
-  //let address = "2500 N Lakeview Drive, Austin TX, 72481";
-  const [address, setAddress] = useState({
-    Addr: petAddr["addr"]
-  });
+  // let petAddr = getPetData(["addr"]);
+  // console.log(petAddr);
+  let address = "2500 N Lakeview Drive, Austin TX, 72481";
+  // const [address, setAddress] = useState({
+  //   Addr: "hell",
+  //   // Addr: petAddr["addr"]
+  // });
 
   return (
     <div id="address-container">

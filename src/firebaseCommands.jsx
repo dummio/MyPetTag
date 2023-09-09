@@ -24,7 +24,7 @@ import {
  * @param {*} email
  * @param {*} password
  */
- 
+
 export async function authStateChangedWrapper() {
   return new Promise((resolve, reject) => {
     onAuthStateChanged(auth, (user) => {
@@ -37,7 +37,6 @@ export async function authStateChangedWrapper() {
     });
   });
 }
-
 
 export async function addNewUserToDatabase(
   firstname_,
@@ -161,20 +160,33 @@ export async function getUserData() {
   }
 }
 
-export async function getPetData(keys) {
-  const uid = authStateChangedWrapper();
+export async function getPetData(petID, keys) {
+  const uid = await authStateChangedWrapper();
   try {
     const userDocRef = doc(db, "users", uid);
     const userDocSnap = await getDoc(userDocRef);
 
     let petData = {};
-    if (userDocSnap.exists) {
-      keys.forEach(element => {
-        petData[element] = userDocSnap.get(element);
+    if (userDocSnap.exists()) {
+      // keys.forEach((element) => {
+      //   petData[element] = userDocSnap[element];
+      // });
+      // console.log("PET DATA: ", petData);
+      // TODO: Binary search
+      userDocSnap.data().pets.forEach((element) => {
+        console.log("in loop");
+        console.log(element["petID"]);
+        if (element["petID"] == petID) {
+          keys.forEach((innerElement) => {
+            petData[innerElement] = element[innerElement];
+          });
+          console.log("PET DATA: ", petData);
+          return petData;
+        }
       });
-      return petData;
     } else {
-      throw new Error("User does not have any pets!");
+      // throw new Error("User does not have any pets!");
+      return petData;
     }
   } catch (error) {
     console.log("Error occurred getting pet data: ", error);
@@ -186,7 +198,7 @@ export async function isUserAuthenticated() {
     const uid_t = await authStateChangedWrapper();
     console.log("curr user id: ", uid_t);
     return uid_t != null;
-  } catch(error) {
+  } catch (error) {
     console.log(error);
     return false;
   }
@@ -194,12 +206,11 @@ export async function isUserAuthenticated() {
 
 export function sendPasswordReset(email) {
   sendPasswordResetEmail(auth, email)
-  .then(() => {
-    console.log("Sent password reset");
-    return null;
-  })
-  .catch((error) => {
-
-    return error;
-  });
+    .then(() => {
+      console.log("Sent password reset");
+      return null;
+    })
+    .catch((error) => {
+      return error;
+    });
 }

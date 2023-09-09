@@ -25,7 +25,7 @@ export default class PetProfileButton extends React.Component {
     return (
       <div className="pet-profile-button">
         <p>{this.state.name}</p>
-        <Link to="../pet/1/profile/">
+        <Link to={`../pet/${this.state.petId}/profile/`}>
           <FontAwesomeIcon
             style={{ fontSize: "20px", marginRight: "15px", cursor: "pointer" }}
             icon={faPen}
