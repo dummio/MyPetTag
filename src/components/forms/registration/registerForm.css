@@ -133,7 +133,7 @@
 }
 
 .error-container {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: left;
   color: red;
