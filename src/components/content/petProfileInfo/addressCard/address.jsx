@@ -4,7 +4,7 @@
  */
 
 // Import React Modules
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 // Import CSS
 import { faHouse } from "@fortawesome/free-solid-svg-icons";
@@ -15,14 +15,23 @@ import "./address.css";
 import { getPetData } from "../../../../firebaseCommands";
 
 const Address = () => {
-  // let petAddr = getPetData(["addr"]);
   // console.log(petAddr);
-  let address = "2500 N Lakeview Drive, Austin TX, 72481";
-  // const [address, setAddress] = useState({
-  //   Addr: "hell",
-  //   // Addr: petAddr["addr"]
-  // });
+  // let address = "2500 N Lakeview Drive, Austin TX, 72481";
+  const petID = window.location.pathname.split("/")[4];
+  const [petAddr, setAddress] = useState(null);
 
+
+  useEffect(() => {
+    async function fetchPetData() {
+      const petAddr = await getPetData(petID, ["addr"]);
+      if (petAddr) {
+        setAddress(petAddr["addr"]);
+      }
+    }
+    fetchPetData();
+    console.log(petAddr);
+  }, []);
+  
   return (
     <div id="address-container">
       <div className="address-label-container">
@@ -38,7 +47,7 @@ const Address = () => {
           }}
           icon={faHouse}
         />
-        <p className="address-title">{address.Addr}</p>
+        <p className="address-title">{petAddr}</p>
       </div>
     </div>
   );

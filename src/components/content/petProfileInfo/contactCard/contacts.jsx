@@ -4,37 +4,44 @@
  */
 
 // Import React Modules
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 // Import CSS
 import { faPhone } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./contacts.css";
 
+//import firebase command
+import { getPetData } from "../../../../firebaseCommands";
+
 const Contacts = () => {
-  const [contact, setContact] = useState({
-    Name: "Tommy",
-    Phone: "801-858-6969",
-  });
+  const [contact, setContact] = useState(null);
+  const petID = window.location.pathname.split("/")[4];
 
-  // const contact2 = {
-  //   Name: "Pet Sitter",
-  //   Phone: "801-420-8569",
-  // };
+  useEffect(() => { 
+      async function fetchPetData() {
+        const petContact = await getPetData(petID, ["contacts"]);
+        if (petContact) {
+          setContact(petContact["contacts"]);
+        }
+      }
+      fetchPetData();
+  }, []);
 
+  console.log("KEVXUE@ ", contact);
   return (
     <div id="contacts-container">
       <div className="contacts-label-container">
         <p>Contacts</p>
       </div>
       <div className="contact-tile">
-        <p className="contact-title">{contact.Name}</p>
+        <p className="contact-title">{"name"}</p>
         <p className="contact-phone">
           <FontAwesomeIcon
             style={{ color: "#000000", fontSize: "18px", paddingRight: "10px" }}
             icon={faPhone}
           />
-          {contact.Phone}
+          {"phone"}
         </p>
       </div>
       {/* <div className="contact-tile">
