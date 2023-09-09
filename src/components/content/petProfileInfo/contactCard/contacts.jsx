@@ -18,14 +18,14 @@ const Contacts = () => {
   const [contact, setContact] = useState(null);
   const petID = window.location.pathname.split("/")[4];
 
-  useEffect(() => { 
-      async function fetchPetData() {
-        const petContact = await getPetData(petID, ["contacts"]);
-        if (petContact) {
-          setContact(petContact["contacts"]);
-        }
+  useEffect(() => {
+    async function fetchPetData() {
+      const petContact = await getPetData(petID, ["contacts"]);
+      if (petContact) {
+        setContact(petContact["contacts"]);
       }
-      fetchPetData();
+    }
+    fetchPetData();
   }, []);
 
   console.log("KEVXUE@ ", contact);
@@ -35,13 +35,15 @@ const Contacts = () => {
         <p>Contacts</p>
       </div>
       <div className="contact-tile">
-        <p className="contact-title">{"name"}</p>
+        <p className="contact-title">
+          {contact ? contact["Name"] : "Loading..."}
+        </p>
         <p className="contact-phone">
           <FontAwesomeIcon
             style={{ color: "#000000", fontSize: "18px", paddingRight: "10px" }}
             icon={faPhone}
           />
-          {"phone"}
+          {contact ? contact["Phone"] : "Loading..."}
         </p>
       </div>
       {/* <div className="contact-tile">
