@@ -168,22 +168,20 @@ export async function getPetData(petID, keys) {
 
     let petData = {};
     if (userDocSnap.exists()) {
-      // keys.forEach((element) => {
-      //   petData[element] = userDocSnap[element];
-      // });
-      // console.log("PET DATA: ", petData);
       // TODO: Binary search
-      userDocSnap.data().pets.forEach((element) => {
+      userDocSnap.data().pets.every((element) => {
         console.log("in loop");
-        console.log(element["petID"]);
+        console.log("checking pet id: ", element["petID"]);
         if (element["petID"] == petID) {
           keys.forEach((innerElement) => {
             petData[innerElement] = element[innerElement];
           });
-          console.log("PET DATA: ", petData);
+          console.log("pet data in getPetData inner loop: ", petData);
           return petData;
         }
       });
+      console.log("pet data in getPetData outer loop: ", petData);
+      return petData;
     } else {
       // throw new Error("User does not have any pets!");
       return petData;

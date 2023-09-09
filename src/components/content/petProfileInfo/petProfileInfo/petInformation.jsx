@@ -15,7 +15,7 @@ const PetInformation = () => {
   console.log(window.location.pathname);
   // Currently, petID is always at index 4
   const petID = window.location.pathname.split("/")[4];
-  // getPetData(petID, ["name", "descr"]);
+  // let fakeData = getPetData(petID, ["name", "descr"]);
 
   // const [myPet] = useState({
   //   Name: "Loading...",
