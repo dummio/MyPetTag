@@ -169,22 +169,40 @@ export async function getPetData(petID, keys) {
     let petData = {};
     if (userDocSnap.exists()) {
       // TODO: Binary search
-      userDocSnap.data().pets.every((element) => {
-        console.log("in loop");
-        console.log("checking pet id: ", element["petID"]);
-        if (element["petID"] == petID) {
-          keys.forEach((innerElement) => {
-            petData[innerElement] = element[innerElement];
-          });
-          console.log("pet data in getPetData inner loop: ", petData);
+      // userDocSnap.data().pets.every((element) => {
+      //   console.log("in loop");
+      //   console.log("checking pet id: ", element["petID"]);
+      //   if (element["petID"] == petID) {
+      //     keys.forEach((innerElement) => {
+      //       petData[innerElement] = element[innerElement];
+      //     });
+      //     console.log("pet data in getPetData inner loop: ", petData);
+      //     return petData;
+      //   }
+      // });
+      // console.log("pet data in getPetData outer loop: ", petData);
+      // return petData;
+
+      // for-each loops are misbehaving. Use regular for-loops for now:
+      const petsList = userDocSnap.data().pets;
+      // For now, searching through the entire pets array to find the one
+      // with the right petID is useless, since petIDs are currently the same
+      // as their index in the list. ie, we could just do petsList[petID].
+      // In the future, however, this won't be the case, so we search through
+      // the array.
+      for (let i = 0; i < petsList.length; i++) {
+        const currPet = petsList[i];
+        if (currPet["petID"] == petID) {
+          for (let j = 0; j < keys.length; j++) {
+            const currKey = keys[j];
+            petData[currKey] = currPet[currKey];
+          }
           return petData;
         }
-      });
-      console.log("pet data in getPetData outer loop: ", petData);
-      return petData;
+      }
     } else {
       // throw new Error("User does not have any pets!");
-      return petData;
+      return null;
     }
   } catch (error) {
     console.log("Error occurred getting pet data: ", error);
