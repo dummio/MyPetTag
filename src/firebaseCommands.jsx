@@ -172,20 +172,6 @@ export async function getPetData(petID, keys) {
 
     let petData = {};
     if (userDocSnap.exists()) {
-      // TODO: Binary search
-      // userDocSnap.data().pets.every((element) => {
-      //   console.log("in loop");
-      //   console.log("checking pet id: ", element["petID"]);
-      //   if (element["petID"] == petID) {
-      //     keys.forEach((innerElement) => {
-      //       petData[innerElement] = element[innerElement];
-      //     });
-      //     console.log("pet data in getPetData inner loop: ", petData);
-      //     return petData;
-      //   }
-      // });
-      // console.log("pet data in getPetData outer loop: ", petData);
-      // return petData;
 
       // for-each loops are misbehaving. Use regular for-loops for now:
       const petsList = userDocSnap.data().pets;

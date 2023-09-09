@@ -88,9 +88,8 @@ const PetProfileEditForm = () => {
         weightReg,
         { Name: contactNameReg, Phone: contactPhoneReg },
         {}
-      )
-        .then((response) => {
-          navigate("../../../account", { replace: true });
+      ).then((response) => {
+          setTimeout(navigate("../../account", { replace: true }), 500);
         })
         .catch((err) => {
           console.debug(err);

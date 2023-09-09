@@ -5,7 +5,7 @@
 
 // Import React Modules
 import React, { useState, useEffect } from "react";
-import { isUserAuthenticated } from "../../../firebaseCommands";
+import { isUserAuthenticated, authStateChangedWrapper } from "../../../firebaseCommands";
 
 // Import CSS
 import "./navbar.css";
@@ -13,8 +13,25 @@ import "./navbar.css";
 const NavBar = () => {
   const [hide, show] = useState(false);
   const [isAuthed, setIsAuthed] = useState(false);
+  const [uid, setUid] = useState(null);
 
   useEffect(() => {
+    async function fetchUid() {
+      const uid_ = await authStateChangedWrapper();
+      if(uid_) {
+        setUid(uid_);
+      }
+    }
+
+    fetchUid().then(
+      (result) => {
+        console.log(result);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+
     const getAuthState = async () => {
       const data = await isUserAuthenticated();
       console.log(data);
@@ -25,17 +42,17 @@ const NavBar = () => {
   }, []);
 
   const AuthLinks = () => {
-    console.log("helloworld", isAuthed);
+    const path = `/user/${uid}/account`
     if (isAuthed == true) {
       return (
         <div className="nav-menu">
-          <a href="shop">
+          <a href="/shop">
             <h1 className="nav-menu-item">Shop</h1>
           </a>
           <a href="/logout">
             <h1 className="nav-menu-item">Logout</h1>
           </a>
-          <a href="account">
+          <a href={path}>
             <h1 className="nav-menu-item">Account</h1>
           </a>
         </div>
