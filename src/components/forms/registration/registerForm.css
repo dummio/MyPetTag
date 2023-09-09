@@ -132,13 +132,14 @@
   min-width: 100%;
 }
 
-#error-container {
-  display: none;
+.error-container {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
+  justify-content: left;
   color: red;
   margin-bottom: 23px;
-  visibility: hidden;
+  padding-left: 16px;
+  float: none;
 }
 
 /* 48em = 768px */

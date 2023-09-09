@@ -21,10 +21,10 @@ function useForm(callback) {
             /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
           ).test(value)
         ) {
-          if (required && value.length == 0) {
+          if (required || value.length > 0) {
             setErrors({
               ...errors,
-              email: "Enter a valid email address",
+              email: "Enter a valid email address.",
             });
           }
         } else {
@@ -38,10 +38,10 @@ function useForm(callback) {
             /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/
           ).test(value)
         ) {
-          if (required && value.length == 0) {
+          if (required || value.length > 0) {
             setErrors({
               ...errors,
-              phone: "Enter a valid phone number",
+              phone: "Enter a valid phone number.",
             });
           }
         } else {
@@ -55,11 +55,11 @@ function useForm(callback) {
             /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/
           ).test(value)
         ) {
-          if (required && value.length == 0) {
+          if (required || value.length > 0) {
             setErrors({
               ...errors,
               password:
-                "Password should contain at least 8 characters consisting of uppercase, lowercase, numbers, and a special characters",
+                "Choose a stronger password. Try a mix of letters, numbers, and symbols.",
             });
           }
         } else {
@@ -72,7 +72,7 @@ function useForm(callback) {
           setErrors({
             ...errors,
             [name]:
-              "Field cannot be empty",
+              "Field cannot be empty.",
           });
         } else {
           let newObj = omit(errors, name);
