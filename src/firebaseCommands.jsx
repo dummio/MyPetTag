@@ -24,7 +24,7 @@ import {
  * @param {*} email
  * @param {*} password
  */
-
+ 
 export async function authStateChangedWrapper() {
   return new Promise((resolve, reject) => {
     onAuthStateChanged(auth, (user) => {
