@@ -68,11 +68,13 @@ function useForm(callback) {
         }
         break;
       default:
-        if (required && (value === null || value == undefined || value === "")) {
+        if (
+          required &&
+          (value === null || value == undefined || value === "")
+        ) {
           setErrors({
             ...errors,
-            [name]:
-              "Field cannot be empty.",
+            [name]: "Field cannot be empty.",
           });
         } else {
           let newObj = omit(errors, name);

@@ -84,9 +84,7 @@ const RegisterForm = () => {
           required
           onChange={handleChange}
         />
-        <div className="error-container">
-          { errors.firstname }
-        </div>
+        <div className="error-container">{errors.firstname}</div>
         <label>Last Name</label>
         <input
           className="form-input"
@@ -95,9 +93,7 @@ const RegisterForm = () => {
           required
           onChange={handleChange}
         />
-        <div className="error-container">
-          { errors.lastname }
-        </div>
+        <div className="error-container">{errors.lastname}</div>
         <label>Phone Number</label>
         <input
           className="form-input"
@@ -106,9 +102,7 @@ const RegisterForm = () => {
           required
           onChange={handleChange}
         />
-        <div className="error-container">
-          { errors.phone }
-        </div>
+        <div className="error-container">{errors.phone}</div>
         <label>Email</label>
         <input
           className="form-input"
@@ -117,9 +111,7 @@ const RegisterForm = () => {
           required
           onChange={handleChange}
         />
-        <div className="error-container">
-          { errors.email }
-        </div>
+        <div className="error-container">{errors.email}</div>
         <label>Confirm Email</label>
         <input
           className="form-input"
@@ -129,7 +121,7 @@ const RegisterForm = () => {
           onChange={handleChange}
         />
         <div className="error-container">
-          { values.email !== values.emailConfirm ? "Emails do not match." : null }
+          {values.email !== values.emailConfirm ? "Emails do not match." : null}
         </div>
         <label>
           Password{" "}
@@ -145,9 +137,7 @@ const RegisterForm = () => {
           required
           onChange={handleChange}
         />
-        <div className="error-container">
-          { errors.password }
-        </div>
+        <div className="error-container">{errors.password}</div>
         <label>Confirm Password</label>
         <input
           className="form-input"
@@ -157,7 +147,9 @@ const RegisterForm = () => {
           onChange={handleChange}
         />
         <div className="error-container">
-          { values.password !== values.passwordConfirm ? "Passwords do not match." : null }
+          {values.password !== values.passwordConfirm
+            ? "Passwords do not match."
+            : null}
         </div>
         <div id="register-checkbox-container">
           <input className="form-checkbox" type="checkbox" />
