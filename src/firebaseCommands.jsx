@@ -100,6 +100,8 @@ export async function addPetToDatabase(
   descr_,
   name_,
   sex_,
+  birthyear_,
+  weight_,
   contacts_,
   vets_
 ) {
@@ -120,6 +122,8 @@ export async function addPetToDatabase(
       addr: addr_,
       breed: breed_,
       sex: sex_,
+      birthyear: birthyear_,
+      weight: weight_,
       descr: descr_,
       behavior: behavior_,
       contacts: contacts_,

@@ -36,14 +36,18 @@ const Contacts = () => {
       </div>
       <div className="contact-tile">
         <p className="contact-title">
-          {contact ? contact["Name"] : "Loading..."}
+          {contact ? (contact["Name"] ? contact["Name"] : "N/A") : "Loading..."}
         </p>
         <p className="contact-phone">
           <FontAwesomeIcon
             style={{ color: "#000000", fontSize: "18px", paddingRight: "10px" }}
             icon={faPhone}
           />
-          {contact ? contact["Phone"] : "Loading..."}
+          {contact
+            ? contact["Phone"]
+              ? contact["Phone"]
+              : "N/A"
+            : "Loading..."}
         </p>
       </div>
       {/* <div className="contact-tile">

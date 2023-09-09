@@ -9,7 +9,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 // Import CSS
-import { faPen } from "@fortawesome/free-solid-svg-icons";
+import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default class PetProfileButton extends React.Component {
@@ -28,7 +28,7 @@ export default class PetProfileButton extends React.Component {
         <Link to={`../pet/${this.state.petId}/profile/`}>
           <FontAwesomeIcon
             style={{ fontSize: "20px", marginRight: "15px", cursor: "pointer" }}
-            icon={faPen}
+            icon={faEye}
           />
         </Link>
       </div>

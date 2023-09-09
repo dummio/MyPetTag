@@ -84,16 +84,17 @@ const PetProfileEditForm = () => {
         descriptionReg,
         petNameReg,
         sexReg,
-        {'Name': contactNameReg, 'Phone': contactPhoneReg},
+        birthYearReg,
+        weightReg,
+        { Name: contactNameReg, Phone: contactPhoneReg },
         {}
-      );
-      console.log("added pet");
-      // .then((response) => {
-      //   navigate("/", { replace: true });
-      // })
-      // .catch((err) => {
-      //   console.debug(err);
-      // });
+      )
+        .then((response) => {
+          navigate("../../../account", { replace: true });
+        })
+        .catch((err) => {
+          console.debug(err);
+        });
     }
   };
 
