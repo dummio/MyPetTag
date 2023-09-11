@@ -17,7 +17,9 @@ function useForm(callback) {
   const [errors, setErrors] = useState({});
 
   function validate(event, name, value) {
-    //A function to validate each input values
+    // A function to validate each input values
+    let required = event.target.required;
+
     switch (name) {
       case "email":
         if (
@@ -25,10 +27,12 @@ function useForm(callback) {
             /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
           ).test(value)
         ) {
-          setErrors({
-            ...errors,
-            email: "Enter a valid email address",
-          });
+          if (required || value.length > 0) {
+            setErrors({
+              ...errors,
+              email: "Enter a valid email address.",
+            });
+          }
         } else {
           let newObj = omit(errors, "email");
           setErrors(newObj);
@@ -40,10 +44,12 @@ function useForm(callback) {
             /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/
           ).test(value)
         ) {
-          setErrors({
-            ...errors,
-            phone: "Enter a valid phone number",
-          });
+          if (required || value.length > 0) {
+            setErrors({
+              ...errors,
+              phone: "Enter a valid phone number.",
+            });
+          }
         } else {
           let newObj = omit(errors, "phone");
           setErrors(newObj);
@@ -55,16 +61,31 @@ function useForm(callback) {
             /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/
           ).test(value)
         ) {
-          setErrors({
-            ...errors,
-            password: "Password does not meet requirements",
-          });
+          if (required || value.length > 0) {
+            setErrors({
+              ...errors,
+              password:
+                "Password does not meet requirements.",
+            });
+          }
         } else {
           let newObj = omit(errors, "password");
           setErrors(newObj);
         }
         break;
       default:
+        if (
+          required &&
+          (value === null || value == undefined || value === "")
+        ) {
+          setErrors({
+            ...errors,
+            [name]: "Field cannot be empty.",
+          });
+        } else {
+          let newObj = omit(errors, name);
+          setErrors(newObj);
+        }
         break;
     }
   }
