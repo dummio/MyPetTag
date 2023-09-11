@@ -16,6 +16,8 @@ import { faPen } from "@fortawesome/free-solid-svg-icons";
 //import firebase helper function
 import { getUserData } from "../../../firebaseCommands";
 
+import { useNavigate } from "react-router-dom";
+
 /**
  * Handles all information about a users account filling in and updating data
  * pertaining to the user. Such as (Phone, Email, Name, and Pet Profiles)
@@ -32,10 +34,13 @@ const AccountInformation = () => {
   const [realEmail, setEmail] = useState(null);
   const [realPet, setRealPet] = useState(null);
 
+  const navigate = useNavigate();
   useEffect(() => {
     // Fetch user data when the component mounts
     async function fetchUserData() {
-      const userData = await getUserData();
+      const userData = await getUserData().catch(error => {
+        navigate('/*', {replace: true});
+      });
       if (userData) {
         setUser(userData[0]);
         setEmail(userData[1]);

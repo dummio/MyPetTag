@@ -32,7 +32,7 @@ export async function authStateChangedWrapper() {
         resolve(user.uid);
         console.log(user.uid);
       } else {
-        reject("No User Found");
+        reject(new Error("No User Found"));
       }
     });
   });

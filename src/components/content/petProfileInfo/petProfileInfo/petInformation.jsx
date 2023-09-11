@@ -11,6 +11,8 @@ import PetImg from "../../../../images/pitbull.png";
 import "./petInformation.css";
 import { getPetData } from "../../../../firebaseCommands";
 
+import { useNavigate } from "react-router-dom";
+
 /**
  * Gets all current Pet Information For the Pet Profile.
  *
@@ -19,6 +21,7 @@ import { getPetData } from "../../../../firebaseCommands";
 const PetInformation = () => {
   console.log(window.location.pathname);
   const petID = window.location.pathname.split("/")[4];
+  const navigate = useNavigate();
 
   const [petName, setPetName] = useState(null);
   const [petBreed, setPetBreed] = useState(null);
@@ -40,7 +43,9 @@ const PetInformation = () => {
         "birthyear",
         "weight",
         "sex",
-      ]);
+      ]).catch(error => {
+        navigate('/*', {replace: true});
+      });
       console.log("pet data in useEffect: ", petData);
       if (petData) {
         setPetName(petData["name"]);

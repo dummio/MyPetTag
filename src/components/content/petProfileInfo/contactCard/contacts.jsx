@@ -25,7 +25,9 @@ const Contacts = () => {
 
   useEffect(() => {
     async function fetchPetData() {
-      const petContact = await getPetData(petID, ["contacts"]);
+      const petContact = await getPetData(petID, ["contacts"]).catch(error => {
+        console.log(error);
+      });
       if (petContact) {
         setContact(petContact["contacts"]);
       }
