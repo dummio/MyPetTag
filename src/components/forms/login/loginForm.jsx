@@ -14,6 +14,11 @@ import logo from "../../../images/paw.png";
 import { login } from "../../../firebaseCommands";
 import { useNavigate } from "react-router-dom";
 
+/**
+ * Login form for MyPetTag, checks to see if user exists and is authenticated.
+ *
+ * @returns HTML Element
+ */
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,6 +26,11 @@ const LoginForm = () => {
 
   const navigate = useNavigate();
 
+  /**
+   * Submits form input values to firebase and directs user to account page after auth.
+   *
+   * @param e: event
+   */
   const submitLogin = (e) => {
     e.preventDefault();
     login(email, password).then((response) => {
@@ -35,6 +45,9 @@ const LoginForm = () => {
     });
   };
 
+  /**
+   * Handles Form Input Errors and Displays a relevant error message.
+   */
   const ErrorHandle = () => {
     let errorText = document.getElementById("error-container");
 

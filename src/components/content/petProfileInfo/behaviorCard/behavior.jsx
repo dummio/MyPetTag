@@ -11,6 +11,11 @@ import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./behavior.css";
 
+/**
+ * Gets a Pets Behavior Information
+ *
+ * @returns HTML Element
+ */
 const BehaviorInformation = () => {
   return (
     <div id="behavior-container">

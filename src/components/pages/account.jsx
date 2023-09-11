@@ -10,6 +10,11 @@ import React from "react";
 import NavBar from "../navigation/navbar/navbar";
 import AccountInfo from "../content/accountInfo/accountInfo";
 
+/**
+ * User Account Page
+ *
+ * @returns HTML Element
+ */
 const Account = () => {
   return (
     <React.Fragment>

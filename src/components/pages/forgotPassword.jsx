@@ -10,6 +10,11 @@ import React from "react";
 import NavBar from "../navigation/navbar/navbar";
 import ForgotForm from "../forms/forgotPassword/forgotForm";
 
+/**
+ * Forgot Password Page
+ *
+ * @returns HTML Element
+ */
 const ForgotPassword = () => {
   return (
     <React.Fragment>

@@ -9,6 +9,12 @@ import React from "react";
 // Import CSS
 import "./locationService.css";
 
+/**
+ * Gets Users current location and directs them
+ * to the nearest vet clinic
+ *
+ * @returns HTML Element
+ */
 const LocationService = () => {
   const GetLocation = () => {
     navigator.geolocation.getCurrentPosition((position) => {

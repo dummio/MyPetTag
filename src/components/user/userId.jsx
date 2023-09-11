@@ -7,6 +7,11 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 
+/**
+ * UserID
+ *
+ * @returns UserID
+ */
 const UserId = () => {
   return <Outlet />;
 };

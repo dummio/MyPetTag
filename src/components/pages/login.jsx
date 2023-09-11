@@ -10,7 +10,11 @@ import React from "react";
 import LoginForm from "../forms/login/loginForm";
 import NavBar from "../navigation/navbar/navbar";
 
-// Display Login
+/**
+ * Login Page
+ *
+ * @returns HTML Element
+ */
 const Login = () => {
   return (
     <React.Fragment>

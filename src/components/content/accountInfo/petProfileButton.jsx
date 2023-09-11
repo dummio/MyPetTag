@@ -12,6 +12,10 @@ import { Link } from "react-router-dom";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+/**
+ * Extends react component, dynamically pulls in pet profile ID's
+ * from firebase and fills in relevant information.
+ */
 export default class PetProfileButton extends React.Component {
   constructor(props) {
     super(props);

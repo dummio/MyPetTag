@@ -11,6 +11,11 @@ import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./health.css";
 
+/**
+ * Has Not been Implemented Yet
+ *
+ * @returns HTML Element
+ */
 const HealthInformation = () => {
   return (
     <div id="health-container">

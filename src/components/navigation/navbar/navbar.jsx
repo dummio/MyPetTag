@@ -5,11 +5,19 @@
 
 // Import React Modules
 import React, { useState, useEffect } from "react";
-import { isUserAuthenticated, authStateChangedWrapper } from "../../../firebaseCommands";
+import {
+  isUserAuthenticated,
+  authStateChangedWrapper,
+} from "../../../firebaseCommands";
 
 // Import CSS
 import "./navbar.css";
 
+/**
+ * Shows and displays navbar for MyPetTag App
+ *
+ * @returns HTML Element
+ */
 const NavBar = () => {
   const [hide, show] = useState(false);
   const [isAuthed, setIsAuthed] = useState(false);
@@ -18,7 +26,7 @@ const NavBar = () => {
   useEffect(() => {
     async function fetchUid() {
       const uid_ = await authStateChangedWrapper();
-      if(uid_) {
+      if (uid_) {
         setUid(uid_);
       }
     }
@@ -41,8 +49,13 @@ const NavBar = () => {
     getAuthState();
   }, []);
 
+  /**
+   * Shows links based on user authentication status
+   *
+   * @returns HTML Element
+   */
   const AuthLinks = () => {
-    const path = `/user/${uid}/account`
+    const path = `/user/${uid}/account`;
     if (isAuthed == true) {
       return (
         <div className="nav-menu">

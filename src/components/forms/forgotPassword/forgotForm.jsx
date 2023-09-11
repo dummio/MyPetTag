@@ -13,6 +13,12 @@ import "./forgotForm.css";
 import ForgotConfirmation from "./forgotConfirm";
 import useForm from "../../../Hooks/useForm";
 
+/**
+ * Gets current user based on Firebase auth, Checks to see if user
+ * exists and sends an email to the user to reset password.
+ *
+ * @returns HTML Element
+ */
 const ForgotForm = () => {
   const [canSubmit, setCanSubmit] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -44,7 +50,6 @@ const ForgotForm = () => {
     }
   }, [values, errors]);
 
-
   if (isSubmitted) {
     return <ForgotConfirmation />;
   } else {
@@ -58,9 +63,9 @@ const ForgotForm = () => {
           height={250}
         />
         <div className="company-title">
-        My<span style={{ color: "#75af96" }}>PetTag</span>
-      </div>
-      <form id="forgot-form" onSubmit={handleSubmit}>
+          My<span style={{ color: "#75af96" }}>PetTag</span>
+        </div>
+        <form id="forgot-form" onSubmit={handleSubmit}>
           <label>Email</label>
           <input
             className="form-input"

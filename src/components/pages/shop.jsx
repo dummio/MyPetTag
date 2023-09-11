@@ -12,6 +12,11 @@ import logo from "../../images/paw.png";
 // Import Components
 import NavBar from "../navigation/navbar/navbar";
 
+/**
+ * Shop Page
+ *
+ * @returns HTML Element
+ */
 const Shop = () => {
   return (
     <React.Fragment>

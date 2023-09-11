@@ -16,6 +16,11 @@ import BehaviorInformation from "../content/petProfileInfo/behaviorCard/behavior
 import VetProvider from "../content/petProfileInfo/vetProviderCard/vetProvider";
 import LocationService from "../content/petProfileInfo/locationServices/locationService";
 
+/**
+ * Pet Profile Page
+ *
+ * @returns HTML Element
+ */
 const PetProfile = () => {
   return (
     <React.Fragment>

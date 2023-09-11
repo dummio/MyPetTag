@@ -1,3 +1,8 @@
+/**
+ * MyPetTag - All rights reserved (c) 2023
+ * Maintainers: Ashton Foulger, Kevin Xue, Kyle Charlton, Sameer Khan
+ */
+
 #account-container {
   display: flex;
   flex-direction: column;
@@ -116,40 +121,3 @@
   font-size: 20px;
   margin: 0px 0px 0px 15px;
 }
-
-/**
-* Testing CSS for Desktop and Tablet, Decided that the look
-* did not feel good, commenting out this for now.
-*/
-/* @media (min-width: 48em) {
-  #company-name-container {
-    width: 500px;
-  }
-
-  #user-information-container {
-    width: 500px;
-  }
-
-  #user-name-container {
-    width: 500px;
-    flex-direction: row;
-  }
-
-  #welcome-text {
-    padding-right: 15px;
-  }
-
-  #user-information-container {
-    width: 500px;
-  }
-
-  #pet-profiles-container {
-    width: 300px;
-    justify-content: center;
-    align-items: center;
-  }
-
-  #pet-container-name {
-    width: 300px;
-  }
-} */

@@ -11,6 +11,12 @@ import "./passwordModal.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
 
+/**
+ * Show modal for password requirements.
+ *
+ * @param boolean Show Modal
+ * @returns HTML element
+ */
 const PasswordModal = ({ showModal, setShowModal }) => {
   return (
     <>
@@ -45,7 +51,7 @@ const PasswordModal = ({ showModal, setShowModal }) => {
             <FontAwesomeIcon
               icon={faX}
               className="close-modal"
-              onClick={() => {
+              onClick={(e) => {
                 setShowModal((prev) => !prev);
               }}
             />

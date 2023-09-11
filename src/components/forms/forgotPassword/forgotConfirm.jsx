@@ -9,13 +9,16 @@ import { useNavigate } from "react-router-dom";
 
 // Import CSS
 import logo from "../../../images/paw.png";
+
+/**
+ * Firebase to check to see if user validated email auth in order to reset password
+ * Firebase then sends a auth bool to this page to then render the reset password page
+ * The user should then be able to reset their password.
+ * @returns HTML Element
+ */
 const ForgotConfirmation = () => {
   let email = localStorage.getItem("userEmail");
   localStorage.clear();
-
-  // Firebase to check to see if user validated email auth in order to reset password
-  // Firebase then sends a auth bool to this page to then render the reset password page
-  // The user should then be able to reset their password.
 
   return (
     <React.Fragment>

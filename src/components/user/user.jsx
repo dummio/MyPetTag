@@ -7,8 +7,12 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 
+/**
+ * User
+ *
+ * @returns User Object
+ */
 const User = () => {
-  
   return <Outlet />;
 };
 

@@ -16,6 +16,12 @@ import { faPen } from "@fortawesome/free-solid-svg-icons";
 //import firebase helper function
 import { getUserData } from "../../../firebaseCommands";
 
+/**
+ * Handles all information about a users account filling in and updating data
+ * pertaining to the user. Such as (Phone, Email, Name, and Pet Profiles)
+ *
+ * @returns Account HTML element.
+ */
 const AccountInformation = () => {
   const [user] = useState({
     Name: "Loading...",
@@ -45,13 +51,6 @@ const AccountInformation = () => {
   console.log("USER 2 DATA: ", realUser);
   console.log("rEaL pEt DaTa: ", realPet);
 
-  const pet = [
-    { Key: 0, Name: "Tommy" },
-    { Key: 1, Name: "Mia" },
-    { Key: 2, Name: "Charlie" },
-    { Key: 3, Name: "Evelyn" },
-  ];
-
   return (
     <div id="account-container">
       <div id="company-name-container">
@@ -66,7 +65,6 @@ const AccountInformation = () => {
           height={55}
         />
       </div>
-
       <div id="user-information-container">
         <div id="user-name-container">
           <h1 id="welcome-text">Welcome</h1>
@@ -83,7 +81,6 @@ const AccountInformation = () => {
             />
           </h1>
         </div>
-
         <div id="user-container">
           <div id="user-info">
             <p>

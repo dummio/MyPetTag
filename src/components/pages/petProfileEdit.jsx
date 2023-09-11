@@ -10,7 +10,11 @@ import React from "react";
 import PetProfileEditForm from "../forms/petProfileEdit/petProfileEditForm";
 import NavBar from "../navigation/navbar/navbar";
 
-// Display Register Form
+/**
+ * Pet Edit Page
+ *
+ * @returns HTML Element
+ */
 const PetProfileEdit = () => {
   return (
     <React.Fragment>

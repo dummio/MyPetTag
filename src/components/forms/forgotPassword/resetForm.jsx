@@ -15,6 +15,11 @@ import { faCircleQuestion } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import PasswordModal from "../../modals/passwordModal";
 
+/**
+ * Updates user password in Firebase database.
+ *
+ * @returns HTML Element
+ */
 const ResetForm = () => {
   const [canSubmit, setCanSubmit] = useState(false);
   const [showModal, setShowModal] = useState(false);

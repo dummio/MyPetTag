@@ -9,6 +9,11 @@ import React from "react";
 // Import Components
 import NavBar from "../navigation/navbar/navbar";
 
+/**
+ * Returns 404 page if route does not exists.
+ *
+ * @returns HTML Element
+ */
 const NotFound = () => {
   return (
     <React.Fragment>

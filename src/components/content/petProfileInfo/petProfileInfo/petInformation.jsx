@@ -11,20 +11,14 @@ import PetImg from "../../../../images/pitbull.png";
 import "./petInformation.css";
 import { getPetData } from "../../../../firebaseCommands";
 
+/**
+ * Gets all current Pet Information For the Pet Profile.
+ *
+ * @returns HTML Element
+ */
 const PetInformation = () => {
   console.log(window.location.pathname);
-  // Currently, petID is always at index 4
   const petID = window.location.pathname.split("/")[4];
-  // let fakeData = getPetData(petID, ["name", "descr"]);
-
-  // const [myPet] = useState({
-  //   Name: "Loading...",
-  //   Breed: "Loading...",
-  //   Description: "Loading...",
-  //   Age: "Loading...",
-  //   Weight: "Loading...",
-  //   Sex: "Loading...",
-  // });
 
   const [petName, setPetName] = useState(null);
   const [petBreed, setPetBreed] = useState(null);
@@ -35,13 +29,6 @@ const PetInformation = () => {
 
   const [pet, setPet] = useState({
     Image: PetImg,
-    //   Name: "Tommy",
-    //   Breed: "Domestic Longhair",
-    //   Description:
-    //     "Testing out information text. This text should describe the animal and or provide a brief introduction about the animal.",
-    //   Age: 1,
-    //   Weight: 8,
-    //   Sex: "Male",
   });
 
   useEffect(() => {

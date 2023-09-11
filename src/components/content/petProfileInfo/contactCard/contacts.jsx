@@ -11,9 +11,14 @@ import { faPhone } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./contacts.css";
 
-//import firebase command
+// Import firebase command
 import { getPetData } from "../../../../firebaseCommands";
 
+/**
+ * Gets a Pets contact's information and displays it in a dynamic card.
+ *
+ * @returns HTML Element
+ */
 const Contacts = () => {
   const [contact, setContact] = useState(null);
   const petID = window.location.pathname.split("/")[4];
@@ -50,16 +55,6 @@ const Contacts = () => {
             : "Loading..."}
         </p>
       </div>
-      {/* <div className="contact-tile">
-        <p className="contact-title">{contact2.Name}</p>
-        <p className="contact-phone">
-          <FontAwesomeIcon
-            style={{ color: "#000000", fontSize: "18px", paddingRight: "10px" }}
-            icon={faPhone}
-          />
-          {contact2.Phone}
-        </p>
-      </div> */}
     </div>
   );
 };

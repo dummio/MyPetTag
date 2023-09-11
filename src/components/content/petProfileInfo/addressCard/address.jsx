@@ -11,12 +11,15 @@ import { faHouse } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./address.css";
 
-//import firebase command
+// Import firebase command
 import { getPetData } from "../../../../firebaseCommands";
 
+/**
+ * Grabs information from Firebase to get Pets Home address.
+ *
+ * @returns HTML Element
+ */
 const Address = () => {
-  // console.log(petAddr);
-  // let address = "2500 N Lakeview Drive, Austin TX, 72481";
   const petID = window.location.pathname.split("/")[4];
   const [petAddr, setAddress] = useState(null);
 

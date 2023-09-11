@@ -10,7 +10,11 @@ import React from "react";
 import RegisterForm from "../forms/registration/registerForm";
 import NavBar from "../navigation/navbar/navbar";
 
-// Display Register Form
+/**
+ * Register Page
+ *
+ * @returns HTML Element
+ */
 const Register = () => {
   return (
     <React.Fragment>

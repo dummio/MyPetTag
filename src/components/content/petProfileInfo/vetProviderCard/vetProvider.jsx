@@ -14,28 +14,14 @@ import "./vetProvider.css";
 //import firebase command
 import { getPetData } from "../../../../firebaseCommands";
 
-const SERVER_URI = process.env.REACT_APP_API_URL
-  ? process.env.REACT_APP_API_URL
-  : "http://localhost:3001";
-
+/**
+ * Gets a Pets Vet information to display as part
+ * of the vet provider card in the pet profile.
+ *
+ * @returns HTML Element
+ */
 const VetProvider = () => {
   const [hide, show] = useState(false);
-
-  // const vet = {
-  //   Name: "Dr. Mike",
-  //   Phone: "(385) 498-4500",
-  //   Address: "424 Alpine Highway, Alpine Utah, 84004",
-  //   License: "8569872290",
-  //   Microchip: "21876859009",
-  // };
-
-  // const [vet, setVet] = useState({
-  //   Name: "Dr. Mike",
-  //   Phone: "(385) 498-4500",
-  //   Address: "424 Alpine Highway, Alpine Utah, 84004",
-  //   License: "8569872290",
-  //   Microchip: "21876859009",
-  // });
 
   const [vet, setVet] = useState(null);
   const petID = window.location.pathname.split("/")[4];

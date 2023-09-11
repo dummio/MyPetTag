@@ -16,12 +16,22 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleQuestion } from "@fortawesome/free-solid-svg-icons";
 import PasswordModal from "../../modals/passwordModal";
 
+/**
+ * Registration form allowing new users to register for MyPetTag
+ * Saves all information in firebase and creates a new account.
+ *
+ * @returns HTML element
+ */
 const RegisterForm = () => {
   const [canSubmit, setCanSubmit] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
   const navigate = useNavigate();
 
+  /**
+   * Submits Register Form, and send all information to firebase database
+   * creates user and navigates to pet registration.
+   */
   const formRegister = () => {
     if (canSubmit) {
       addNewUserToDatabase(
