@@ -7,7 +7,7 @@
 import React, { useEffect, useState } from "react";
 
 // Import CSS
-import PetImg from "../../../../images/orange-cat.png";
+import PetImg from "../../../../images/pitbull.png";
 import "./petInformation.css";
 import { getPetData } from "../../../../firebaseCommands";
 
