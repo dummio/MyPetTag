@@ -61,7 +61,7 @@ function useForm(callback) {
             /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/
           ).test(value)
         ) {
-          sif (required || value.length > 0) {
+          if (required || value.length > 0) {
             setErrors({
               ...errors,
               password:
