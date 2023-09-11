@@ -101,7 +101,7 @@ const PetProfileEditForm = () => {
         }
       )
         .then((response) => {
-          setTimeout(navigate("../../account", { replace: true }), 500);
+          setTimeout(navigate("../../account", { replace: true }), 1000);
         })
         .catch((err) => {
           console.debug(err);
