@@ -68,6 +68,11 @@ const PetProfileEditForm = () => {
     descriptionReg,
     breedReg,
     addressReg,
+    vetNameReg,
+    vetAddress,
+    vetPhone,
+    vetLicenseID,
+    vetMicrochipID,
   ]);
 
   useEffect(ErrorHandle, [petNameReg]);
@@ -87,7 +92,13 @@ const PetProfileEditForm = () => {
         birthYearReg,
         weightReg,
         { Name: contactNameReg, Phone: contactPhoneReg },
-        {}
+        {
+          name: vetNameReg,
+          phone: vetPhone,
+          addr: vetAddress,
+          licenseId: vetLicenseID,
+          microchipId: vetMicrochipID,
+        }
       )
         .then((response) => {
           setTimeout(navigate("../../account", { replace: true }), 500);

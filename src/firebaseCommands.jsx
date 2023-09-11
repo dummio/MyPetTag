@@ -116,6 +116,7 @@ export async function addPetToDatabase(
       petID_ = 0;
     }
 
+    console.log("adding pet with vet: ", vets_);
     const pet = {
       petID: petID_,
       name: name_,
@@ -172,7 +173,6 @@ export async function getPetData(petID, keys) {
 
     let petData = {};
     if (userDocSnap.exists()) {
-
       // for-each loops are misbehaving. Use regular for-loops for now:
       const petsList = userDocSnap.data().pets;
       // For now, searching through the entire pets array to find the one
