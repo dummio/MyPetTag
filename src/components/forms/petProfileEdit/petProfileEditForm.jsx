@@ -88,7 +88,8 @@ const PetProfileEditForm = () => {
         weightReg,
         { Name: contactNameReg, Phone: contactPhoneReg },
         {}
-      ).then((response) => {
+      )
+        .then((response) => {
           setTimeout(navigate("../../account", { replace: true }), 500);
         })
         .catch((err) => {
@@ -106,7 +107,11 @@ const PetProfileEditForm = () => {
         width={250}
         height={250}
       />
+      <div className="company-title">
+        My<span style={{ color: "#75af96" }}>PetTag</span>
+      </div>
       <form id="register-form">
+        <h2 id="register-form-title">Register Your Furry Friend</h2>
         <label>Pet Name</label>
         <input
           className="form-input"
