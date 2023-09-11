@@ -20,7 +20,6 @@ const Address = () => {
   const petID = window.location.pathname.split("/")[4];
   const [petAddr, setAddress] = useState(null);
 
-
   useEffect(() => {
     async function fetchPetData() {
       const petAddr = await getPetData(petID, ["addr"]);
@@ -31,7 +30,7 @@ const Address = () => {
     fetchPetData();
     console.log(petAddr);
   }, []);
-  
+
   return (
     <div id="address-container">
       <div className="address-label-container">
@@ -47,7 +46,7 @@ const Address = () => {
           }}
           icon={faHouse}
         />
-        <p className="address-title">{petAddr}</p>
+        <p className="address-title">{petAddr ? petAddr : "N/A"}</p>
       </div>
     </div>
   );

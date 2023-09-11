@@ -33,7 +33,7 @@ const AccountInformation = () => {
       if (userData) {
         setUser(userData[0]);
         setEmail(userData[1]);
-        const userPets = userData[0].pets.map((pet) => ({
+        const userPets = userData[0].pets?.map((pet) => ({
           Key: pet.petID,
           Name: pet.name,
         }));
@@ -115,14 +115,18 @@ const AccountInformation = () => {
         <div id="pet-container-name">
           <h2>Pet Profiles</h2>
         </div>
-        {realPet ? (
-          realPet.map((userPet) => (
-            <PetProfileButton
-              key={userPet.Key}
-              petId={userPet.Key}
-              name={userPet.Name}
-            />
-          ))
+        {realUser ? (
+          realPet ? (
+            realPet.map((userPet) => (
+              <PetProfileButton
+                key={userPet.Key}
+                petId={userPet.Key}
+                name={userPet.Name}
+              />
+            ))
+          ) : (
+            <p>No pets</p>
+          )
         ) : (
           <p>Loading pets...</p>
         )}

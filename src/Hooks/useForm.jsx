@@ -1,3 +1,9 @@
+/**
+ * MyPetTag - All rights reserved (c) 2023
+ * Maintainers: Ashton Foulger, Kevin Xue, Kyle Charlton, Sameer Khan
+ */
+
+// Import React Modules
 import React, { useState } from "react";
 import { omit } from "lodash";
 
@@ -55,11 +61,11 @@ function useForm(callback) {
             /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/
           ).test(value)
         ) {
-          if (required || value.length > 0) {
+          sif (required || value.length > 0) {
             setErrors({
               ...errors,
               password:
-                "Choose a stronger password. Try a mix of letters, numbers, and symbols.",
+                "Password does not meet requirements.",
             });
           }
         } else {

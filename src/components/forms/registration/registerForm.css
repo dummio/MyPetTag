@@ -133,13 +133,8 @@
 }
 
 .error-container {
-  display: flex;
-  align-items: center;
-  justify-content: left;
   color: red;
-  margin-bottom: 23px;
-  padding-left: 16px;
-  float: none;
+  margin: 0px;
 }
 
 /* 48em = 768px */

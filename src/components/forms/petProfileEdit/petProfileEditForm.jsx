@@ -68,6 +68,11 @@ const PetProfileEditForm = () => {
     descriptionReg,
     breedReg,
     addressReg,
+    vetNameReg,
+    vetAddress,
+    vetPhone,
+    vetLicenseID,
+    vetMicrochipID,
   ]);
 
   useEffect(ErrorHandle, [petNameReg]);
@@ -84,16 +89,23 @@ const PetProfileEditForm = () => {
         descriptionReg,
         petNameReg,
         sexReg,
-        {'Name': contactNameReg, 'Phone': contactPhoneReg},
-        {}
-      );
-      console.log("added pet");
-      // .then((response) => {
-      //   navigate("/", { replace: true });
-      // })
-      // .catch((err) => {
-      //   console.debug(err);
-      // });
+        birthYearReg,
+        weightReg,
+        { Name: contactNameReg, Phone: contactPhoneReg },
+        {
+          name: vetNameReg,
+          phone: vetPhone,
+          addr: vetAddress,
+          licenseId: vetLicenseID,
+          microchipId: vetMicrochipID,
+        }
+      )
+        .then((response) => {
+          setTimeout(navigate("../../account", { replace: true }), 500);
+        })
+        .catch((err) => {
+          console.debug(err);
+        });
     }
   };
 
@@ -106,7 +118,11 @@ const PetProfileEditForm = () => {
         width={250}
         height={250}
       />
+      <div className="company-title">
+        My<span style={{ color: "#75af96" }}>PetTag</span>
+      </div>
       <form id="register-form">
+        <h2 id="register-form-title">Register Your Furry Friend</h2>
         <label>Pet Name</label>
         <input
           className="form-input"

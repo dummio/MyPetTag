@@ -124,7 +124,10 @@ const RegisterForm = () => {
           {values.email !== values.emailConfirm ? "Emails do not match." : null}
         </div>
         <label>
-          Password{" "}
+          Password
+          {errors.password ? (
+            <p className="error-container">{errors.password}</p>
+          ) : null}
           <FontAwesomeIcon
             icon={faCircleQuestion}
             onClick={OpenPasswordModal}

@@ -7,7 +7,7 @@
 import React, { useEffect, useState } from "react";
 
 // Import CSS
-import PetImg from "../../../../images/orange-cat.png";
+import PetImg from "../../../../images/pitbull.png";
 import "./petInformation.css";
 import { getPetData } from "../../../../firebaseCommands";
 
@@ -50,8 +50,8 @@ const PetInformation = () => {
         "name",
         "breed",
         "descr",
-        // "age",
-        // "weight",
+        "birthyear",
+        "weight",
         "sex",
       ]);
       console.log("pet data in useEffect: ", petData);
@@ -59,8 +59,8 @@ const PetInformation = () => {
         setPetName(petData["name"]);
         setPetBreed(petData["breed"]);
         setPetDescr(petData["descr"]);
-        setPetAge("888");
-        setPetWeight("888");
+        setPetAge(2023 - petData["birthyear"]);
+        setPetWeight(petData["weight"]);
         setPetSex(petData["sex"]);
       }
     }
@@ -77,24 +77,36 @@ const PetInformation = () => {
         height={157}
       />
       <p className="pet-name">{petName ? petName : "Loading..."}</p>
-      <p className="pet-breed">{petBreed ? petBreed : "Loading..."}</p>
+      <p className="pet-breed">
+        {petName ? (petBreed ? petBreed : "Breed not provided") : "Loading..."}
+      </p>
       <div className="pet-description">
-        <p>{petDescr ? petDescr : "Loading..."}</p>
+        <p>
+          {petName
+            ? petDescr
+              ? petDescr
+              : "Description not provided"
+            : "Loading..."}
+        </p>
       </div>
       <div className="info-boxes-container">
         <div className="info-box">
           <p className="info-box-title">Age</p>
-          <p className="info-box-value">{petAge ? petAge : "Loading..."}</p>
+          <p className="info-box-value">
+            {petName ? (petAge ? petAge : "N/A") : "Loading"}
+          </p>
         </div>
         <div className="info-box">
           <p className="info-box-title">Weight</p>
           <p className="info-box-value">
-            {petWeight ? petWeight + " lbs" : "Loading..."}
+            {petName ? (petWeight ? petWeight + " lbs" : "N/A") : "Loading"}
           </p>
         </div>
         <div className="info-box">
           <p className="info-box-title">Sex</p>
-          <p className="info-box-value">{petSex ? petSex : "Loading..."}</p>
+          <p className="info-box-value">
+            {petName ? (petSex ? petSex : "N/A") : "Loading"}
+          </p>
         </div>
       </div>
     </div>
