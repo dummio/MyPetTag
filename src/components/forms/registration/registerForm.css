@@ -132,13 +132,9 @@
   min-width: 100%;
 }
 
-#error-container {
-  display: none;
-  align-items: center;
-  justify-content: center;
+.error-container {
   color: red;
-  margin-bottom: 23px;
-  visibility: hidden;
+  margin: 0px;
 }
 
 /* 48em = 768px */

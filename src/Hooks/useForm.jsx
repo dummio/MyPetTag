@@ -51,8 +51,7 @@ function useForm(callback) {
         ) {
           setErrors({
             ...errors,
-            password:
-              "Password should contain at least 8 characters consisting of uppercase, lowercase, numbers, and a special characters",
+            password: "Password does not meet requirements",
           });
         } else {
           let newObj = omit(errors, "password");

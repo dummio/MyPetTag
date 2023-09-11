@@ -47,7 +47,6 @@ const RegisterForm = () => {
   const { handleChange, values, errors, handleSubmit } = useForm(formRegister);
 
   useEffect(() => {
-    let errorText = document.getElementById("error-container");
     if (
       Object.keys(errors).length === 0 &&
       Object.keys(values).length !== 0 &&
@@ -55,21 +54,8 @@ const RegisterForm = () => {
       values.password === values.passwordConfirm
     ) {
       setCanSubmit(true);
-      errorText.innerHTML = "";
-      errorText.style.display = "flex";
-      errorText.style.visibility = "hidden";
     } else {
       setCanSubmit(false);
-
-      errorText.innerHTML = "";
-      for (let key in errors) errorText.innerHTML += errors[key] + "<br/>";
-      if (values.email !== values.emailConfirm)
-        errorText.innerHTML += "Emails do not match<br/>";
-      if (values.password !== values.passwordConfirm)
-        errorText.innerHTML += "Passwords do not match<br/>";
-
-      errorText.style.display = "flex";
-      errorText.style.visibility = "visible";
     }
   }, [values, errors]);
 
@@ -106,7 +92,12 @@ const RegisterForm = () => {
           required
           onChange={handleChange}
         />
-        <label>Phone Number</label>
+        <label>
+          Phone Number
+          {errors.phone ? (
+            <p className="error-container">{errors.phone}</p>
+          ) : null}
+        </label>
         <input
           className="form-input"
           type="text"
@@ -114,7 +105,12 @@ const RegisterForm = () => {
           required
           onChange={handleChange}
         />
-        <label>Email</label>
+        <label>
+          Email
+          {errors.email ? (
+            <p className="error-container">{errors.email}</p>
+          ) : null}
+        </label>
         <input
           className="form-input"
           type="email"
@@ -122,7 +118,12 @@ const RegisterForm = () => {
           required
           onChange={handleChange}
         />
-        <label>Confirm Email</label>
+        <label>
+          Confirm Email
+          {values.emailConfirm !== values.email ? (
+            <p className="error-container">Emails do not match</p>
+          ) : null}
+        </label>
         <input
           className="form-input"
           type="email"
@@ -131,7 +132,10 @@ const RegisterForm = () => {
           onChange={handleChange}
         />
         <label>
-          Password{" "}
+          Password
+          {errors.password ? (
+            <p className="error-container">{errors.password}</p>
+          ) : null}
           <FontAwesomeIcon
             icon={faCircleQuestion}
             onClick={OpenPasswordModal}
@@ -144,7 +148,12 @@ const RegisterForm = () => {
           required
           onChange={handleChange}
         />
-        <label>Confirm Password</label>
+        <label>
+          Confirm Password
+          {values.passwordConfirm !== values.password ? (
+            <p className="error-container">Passwords do not match</p>
+          ) : null}
+        </label>
         <input
           className="form-input"
           type="password"
@@ -155,9 +164,6 @@ const RegisterForm = () => {
         <div id="register-checkbox-container">
           <input className="form-checkbox" type="checkbox" />
           <p>Allow MyPetTag to send you email alerts.</p>
-        </div>
-        <div id="error-container">
-          <p></p>
         </div>
         <input
           id="register-btn"
