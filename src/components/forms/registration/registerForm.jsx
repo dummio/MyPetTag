@@ -87,6 +87,7 @@ const RegisterForm = () => {
       </div>
       <form id="register-form" onSubmit={handleSubmit}>
         <label>First Name</label>
+        <div className="error-container">{errors.firstname}</div>
         <input
           className="form-input"
           type="text"
@@ -94,8 +95,8 @@ const RegisterForm = () => {
           required
           onChange={handleChange}
         />
-        <div className="error-container">{errors.firstname}</div>
         <label>Last Name</label>
+        <div className="error-container">{errors.lastname}</div>
         <input
           className="form-input"
           type="text"
@@ -103,8 +104,8 @@ const RegisterForm = () => {
           required
           onChange={handleChange}
         />
-        <div className="error-container">{errors.lastname}</div>
         <label>Phone Number</label>
+        <div className="error-container">{errors.phone}</div>
         <input
           className="form-input"
           type="text"
@@ -112,8 +113,8 @@ const RegisterForm = () => {
           required
           onChange={handleChange}
         />
-        <div className="error-container">{errors.phone}</div>
         <label>Email</label>
+        <div className="error-container">{errors.email}</div>
         <input
           className="form-input"
           type="email"
@@ -121,8 +122,10 @@ const RegisterForm = () => {
           required
           onChange={handleChange}
         />
-        <div className="error-container">{errors.email}</div>
         <label>Confirm Email</label>
+        <div className="error-container">
+          {values.email !== values.emailConfirm ? "Emails do not match." : null}
+        </div>
         <input
           className="form-input"
           type="email"
@@ -130,19 +133,14 @@ const RegisterForm = () => {
           required
           onChange={handleChange}
         />
-        <div className="error-container">
-          {values.email !== values.emailConfirm ? "Emails do not match." : null}
-        </div>
         <label>
-          Password
-          {errors.password ? (
-            <p className="error-container">{errors.password}</p>
-          ) : null}
+          Password{" "}
           <FontAwesomeIcon
             icon={faCircleQuestion}
             onClick={OpenPasswordModal}
           />
         </label>
+        <div className="error-container">{errors.password}</div>
         <input
           className="form-input"
           type="password"
@@ -150,8 +148,12 @@ const RegisterForm = () => {
           required
           onChange={handleChange}
         />
-        <div className="error-container">{errors.password}</div>
         <label>Confirm Password</label>
+        <div className="error-container">
+          {values.password !== values.passwordConfirm
+            ? "Passwords do not match."
+            : null}
+        </div>
         <input
           className="form-input"
           type="password"
@@ -159,11 +161,6 @@ const RegisterForm = () => {
           required
           onChange={handleChange}
         />
-        <div className="error-container">
-          {values.password !== values.passwordConfirm
-            ? "Passwords do not match."
-            : null}
-        </div>
         <div id="register-checkbox-container">
           <input className="form-checkbox" type="checkbox" />
           <p>Allow MyPetTag to send you email alerts.</p>
