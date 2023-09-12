@@ -18,13 +18,9 @@ import {
 } from "firebase/auth";
 
 /**
- * This function is to be used when a new user registers
- * @param {*} firstname_
- * @param {*} lastname_
- * @param {*} email
- * @param {*} password
+ * A wrapper for Firebase's authentication
+ * @returns A promise for whether a user is authenticated
  */
-
 export async function authStateChangedWrapper() {
   return new Promise((resolve, reject) => {
     onAuthStateChanged(auth, (user) => {
@@ -38,6 +34,13 @@ export async function authStateChangedWrapper() {
   });
 }
 
+/**
+ * This function is to be used when a new user registers
+ * @param {*} firstname_
+ * @param {*} lastname_
+ * @param {*} email
+ * @param {*} password
+ */
 export async function addNewUserToDatabase(
   firstname_,
   lastname_,
@@ -68,6 +71,12 @@ export async function addNewUserToDatabase(
   }
 }
 
+/**
+ * Logs the user in, updates authentication state
+ * @param {*} _email
+ * @param {*} _password
+ * @returns
+ */
 export async function login(_email, _password) {
   try {
     const userCredential = await signInWithEmailAndPassword(
@@ -83,6 +92,9 @@ export async function login(_email, _password) {
   }
 }
 
+/**
+ * Logs the user out, updates authentication status
+ */
 export async function logout() {
   signOut(auth)
     .then(() => {
@@ -93,6 +105,20 @@ export async function logout() {
     });
 }
 
+/**
+ * Checks the user authentication status. If user is logged in, adds
+ * the pet to the corresonding user
+ * @param {*} addr_
+ * @param {*} behavior_
+ * @param {*} breed_
+ * @param {*} descr_
+ * @param {*} name_
+ * @param {*} sex_
+ * @param {*} birthyear_
+ * @param {*} weight_
+ * @param {*} contacts_ A dictionary with keys "Name" and "Number"
+ * @param {*} vets_ A dictionary with keys "name", "phone", "addr", "licenseId", "microchipId"
+ */
 export async function addPetToDatabase(
   addr_,
   behavior_,
@@ -147,6 +173,10 @@ export async function addPetToDatabase(
   }
 }
 
+/**
+ * Returns user data to populate user home page
+ * @returns
+ */
 export async function getUserData() {
   const uid_t = await authStateChangedWrapper();
   try {
@@ -165,6 +195,12 @@ export async function getUserData() {
   }
 }
 
+/**
+ * Returns pet data to populate pet profile page
+ * @param {*} petID
+ * @param {*} keys The pet fields to provide
+ * @returns
+ */
 export async function getPetData(petID, keys) {
   const uid = await authStateChangedWrapper();
   try {
@@ -199,6 +235,10 @@ export async function getPetData(petID, keys) {
   }
 }
 
+/**
+ *
+ * @returns Determines whether user is authenticated
+ */
 export async function isUserAuthenticated() {
   try {
     const uid_t = await authStateChangedWrapper();
@@ -210,6 +250,10 @@ export async function isUserAuthenticated() {
   }
 }
 
+/**
+ * Method called when password is reset
+ * @param {*} email
+ */
 export function sendPasswordReset(email) {
   sendPasswordResetEmail(auth, email)
     .then(() => {
