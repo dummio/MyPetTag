@@ -264,3 +264,7 @@ export function sendPasswordReset(email) {
       return error;
     });
 }
+
+export async function getCurrentUserEmail() {
+  return await auth.currentUser.email;  
+}

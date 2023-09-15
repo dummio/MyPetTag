@@ -9,6 +9,10 @@ import React from "react";
 // Import CSS
 import "./locationService.css";
 
+//import emailJSCommands
+import { sendFoundPetEmail } from "../../../../emailJSCommands";
+
+
 /**
  * Gets Users current location and directs them
  * to the nearest vet clinic
@@ -21,7 +25,8 @@ const LocationService = () => {
       let lat = position.coords.latitude;
       let lon = position.coords.longitude;
 
-      alert("Your location is " + lat + ", " + lon);
+      sendFoundPetEmail(lat, lon);
+      alert("You've alerted the owner that their pet was found at: '" + lat + ", " + lon);
     });
   };
 
