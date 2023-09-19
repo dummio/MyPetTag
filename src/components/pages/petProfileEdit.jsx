@@ -7,7 +7,7 @@
 import React from "react";
 
 // Import Components
-import PetProfileEditForm from "../forms/petProfileEdit/petProfileEditForm";
+import PetEdit from "../forms/petEdit/petEdit";
 import NavBar from "../navigation/navbar/navbar";
 
 /**
@@ -19,7 +19,7 @@ const PetProfileEdit = () => {
   return (
     <React.Fragment>
       <NavBar />
-      <PetProfileEditForm />
+      <PetEdit />
     </React.Fragment>
   );
 };

@@ -3,11 +3,11 @@
  * Maintainers: Ashton Foulger, Kevin Xue, Kyle Charlton, Sameer Khan
  */
 
-// Import React
+// Import React Modules
 import React, { useState } from "react";
 
 // Import CSS
-import "./petCreate.css";
+import "./petEdit.css";
 import logo from "../../../images/paw.png";
 import SelectStyles from "../selectStyles/selectStyles";
 import SelectMultiStyles from "../selectStyles/selectMultiStyles";
@@ -19,45 +19,28 @@ import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
 
-const PetCreate = () => {
+/**
+ * Displays Pet Profile Information that is editable by the user.
+ * Once the user saves changes it writes the new changes to
+ * firebase and updates the pet profile.
+ *
+ * @returns HTML Element
+ */
+const PetEdit = () => {
   // Render States
   const [petInfoHide, setPetInfoHide] = useState(true);
   const [petHealthHide, setPetHealthHide] = useState(false);
   const [petBehaviorHide, setPetBehaviorHide] = useState(false);
   const [petVetHide, setPetVetHide] = useState(false);
 
-  // Select Arrays
-  const PetTypes = [
-    { value: "Dog", label: "Dog" },
-    { value: "Cat", label: "Cat" },
-    { value: "Other", label: "Other" },
-  ];
-  const PetSex = [
-    { value: "Male", label: "Male" },
-    { value: "Neutered Male", label: "Neutered Male" },
-    { value: "Female", label: "Female" },
-    { value: "Spayed Female", label: "Spayed Female" },
-  ];
-  const PetBreeds = [];
-  const PetAgressions = [
-    { value: "Men", label: "Men" },
-    { value: "Women", label: "Women" },
-    { value: "Children", label: "Children" },
-    { value: "Cats", label: "Cats" },
-    { value: "Dogs", label: "Dogs" },
-    { value: "Other", label: "Other" },
-  ];
-  const PetGoodWith = [
-    { value: "Men", label: "Men" },
-    { value: "Women", label: "Women" },
-    { value: "Children", label: "Children" },
-    { value: "Cats", label: "Cats" },
-    { value: "Dogs", label: "Dogs" },
-    { value: "Other", label: "Other" },
-  ];
+  // Temp Array
+  const options = [];
+
+  // Temp Name
+  const pet = "pet-name";
 
   return (
-    <div id="create-container">
+    <div id="edit-container">
       <img
         className="logo"
         src={logo}
@@ -68,8 +51,8 @@ const PetCreate = () => {
       <div className="company-title">
         My<span style={{ color: "#75af96" }}>PetTag</span>
       </div>
-      <form id="create-form">
-        <h1 id="create-form-title">Add New Pet</h1>
+      <form id="edit-form">
+        <h1 id="edit-form-title">Editing {pet}</h1>
         <h2>
           Pet Information{" "}
           <FontAwesomeIcon
@@ -94,7 +77,7 @@ const PetCreate = () => {
               isSearchable
               closeMenuOnSelect={true}
               styles={SelectStyles}
-              options={PetTypes}
+              options={options}
             />
             <label>Pet Breed</label>
             <CreatableSelect
@@ -102,7 +85,7 @@ const PetCreate = () => {
               isSearchable
               closeMenuOnSelect={true}
               styles={SelectStyles}
-              options={PetBreeds}
+              options={options}
             />
             <label>Pet Description</label>
             <textarea
@@ -129,7 +112,7 @@ const PetCreate = () => {
               isSearchable
               closeMenuOnSelect={true}
               styles={SelectStyles}
-              options={PetSex}
+              options={options}
             />
             <div id="form-contacts-container">
               <label>Contacts</label>
@@ -174,7 +157,7 @@ const PetCreate = () => {
               isSearchable
               closeMenuOnSelect={false}
               styles={SelectMultiStyles}
-              options={PetAgressions}
+              options={options}
             />
             <label>Health Conditions</label>
             <CreatableSelect
@@ -183,7 +166,7 @@ const PetCreate = () => {
               isSearchable
               closeMenuOnSelect={false}
               styles={SelectMultiStyles}
-              options={PetAgressions}
+              options={options}
             />
             <label>Medications</label>
             <CreatableSelect
@@ -192,7 +175,7 @@ const PetCreate = () => {
               isSearchable
               closeMenuOnSelect={false}
               styles={SelectMultiStyles}
-              options={PetAgressions}
+              options={options}
             />
             <label>Allergies</label>
             <CreatableSelect
@@ -201,7 +184,7 @@ const PetCreate = () => {
               isSearchable
               closeMenuOnSelect={false}
               styles={SelectMultiStyles}
-              options={PetAgressions}
+              options={options}
             />
             <label>Additional Information</label>
             <textarea
@@ -235,7 +218,7 @@ const PetCreate = () => {
               isSearchable
               closeMenuOnSelect={false}
               styles={SelectMultiStyles}
-              options={PetAgressions}
+              options={options}
             />
             <label>Good With</label>
             <CreatableSelect
@@ -244,7 +227,7 @@ const PetCreate = () => {
               isSearchable
               closeMenuOnSelect={false}
               styles={SelectMultiStyles}
-              options={PetGoodWith}
+              options={options}
             />
             <label>Additional Information</label>
             <textarea
@@ -294,16 +277,25 @@ const PetCreate = () => {
             />
           </>
         )}
-        <input
-          id="create-btn"
-          type="submit"
-          value="Create Pet"
-          onClick={() => {}}
-          disabled={() => {}}
-        />
+        <div id="edit-form-btns">
+          <input
+            id="cancel-btn"
+            type="submit"
+            value="Cancel"
+            onClick={() => {}}
+            disabled={() => {}}
+          />
+          <input
+            id="save-btn"
+            type="submit"
+            value="Save"
+            onClick={() => {}}
+            disabled={() => {}}
+          />
+        </div>
       </form>
     </div>
   );
 };
 
-export default PetCreate;
+export default PetEdit;

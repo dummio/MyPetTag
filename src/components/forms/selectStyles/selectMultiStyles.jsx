@@ -4,12 +4,13 @@
  */
 
 /**
- * Component sets style props for react-select selectors in pet create form.
+ * Component sets style props for react-select multi selectors in pet create form.
  */
-const SelectStyles = {
+const SelectMultiStyles = {
+  container: (provided, state) => ({ ...provided }),
   control: (provided, state) => ({
     ...provided,
-    height: "50px",
+    minHeight: "50px",
     backgroundColor: "#75af96",
     borderRadius: "16px",
     border: "none",
@@ -20,14 +21,7 @@ const SelectStyles = {
     fontSize: "16px",
     color: "black",
   }),
-  placeholder: (provided, state) => ({
-    ...provided,
-    color: "#354f44",
-  }),
-  singleValue: (provided, state) => ({
-    ...provided,
-    color: "inherit",
-  }),
+  placeholder: (provided, state) => ({ ...provided, color: "#354f44" }),
   indicatorSeparator: (provided, state) => ({
     ...provided,
     backgroundColor: "black",
@@ -45,15 +39,33 @@ const SelectStyles = {
   }),
   option: (provided, state) => ({
     ...provided,
-    color: state.isSelected ? "black" : "",
-    borderRadius: state.isSelected ? "6px" : "",
-    backgroundColor: state.isSelected ? "#d4d4d4" : "",
+    color: "black",
+    borderRadius: "6px",
+    backgroundColor: "none",
     "&:hover": {
       backgroundColor: "#d4d4d4",
       borderRadius: "10px",
       color: "inherit",
     },
   }),
+  multiValue: (provided, state) => ({
+    ...provided,
+    backgroundColor: "#0f5738",
+    borderRadius: "12px",
+    color: "white",
+  }),
+  multiValueLabel: (provided, state) => ({
+    ...provided,
+    color: "inherit",
+    paddingLeft: "10px",
+  }),
+  multiValueRemove: (provided, state) => ({
+    ...provided,
+    color: "inherit",
+    "&:hover": {
+      backgroundColor: "transparent",
+    },
+  }),
 };
 
-export default SelectStyles;
+export default SelectMultiStyles;
