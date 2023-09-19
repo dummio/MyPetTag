@@ -4,7 +4,9 @@
  */
 
 // Import React
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { addPetToDatabase } from "../../../firebaseCommands";
+import { useNavigate } from "react-router-dom";
 
 // Import CSS
 import "./petCreate.css";
@@ -25,6 +27,128 @@ const PetCreate = () => {
   const [petHealthHide, setPetHealthHide] = useState(false);
   const [petBehaviorHide, setPetBehaviorHide] = useState(false);
   const [petVetHide, setPetVetHide] = useState(false);
+
+  const [petName, setPetName] = useState(null);
+  const [petSpecies, setPetSpecies] = useState(null);
+  const [petBreed, setPetBreed] = useState(null);
+  const [petDescr, setPetDescr] = useState(null);
+  const [petBirthDate, setPetBirthDate] = useState(null);
+  const [petWeight, setPetWeight] = useState(null);
+  const [petSex, setPetSex] = useState(null);
+  const [petContactName, setPetContactName] = useState(null);
+  const [petContactPhone, setPetContactPhone] = useState(null);
+  const [petAddress, setPetAddress] = useState(null);
+  const [petVaccines, setPetVaccines] = useState([]);
+  const [petConditions, setPetConditions] = useState([]);
+  const [petMeds, setPetMeds] = useState([]);
+  const [petAllergies, setPetAllergies] = useState([]);
+  const [petHealthInfo, setPetHealthInfo] = useState(null);
+  const [petAggressions, setPetAggressions] = useState([]);
+  const [petGoodWith, setPetGoodWith] = useState([]);
+  const [petBehaviorInfo, setPetBehaviorInfo] = useState(null);
+  const [clinicName, setClinicName] = useState(null);
+  const [clinicAddr, setClinicAddr] = useState(null);
+  const [clinicPhone, setClinicPhone] = useState(null);
+  const [vetName, setVetName] = useState(null);
+  const [microchipId, setMicrochipId] = useState(null);
+
+  const [canSubmit, setCanSubmit] = useState(false);
+
+  const ValidateForm = () => {
+    let isValid = false;
+
+    if (petName) isValid = true;
+
+    setCanSubmit(isValid);
+  };
+
+  const ErrorHandle = () => {
+    let errorText = document.getElementById("error-container");
+
+    if (petName === "") {
+      if (errorText !== null) {
+        errorText.innerHTML = "Pet name cannot be empty!";
+        errorText.style.display = "flex";
+        errorText.style.visibility = "visible";
+      }
+    } else {
+      if (errorText !== null) {
+        errorText.style.display = "none";
+        errorText.style.visibility = "hidden";
+      }
+    }
+  };
+
+  useEffect(ValidateForm, [
+    petName,
+    petSpecies,
+    petBreed,
+    petDescr,
+    petBirthDate,
+    petWeight,
+    petSex,
+    petContactName,
+    petContactPhone,
+    petAddress,
+    petVaccines,
+    petConditions,
+    petMeds,
+    petAllergies,
+    petHealthInfo,
+    petAggressions,
+    petGoodWith,
+    petBehaviorInfo,
+    { Name: petContactName, Phone: petContactPhone },
+    {
+      clinicName: clinicName,
+      addr: clinicAddr,
+      phone: clinicPhone,
+      vetName: vetName,
+      microchipId: microchipId,
+    },
+  ]);
+
+  useEffect(ErrorHandle, [petName]);
+
+  const navigate = useNavigate();
+
+  const UpdateProfile = (e) => {
+    e.preventDefault();
+    if (canSubmit) {
+      addPetToDatabase(
+        petName,
+        petSpecies,
+        petBreed,
+        petDescr,
+        petBirthDate,
+        petWeight,
+        petSex,
+        petAddress,
+        petVaccines,
+        petConditions,
+        petMeds,
+        petAllergies,
+        petHealthInfo,
+        petAggressions,
+        petGoodWith,
+        petBehaviorInfo,
+        { Name: petContactName, Phone: petContactPhone },
+        {
+          clinicName: clinicName,
+          addr: clinicAddr,
+          phone: clinicPhone,
+          vetName: vetName,
+          microchipId: microchipId,
+        }
+      )
+        .then((response) => {
+          setTimeout(navigate("../../account", { replace: true }), 1000);
+        })
+        .catch((err) => {
+          console.debug(err);
+        });
+    }
+  };
 
   // Select Arrays
   const PetTypes = [
@@ -87,7 +211,13 @@ const PetCreate = () => {
         {petInfoHide && (
           <>
             <label>Pet Name</label>
-            <input className="form-input" type="text" />
+            <input
+              className="form-input"
+              type="text"
+              onChange={(e) => {
+                setPetName(e.target.value);
+              }}
+            />
             <label>Pet Species</label>
             <Select
               isClearable
@@ -95,6 +225,14 @@ const PetCreate = () => {
               closeMenuOnSelect={true}
               styles={SelectStyles}
               options={PetTypes}
+              onChange={(e) => {
+                if (e) {
+                  console.log("value: ", e.value);
+                  setPetSpecies(e.value);
+                  // console.log("option ", selectedOption);
+                  console.log("species: ", petSpecies);
+                }
+              }}
             />
             <label>Pet Breed</label>
             <CreatableSelect
@@ -103,6 +241,9 @@ const PetCreate = () => {
               closeMenuOnSelect={true}
               styles={SelectStyles}
               options={PetBreeds}
+              onChange={(e) => {
+                setPetBreed(e.value);
+              }}
             />
             <label>Pet Description</label>
             <textarea
@@ -116,12 +257,18 @@ const PetCreate = () => {
               className="form-input"
               type="date"
               style={{ appearance: "textfield" }}
+              onChange={(e) => {
+                setPetBirthDate(e.target.value);
+              }}
             />
             <label>Pet Weight</label>
             <input
               className="form-input"
               type="number"
               style={{ appearance: "textfield" }}
+              onChange={(e) => {
+                setPetWeight(e.target.value);
+              }}
             />
             <label>Pet Sex</label>
             <Select
@@ -130,17 +277,30 @@ const PetCreate = () => {
               closeMenuOnSelect={true}
               styles={SelectStyles}
               options={PetSex}
+              onChange={(e) => {
+                setPetSex(e.value);
+              }}
             />
             <div id="form-contacts-container">
               <label>Contacts</label>
               <FontAwesomeIcon icon={faPlus} style={{ height: "25px" }} />
             </div>
             {/* {Wrap in map to dynamically add more contacts} */}
-            <input className="form-input" type="text" placeholder="Name" />
+            <input
+              className="form-input"
+              type="text"
+              placeholder="Name"
+              onChange={(e) => {
+                setPetContactName(e.target.value);
+              }}
+            />
             <input
               className="form-input"
               type="text"
               placeholder="Phone Number"
+              onChange={(e) => {
+                setPetContactPhone(e.target.value);
+              }}
             />
             {/*------------------------------------------------------------------*/}
             <label>Address</label>
@@ -148,6 +308,9 @@ const PetCreate = () => {
               className="form-input"
               type="text"
               placeholder="1234 Park Ave, City, TX 12345"
+              onChange={(e) => {
+                setPetAddress(e.target.value);
+              }}
             />
           </>
         )}
@@ -174,7 +337,10 @@ const PetCreate = () => {
               isSearchable
               closeMenuOnSelect={false}
               styles={SelectMultiStyles}
-              options={PetAgressions}
+              onChange={(e) => {
+                setPetVaccines([]);
+                e.forEach((item) => petVaccines.push(item.value));
+              }}
             />
             <label>Health Conditions</label>
             <CreatableSelect
@@ -184,6 +350,10 @@ const PetCreate = () => {
               closeMenuOnSelect={false}
               styles={SelectMultiStyles}
               options={PetAgressions}
+              onChange={(e) => {
+                setPetConditions([]);
+                e.forEach((item) => petConditions.push(item.value));
+              }}
             />
             <label>Medications</label>
             <CreatableSelect
@@ -193,6 +363,10 @@ const PetCreate = () => {
               closeMenuOnSelect={false}
               styles={SelectMultiStyles}
               options={PetAgressions}
+              onChange={(e) => {
+                setPetMeds([]);
+                e.forEach((item) => petMeds.push(item.value));
+              }}
             />
             <label>Allergies</label>
             <CreatableSelect
@@ -202,6 +376,10 @@ const PetCreate = () => {
               closeMenuOnSelect={false}
               styles={SelectMultiStyles}
               options={PetAgressions}
+              onChange={(e) => {
+                setPetAllergies([]);
+                e.forEach((item) => petAllergies.push(item.value));
+              }}
             />
             <label>Additional Information</label>
             <textarea
@@ -209,6 +387,9 @@ const PetCreate = () => {
               name="description"
               rows={5}
               cols={50}
+              onChange={(e) => {
+                setPetHealthInfo(e.target.value);
+              }}
             />
           </>
         )}
@@ -236,6 +417,10 @@ const PetCreate = () => {
               closeMenuOnSelect={false}
               styles={SelectMultiStyles}
               options={PetAgressions}
+              onChange={(e) => {
+                setPetAggressions([]);
+                e.forEach((item) => petAggressions.push(item.value));
+              }}
             />
             <label>Good With</label>
             <CreatableSelect
@@ -245,6 +430,10 @@ const PetCreate = () => {
               closeMenuOnSelect={false}
               styles={SelectMultiStyles}
               options={PetGoodWith}
+              onChange={(e) => {
+                setPetGoodWith([]);
+                e.forEach((item) => petGoodWith.push(item.value));
+              }}
             />
             <label>Additional Information</label>
             <textarea
@@ -252,6 +441,9 @@ const PetCreate = () => {
               name="description"
               rows={5}
               cols={50}
+              onChange={(e) => {
+                setPetBehaviorInfo(e.target.value);
+              }}
             />
           </>
         )}
@@ -275,22 +467,41 @@ const PetCreate = () => {
               className="form-input"
               type="text"
               placeholder="Clinic Name"
+              onChange={(e) => {
+                setClinicName(e.target.value);
+              }}
             />
             <input
               className="form-input"
               type="text"
               placeholder="Clinic Address"
+              onChange={(e) => {
+                setClinicAddr(e.target.value);
+              }}
             />
             <input
               className="form-input"
               type="text"
               placeholder="Clinic Phone #"
+              onChange={(e) => {
+                setClinicPhone(e.target.value);
+              }}
             />
-            <input className="form-input" type="text" placeholder="Vet Name" />
+            <input
+              className="form-input"
+              type="text"
+              placeholder="Vet Name"
+              onChange={(e) => {
+                setVetName(e.target.value);
+              }}
+            />
             <input
               className="form-input"
               type="text"
               placeholder="Microchip ID"
+              onChange={(e) => {
+                setMicrochipId(e.target.value);
+              }}
             />
           </>
         )}
@@ -298,8 +509,8 @@ const PetCreate = () => {
           id="create-btn"
           type="submit"
           value="Create Pet"
-          onClick={() => {}}
-          disabled={() => {}}
+          onClick={UpdateProfile}
+          disabled={!canSubmit}
         />
       </form>
     </div>

@@ -44,10 +44,10 @@ const App = () => {
               <Route path="edit" element={<PetProfileEdit />} />
             </Route>
             <Route path="account" element={<Account />} />
+            <Route path="create" element={<PetRegister />} />
           </Route>
         </Route>
         <Route path="*" element={<NotFound />} />
-        <Route path="/create" element={<PetRegister />} />
       </Routes>
     </div>
   );
