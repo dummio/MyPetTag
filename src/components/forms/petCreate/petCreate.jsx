@@ -230,10 +230,9 @@ const PetCreate = () => {
               options={PetTypes}
               onChange={(e) => {
                 if (e) {
-                  console.log("value: ", e.value);
                   setPetSpecies(e.value);
-                  // console.log("option ", selectedOption);
-                  console.log("species: ", petSpecies);
+                } else {
+                  setPetSpecies(null);
                 }
               }}
             />
@@ -245,7 +244,11 @@ const PetCreate = () => {
               styles={SelectStyles}
               options={PetBreeds}
               onChange={(e) => {
-                setPetBreed(e.value);
+                if (e) {
+                  setPetBreed(e.value);
+                } else {
+                  setPetBreed(null);
+                }
               }}
             />
             <label>Pet Description</label>
@@ -284,7 +287,11 @@ const PetCreate = () => {
               styles={SelectStyles}
               options={PetSex}
               onChange={(e) => {
-                setPetSex(e.value);
+                if (e) {
+                  setPetSex(e.value);
+                } else {
+                  setPetSex(null);
+                }
               }}
             />
             <div id="form-contacts-container">
