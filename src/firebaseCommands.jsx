@@ -150,7 +150,7 @@ export async function addPetToDatabase(
       petID_ = 0;
     }
 
-    console.log("adding pet with vet: ", vets_);
+    console.log("adding pet with vaccines: ", vaccines_);
     const pet = {
       petID: petID_,
       name: name_,

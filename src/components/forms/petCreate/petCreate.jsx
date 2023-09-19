@@ -20,6 +20,7 @@ import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 // Import Modules
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
+import { NODE_PARENT_VALIDATIONS } from "@babel/types";
 
 const PetCreate = () => {
   // Render States
@@ -113,7 +114,9 @@ const PetCreate = () => {
   const navigate = useNavigate();
 
   const UpdateProfile = (e) => {
+    console.log("Vaccines in update profile: ", petVaccines);
     e.preventDefault();
+    console.log("Vaccines in update profile2: ", petVaccines);
     if (canSubmit) {
       addPetToDatabase(
         petName,
@@ -251,6 +254,9 @@ const PetCreate = () => {
               name="description"
               rows={5}
               cols={50}
+              onChange={(e) => {
+                setPetDescr(e.target.value);
+              }}
             />
             <label>Pet Age</label>
             <input
@@ -338,8 +344,9 @@ const PetCreate = () => {
               closeMenuOnSelect={false}
               styles={SelectMultiStyles}
               onChange={(e) => {
-                setPetVaccines([]);
-                e.forEach((item) => petVaccines.push(item.value));
+                let newVaccines = [];
+                e.forEach((item) => newVaccines.push(item.value));
+                setPetVaccines(newVaccines);
               }}
             />
             <label>Health Conditions</label>
@@ -351,8 +358,9 @@ const PetCreate = () => {
               styles={SelectMultiStyles}
               options={PetAgressions}
               onChange={(e) => {
-                setPetConditions([]);
-                e.forEach((item) => petConditions.push(item.value));
+                let newConds = [];
+                e.forEach((item) => newConds.push(item.value));
+                setPetConditions(newConds);
               }}
             />
             <label>Medications</label>
@@ -364,8 +372,9 @@ const PetCreate = () => {
               styles={SelectMultiStyles}
               options={PetAgressions}
               onChange={(e) => {
-                setPetMeds([]);
-                e.forEach((item) => petMeds.push(item.value));
+                let newMeds = [];
+                e.forEach((item) => newMeds.push(item.value));
+                setPetMeds(newMeds);
               }}
             />
             <label>Allergies</label>
@@ -377,8 +386,9 @@ const PetCreate = () => {
               styles={SelectMultiStyles}
               options={PetAgressions}
               onChange={(e) => {
-                setPetAllergies([]);
-                e.forEach((item) => petAllergies.push(item.value));
+                let newAllergies = [];
+                e.forEach((item) => newAllergies.push(item.value));
+                setPetAllergies(newAllergies);
               }}
             />
             <label>Additional Information</label>
@@ -418,8 +428,9 @@ const PetCreate = () => {
               styles={SelectMultiStyles}
               options={PetAgressions}
               onChange={(e) => {
-                setPetAggressions([]);
-                e.forEach((item) => petAggressions.push(item.value));
+                let newAggressions = [];
+                e.forEach((item) => newAggressions.push(item.value));
+                setPetAggressions(newAggressions);
               }}
             />
             <label>Good With</label>
@@ -431,8 +442,9 @@ const PetCreate = () => {
               styles={SelectMultiStyles}
               options={PetGoodWith}
               onChange={(e) => {
-                setPetGoodWith([]);
-                e.forEach((item) => petGoodWith.push(item.value));
+                let newGoodWith = [];
+                e.forEach((item) => newGoodWith.push(item.value));
+                setPetGoodWith(newGoodWith);
               }}
             />
             <label>Additional Information</label>
