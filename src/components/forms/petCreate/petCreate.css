@@ -41,6 +41,10 @@
   padding-bottom: 8px;
 }
 
+#create-form h2 {
+  margin: 0px 0px 23px 0px;
+}
+
 .form-input {
   height: 50px;
   background-color: #75af96;
@@ -76,4 +80,22 @@
 #form-contacts-container {
   display: flex;
   justify-content: space-between;
+}
+
+#create-btn {
+  height: 50px;
+  background-color: #0f5738;
+  border-radius: 16px;
+  border: none;
+  box-shadow: 0px 8px 10px 0px rgba(0, 0, 0, 0.25);
+  color: #f0f0f0;
+  font-size: 24px;
+  font-family: inherit;
+  margin-bottom: 23px;
+  transition: transform 0.1s;
+}
+
+#create-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 2px 2px 18px 0px rgba(0, 0, 0, 0.75);
 }
