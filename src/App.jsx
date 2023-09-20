@@ -24,6 +24,7 @@ import PetProfile from "./components/pages/petProfile";
 import PetId from "./components/pets/petId";
 import PetProfileEdit from "./components/pages/petProfileEdit";
 import LogOut from "./components/logout/logout";
+import InputCode from "./components/pages/tagCodeInput";
 
 const App = () => {
   return (
@@ -35,6 +36,7 @@ const App = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/forgot" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetForm />} />
+        <Route path="/input-code" element={<InputCode />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="/user" element={<User />}>
           <Route path=":userId" element={<UserId />}>

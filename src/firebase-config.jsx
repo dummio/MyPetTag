@@ -1,7 +1,7 @@
 // Import Firebase
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth"
-import { getFirestore, collection, addDoc } from "@firebase/firestore";
+import { getFirestore, setDoc, doc } from "@firebase/firestore";
 
 export const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -16,3 +16,31 @@ export const firebaseConfig = {
 const app = await initializeApp(firebaseConfig);
 export const auth = await getAuth(app);
 export const db = await getFirestore(app);
+
+// function generateRandomString(length) {
+//   const characters =
+//     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+//   let result = "";
+//   for (let i = 0; i < length; i++) {
+//     const randomIndex = Math.floor(Math.random() * characters.length);
+//     result += characters.charAt(randomIndex);
+//   }
+//   return result;
+// }
+
+// //const jsonObject = {};
+// const generatedKeys = new Set();
+
+// while (generatedKeys.size < 5000) {
+//   const randomKey = generateRandomString(6);
+//   if (!generatedKeys.has(randomKey)) {
+//     generatedKeys.add(randomKey);
+//   }
+// }
+
+// for(let key of generatedKeys) {
+//   await setDoc(doc(db, "tags", key), {
+//     Pet: '',
+//     UserID: '',
+//   });
+// }

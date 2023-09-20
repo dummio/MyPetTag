@@ -56,13 +56,12 @@ export async function addNewUserToDatabase(
       email,
       password
     );
-    const _uid = userCredential.user.uid;
-    const uid = _uid;
+    const uid = userCredential.user.uid;
 
     await setDoc(doc(db, "users", uid), {
       firstname: firstname_,
       lastname: lastname_,
-      uid: _uid,
+      uid: uid,
       phone: phone, // TODO: Verify if number is valid
     });
     return uid;
