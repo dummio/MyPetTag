@@ -99,7 +99,7 @@ const PetInformation = () => {
         <div className="info-box">
           <p className="info-box-title">Age</p>
           <p className="info-box-value">
-            {petName ? (petAge ? petAge : "N/A") : "Loading"}
+            {petName ? (petAge ? petAge : "EST. 1y") : "Loading"}
           </p>
         </div>
         <div className="info-box">

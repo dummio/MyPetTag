@@ -38,13 +38,6 @@ const VetProvider = () => {
 
   const ExpandTile = () => {
     show(!hide);
-    async function fetchPetData() {
-      const petVet = await getPetData(petID, ["vets"]);
-      if (petVet) {
-        setVet(petVet["vets"]);
-      }
-    }
-    fetchPetData();
     let vetTile = document.getElementById("vet-tile");
     let vetTitleCon = document.getElementById("vet-title-container");
     if (vetTile != null && vetTitleCon != null && !hide) {
