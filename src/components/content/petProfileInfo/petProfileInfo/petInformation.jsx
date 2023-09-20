@@ -12,6 +12,7 @@ import "./petInformation.css";
 import { getPetData } from "../../../../firebaseCommands";
 
 import { useNavigate } from "react-router-dom";
+import { partial } from "lodash";
 
 /**
  * Gets all current Pet Information For the Pet Profile.
@@ -34,6 +35,34 @@ const PetInformation = () => {
     Image: PetImg,
   });
 
+  function calculateAgeFromDoB(date) {
+    var dob = new Date(date);
+    var today= new Date();
+    var allYears= today.getFullYear() - dob.getFullYear();
+    var partialMonths = today.getMonth() - dob.getMonth();
+    if (partialMonths < 0) {
+        allYears--;
+        partialMonths = partialMonths + 12;
+    }
+
+    let age;
+    if (allYears <= 0) {
+      age = partialMonths;
+      if (partialMonths === 0 || partialMonths > 1)
+        age += " months";
+      else
+        age += " month";
+    } else {
+      age = allYears;
+      if (allYears === 1)
+        age += " year";
+      else
+        age += " years";
+    }
+  
+    return age + " old";
+  }
+
   useEffect(() => {
     async function fetchPetData() {
       const petData = await getPetData(petID, [
@@ -41,6 +70,7 @@ const PetInformation = () => {
         "breed",
         "descr",
         "birthyear",
+        "birthDate",
         "weight",
         "sex",
       ]).catch(error => {
@@ -51,7 +81,7 @@ const PetInformation = () => {
         setPetName(petData["name"]);
         setPetBreed(petData["breed"]);
         setPetDescr(petData["descr"]);
-        setPetAge(2023 - petData["birthyear"]);
+        setPetAge(calculateAgeFromDoB(petData["birthDate"]));
         setPetWeight(petData["weight"]);
         setPetSex(petData["sex"]);
       }
