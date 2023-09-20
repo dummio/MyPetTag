@@ -20,7 +20,6 @@ import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 // Import Modules
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
-import { NODE_PARENT_VALIDATIONS } from "@babel/types";
 
 const PetCreate = () => {
   // Render States
@@ -28,7 +27,9 @@ const PetCreate = () => {
   const [petHealthHide, setPetHealthHide] = useState(false);
   const [petBehaviorHide, setPetBehaviorHide] = useState(false);
   const [petVetHide, setPetVetHide] = useState(false);
+  const [canSubmit, setCanSubmit] = useState(false);
 
+  // Pet Data States
   const [petName, setPetName] = useState(null);
   const [petSpecies, setPetSpecies] = useState(null);
   const [petBreed, setPetBreed] = useState(null);
@@ -52,8 +53,6 @@ const PetCreate = () => {
   const [clinicPhone, setClinicPhone] = useState(null);
   const [vetName, setVetName] = useState(null);
   const [microchipId, setMicrochipId] = useState(null);
-
-  const [canSubmit, setCanSubmit] = useState(false);
 
   const ValidateForm = () => {
     let isValid = false;
@@ -166,7 +165,11 @@ const PetCreate = () => {
     { value: "Spayed Female", label: "Spayed Female" },
   ];
   const PetBreeds = [];
-  const PetAgressions = [
+  const Vaccines = [];
+  const HealthConditions = [];
+  const Medications = [];
+  const Allergies = [];
+  const PetAggressions = [
     { value: "Men", label: "Men" },
     { value: "Women", label: "Women" },
     { value: "Children", label: "Children" },
@@ -214,9 +217,13 @@ const PetCreate = () => {
         {petInfoHide && (
           <>
             <label>Pet Name</label>
+            <div className="error-container">
+              {petName === "" ? "Pet Name is Required" : null}
+            </div>
             <input
               className="form-input"
               type="text"
+              autoFocus
               onChange={(e) => {
                 setPetName(e.target.value);
               }}
@@ -350,6 +357,7 @@ const PetCreate = () => {
               isSearchable
               closeMenuOnSelect={false}
               styles={SelectMultiStyles}
+              options={Vaccines}
               onChange={(e) => {
                 let newVaccines = [];
                 e.forEach((item) => newVaccines.push(item.value));
@@ -363,7 +371,7 @@ const PetCreate = () => {
               isSearchable
               closeMenuOnSelect={false}
               styles={SelectMultiStyles}
-              options={PetAgressions}
+              options={HealthConditions}
               onChange={(e) => {
                 let newConds = [];
                 e.forEach((item) => newConds.push(item.value));
@@ -377,7 +385,7 @@ const PetCreate = () => {
               isSearchable
               closeMenuOnSelect={false}
               styles={SelectMultiStyles}
-              options={PetAgressions}
+              options={Medications}
               onChange={(e) => {
                 let newMeds = [];
                 e.forEach((item) => newMeds.push(item.value));
@@ -391,7 +399,7 @@ const PetCreate = () => {
               isSearchable
               closeMenuOnSelect={false}
               styles={SelectMultiStyles}
-              options={PetAgressions}
+              options={Allergies}
               onChange={(e) => {
                 let newAllergies = [];
                 e.forEach((item) => newAllergies.push(item.value));
@@ -433,7 +441,7 @@ const PetCreate = () => {
               isSearchable
               closeMenuOnSelect={false}
               styles={SelectMultiStyles}
-              options={PetAgressions}
+              options={PetAggressions}
               onChange={(e) => {
                 let newAggressions = [];
                 e.forEach((item) => newAggressions.push(item.value));

@@ -34,6 +34,20 @@ const PetInformation = () => {
     Image: PetImg,
   });
 
+  const calculateAge = (date) => {
+    let dateObj = new Date(date);
+    let currDate = new Date();
+    let currAge = currDate.getFullYear() - dateObj.getFullYear();
+
+    if (
+      currDate.getMonth() < dateObj.getMonth() ||
+      (currDate.getMonth() === dateObj.getMonth() &&
+        currDate.getDate() < dateObj.getDate())
+    ) {
+      return currAge - 1;
+    }
+  };
+
   useEffect(() => {
     async function fetchPetData() {
       const petData = await getPetData(petID, [
@@ -43,15 +57,15 @@ const PetInformation = () => {
         "birthyear",
         "weight",
         "sex",
-      ]).catch(error => {
-        navigate('/*', {replace: true});
+      ]).catch((error) => {
+        navigate("/*", { replace: true });
       });
-      console.log("pet data in useEffect: ", petData);
       if (petData) {
+        let age = calculateAge(petData["birthDate"]);
         setPetName(petData["name"]);
         setPetBreed(petData["breed"]);
         setPetDescr(petData["descr"]);
-        setPetAge(2023 - petData["birthyear"]);
+        setPetAge(age);
         setPetWeight(petData["weight"]);
         setPetSex(petData["sex"]);
       }

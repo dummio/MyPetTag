@@ -75,25 +75,25 @@ const VetProvider = () => {
         </div>
         {hide && (
           <div id="vet-info-container">
-            <p className="vet-info-label">Veterinarian:</p>
+            <p className="vet-info-label">Clinic Name:</p>
             <p className="vet-info-value">
-              {vet ? (vet["name"] ? vet["name"] : "N/A") : "Loading..."}
+              {vet
+                ? vet["clinicName"]
+                  ? vet["clinicName"]
+                  : "N/A"
+                : "Loading..."}
             </p>
-            <p className="vet-info-label">Veterinarian Phone:</p>
-            <p className="vet-info-value">
-              {vet ? (vet["phone"] ? vet["phone"] : "N/A") : "Loading..."}
-            </p>
-            <p className="vet-info-label">Veterinarian Address:</p>
+            <p className="vet-info-label">Clinic Address:</p>
             <p className="vet-info-value">
               {vet ? (vet["addr"] ? vet["addr"] : "N/A") : "Loading..."}
             </p>
-            <p className="vet-info-label">Veterinarian License ID:</p>
+            <p className="vet-info-label">Clinic Phone:</p>
             <p className="vet-info-value">
-              {vet
-                ? vet["licenseId"]
-                  ? vet["licenseId"]
-                  : "N/A"
-                : "Loading..."}
+              {vet ? (vet["phone"] ? vet["phone"] : "N/A") : "Loading..."}
+            </p>
+            <p className="vet-info-label">Veterinarian :</p>
+            <p className="vet-info-value">
+              {vet ? (vet["vetName"] ? vet["vetName"] : "N/A") : "Loading..."}
             </p>
             <p className="vet-info-label">Microchip ID:</p>
             <p className="vet-info-value">

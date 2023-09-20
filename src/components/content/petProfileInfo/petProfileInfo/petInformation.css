@@ -51,9 +51,10 @@
   justify-content: center;
   align-items: center;
   background-color: #0f5738;
-  height: 70px;
-  width: 70px;
+  height: 80px;
+  width: 85px;
   border-radius: 16px;
+  text-align: center;
 }
 
 .info-box-title {
