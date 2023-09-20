@@ -7,6 +7,8 @@
 import React, { useState, useEffect } from "react";
 import { addPetToDatabase, getDogBreeds } from "../../../firebaseCommands";
 import { useNavigate } from "react-router-dom";
+import { storage } from "../../../firebase-config";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 // Import CSS
 import "./petCreate.css";
@@ -31,6 +33,8 @@ const PetCreate = () => {
   const [canSubmit, setCanSubmit] = useState(false);
 
   // Pet Data States
+  const [image, setImage] = useState(null);
+  const [url, setUrl] = useState(null);
   const [petName, setPetName] = useState(null);
   const [petSpecies, setPetSpecies] = useState(null);
   const [petBreed, setPetBreed] = useState(null);
@@ -86,6 +90,10 @@ const PetCreate = () => {
     let image = URL.createObjectURL(file);
     let profileImage = document.getElementById("pet-img");
     profileImage.src = image;
+
+    if (file) {
+      setImage(file);
+    }
   };
 
   useEffect(ValidateForm, [
@@ -126,38 +134,95 @@ const PetCreate = () => {
     e.preventDefault();
     console.log("Vaccines in update profile2: ", petVaccines);
     if (canSubmit) {
-      addPetToDatabase(
-        petName,
-        petSpecies,
-        petBreed,
-        petDescr,
-        petBirthDate,
-        petWeight,
-        petSex,
-        petAddress,
-        petVaccines,
-        petConditions,
-        petMeds,
-        petAllergies,
-        petHealthInfo,
-        petAggressions,
-        petGoodWith,
-        petBehaviorInfo,
-        { Name: petContactName, Phone: petContactPhone },
-        {
-          clinicName: clinicName,
-          addr: clinicAddr,
-          phone: clinicPhone,
-          vetName: vetName,
-          microchipId: microchipId,
-        }
-      )
-        .then((response) => {
-          setTimeout(navigate("../../account", { replace: true }), 1000);
-        })
-        .catch((err) => {
-          console.debug(err);
-        });
+      if (image) {
+        // TODO: Come up with better naming scheme
+        const imgName = petName + (Math.random() + 1).toString(36).substring(2);
+        const imageRef = ref(storage, imgName);
+        uploadBytes(imageRef, image)
+          .then(() => {
+            getDownloadURL(imageRef)
+              .then((url) => {
+                setUrl(url);
+                console.log("url: ", url);
+                addPetToDatabase(
+                  petName,
+                  petSpecies,
+                  petBreed,
+                  petDescr,
+                  petBirthDate,
+                  petWeight,
+                  petSex,
+                  petAddress,
+                  petVaccines,
+                  petConditions,
+                  petMeds,
+                  petAllergies,
+                  petHealthInfo,
+                  petAggressions,
+                  petGoodWith,
+                  petBehaviorInfo,
+                  { Name: petContactName, Phone: petContactPhone },
+                  {
+                    clinicName: clinicName,
+                    addr: clinicAddr,
+                    phone: clinicPhone,
+                    vetName: vetName,
+                    microchipId: microchipId,
+                  },
+                  url
+                )
+                  .then((response) => {
+                    setTimeout(
+                      navigate("../../account", { replace: true }),
+                      1000
+                    );
+                  })
+                  .catch((err) => {
+                    console.debug(err);
+                  });
+              })
+              .catch((error) => {
+                console.log("Error when uploading image: ", error);
+              });
+          })
+          .catch((error) => {
+            console.log("Error when uploading image: ", error);
+          });
+      } else {
+        addPetToDatabase(
+          petName,
+          petSpecies,
+          petBreed,
+          petDescr,
+          petBirthDate,
+          petWeight,
+          petSex,
+          petAddress,
+          petVaccines,
+          petConditions,
+          petMeds,
+          petAllergies,
+          petHealthInfo,
+          petAggressions,
+          petGoodWith,
+          petBehaviorInfo,
+          { Name: petContactName, Phone: petContactPhone },
+          {
+            clinicName: clinicName,
+            addr: clinicAddr,
+            phone: clinicPhone,
+            vetName: vetName,
+            microchipId: microchipId,
+          },
+          ""
+        )
+          .then((response) => {
+            setTimeout(navigate("../../account", { replace: true }), 1000);
+          })
+          .catch((err) => {
+            console.debug(err);
+          });
+      }
     }
   };
 
@@ -198,7 +263,7 @@ const PetCreate = () => {
   useEffect(() => {
     async function fetchPetBreedInfo() {
       const dogBreeds = await getDogBreeds();
-      if(dogBreeds) {
+      if (dogBreeds) {
         setPetBreeds(dogBreeds);
       }
     }

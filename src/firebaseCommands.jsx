@@ -137,7 +137,8 @@ export async function addPetToDatabase(
   goodWith_,
   behavior_,
   contacts_,
-  vets_
+  vets_,
+  imageUrl_
 ) {
   const uid = await authStateChangedWrapper();
   try {
@@ -171,7 +172,7 @@ export async function addPetToDatabase(
       behavior: behavior_,
       contacts: contacts_,
       vets: vets_,
-      // images: [],
+      imageUrl: imageUrl_,
     };
 
     console.log(pet);
@@ -292,7 +293,7 @@ export async function getDogBreeds() {
 
   let dogBreeds = [];
   const dogBreedList = dogBreedSnap.data().List;
-  for(let i = 0; i < dogBreedList.length; i++) {
+  for (let i = 0; i < dogBreedList.length; i++) {
     dogBreeds.push({
       label: dogBreedList[i],
       value: dogBreedList[i],

@@ -8,6 +8,7 @@ import React, { useEffect, useState } from "react";
 
 // Import CSS
 import PetImg from "../../../../images/pitbull.png";
+import DefaultImg from "../../../../images/profile-default.png";
 import "./petInformation.css";
 import { getPetData } from "../../../../firebaseCommands";
 
@@ -29,6 +30,7 @@ const PetInformation = () => {
   const [petAge, setPetAge] = useState(null);
   const [petWeight, setPetWeight] = useState(null);
   const [petSex, setPetSex] = useState(null);
+  const [petImage, setPetImage] = useState(null);
 
   const [pet, setPet] = useState({
     Image: PetImg,
@@ -57,6 +59,7 @@ const PetInformation = () => {
         "birthyear",
         "weight",
         "sex",
+        "imageUrl",
       ]).catch((error) => {
         navigate("/*", { replace: true });
       });
@@ -68,6 +71,7 @@ const PetInformation = () => {
         setPetAge(age);
         setPetWeight(petData["weight"]);
         setPetSex(petData["sex"]);
+        setPetImage(petData["imageUrl"]);
       }
     }
     fetchPetData();
@@ -77,7 +81,7 @@ const PetInformation = () => {
     <div id="pet-information-container">
       <img
         className="pet-img"
-        src={pet.Image}
+        src={petImage ? petImage : DefaultImg}
         alt="Pet Img"
         width={157}
         height={157}
