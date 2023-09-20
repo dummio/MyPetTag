@@ -5,7 +5,7 @@
 
 // Import React
 import React, { useState, useEffect } from "react";
-import { addPetToDatabase } from "../../../firebaseCommands";
+import { addPetToDatabase, getDogBreeds } from "../../../firebaseCommands";
 import { useNavigate } from "react-router-dom";
 
 // Import CSS
@@ -173,7 +173,7 @@ const PetCreate = () => {
     { value: "Female", label: "Female" },
     { value: "Spayed Female", label: "Spayed Female" },
   ];
-  const PetBreeds = [];
+  const [PetBreeds, setPetBreeds] = useState([]);
   const Vaccines = [];
   const HealthConditions = [];
   const Medications = [];
@@ -194,6 +194,16 @@ const PetCreate = () => {
     { value: "Dogs", label: "Dogs" },
     { value: "Other", label: "Other" },
   ];
+
+  useEffect(() => {
+    async function fetchPetBreedInfo() {
+      const dogBreeds = await getDogBreeds();
+      if(dogBreeds) {
+        setPetBreeds(dogBreeds);
+      }
+    }
+    fetchPetBreedInfo();
+  }, []);
 
   return (
     <div id="create-container">

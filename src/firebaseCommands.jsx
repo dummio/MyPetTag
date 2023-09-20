@@ -284,3 +284,27 @@ export function sendPasswordReset(email) {
 export async function getCurrentUserEmail() {
   return await auth.currentUser.email;
 }
+
+//gets all dog breeds woof
+export async function getDogBreeds() {
+  const dogBreedDocRef = doc(db, "dogBreeds", "Breeds");
+  const dogBreedSnap = await getDoc(dogBreedDocRef);
+
+  let dogBreeds = [];
+  const dogBreedList = dogBreedSnap.data().List;
+  for(let i = 0; i < dogBreedList.length; i++) {
+    dogBreeds.push({
+      label: dogBreedList[i],
+      value: dogBreedList[i],
+    });
+  }
+
+  // dogBreedSnap.data().List.array.forEach(element => {
+  //   dogBreeds.push({
+  //     label: element,
+  //     value: element,
+  //   })
+  // });
+  console.log(dogBreeds);
+  return dogBreeds;
+}
