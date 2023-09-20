@@ -49,18 +49,18 @@ const PetInformation = () => {
     if (allYears <= 0) {
       age = partialMonths;
       if (partialMonths === 0 || partialMonths > 1)
-        age += " months";
+        age += " Months";
       else
-        age += " month";
+        age += " Month";
     } else {
       age = allYears;
       if (allYears === 1)
-        age += " year";
+        age += " Year";
       else
-        age += " years";
+        age += " Years";
     }
   
-    return age + " old";
+    return age + " Old";
   }
 
   useEffect(() => {
