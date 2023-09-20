@@ -45,6 +45,37 @@
   margin: 0px 0px 23px 0px;
 }
 
+#pet-img-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#pet-img {
+  border-radius: 50%;
+  margin-bottom: 12px;
+}
+
+::file-selector-button {
+  height: 50px;
+  margin-right: 20px;
+  border: none;
+  background: #0f5738;
+  padding: 10px 20px;
+  border-radius: 16px;
+  color: white;
+  cursor: pointer;
+}
+.form-input-file {
+  margin-bottom: 23px;
+  padding: 0px 18px;
+  font-family: inherit;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .form-input {
   height: 50px;
   background-color: #75af96;

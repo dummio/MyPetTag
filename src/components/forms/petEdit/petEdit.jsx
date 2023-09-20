@@ -9,6 +9,7 @@ import React, { useState } from "react";
 // Import CSS
 import "./petEdit.css";
 import logo from "../../../images/paw.png";
+import defaultProfileImage from "../../../images/profile-default.png";
 import SelectStyles from "../selectStyles/selectStyles";
 import SelectMultiStyles from "../selectStyles/selectMultiStyles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -38,6 +39,14 @@ const PetEdit = () => {
 
   // Temp Name
   const pet = "pet-name";
+
+  const UploadImage = (e) => {
+    e.preventDefault();
+    let file = e.target.files[0];
+    let image = URL.createObjectURL(file);
+    let profileImage = document.getElementById("pet-img");
+    profileImage.src = image;
+  };
 
   return (
     <div id="edit-container">
@@ -69,6 +78,22 @@ const PetEdit = () => {
         </h2>
         {petInfoHide && (
           <>
+            <label>Upload Pet Picture</label>
+            <div id="pet-img-container">
+              <img
+                id="pet-img"
+                src={defaultProfileImage}
+                alt="profile-img"
+                width={157}
+                height={157}
+              />
+            </div>
+            <input
+              className="form-input-file"
+              type="file"
+              accept="image/*"
+              onChange={UploadImage}
+            />
             <label>Pet Name</label>
             <input className="form-input" type="text" />
             <label>Pet Species</label>
