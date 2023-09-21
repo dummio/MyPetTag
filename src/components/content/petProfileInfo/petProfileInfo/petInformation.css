@@ -13,6 +13,7 @@
 .pet-img {
   object-fit: cover;
   border-radius: 50%;
+  border: solid 6px #0f5738;
 }
 
 .pet-name {
