@@ -267,3 +267,16 @@ export function sendPasswordReset(email) {
 export async function getCurrentUserEmail() {
   return await auth.currentUser.email;  
 }
+
+export async function checkTagIdTaken(id) {
+  let tagFields = null;
+  try {
+    const tagDocRef = doc(db, "tags", id);
+    const tagDocSnap = await getDoc(tagDocRef);
+    tagFields = [tagDocSnap.data().UserID, tagDocSnap.data().Pet];
+    console.log(tagFields);
+  } catch (error) {
+    console.log(error);
+  }
+  return tagFields;
+}

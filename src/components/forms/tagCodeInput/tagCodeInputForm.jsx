@@ -11,9 +11,13 @@ import { useNavigate } from "react-router-dom";
 import logo from "../../../images/paw.png";
 import "./tagCodeInputForm.css";
 
+//import firebase command
+import { checkTagIdTaken } from "../../../firebaseCommands";
+
 const TagCodeInputEditForm = () => {
   const [tagCode, setTagCodeReg] = useState("");
   const [canSubmit, setCanSubmit] = useState(false);
+  const [tagContent, setTagContent] = useState(null);
 
   const ValidateForm = () => {
     let isValid = false;
@@ -44,12 +48,32 @@ const TagCodeInputEditForm = () => {
 
   const navigate = useNavigate();
 
+  async function fetchTagContent() {
+    const content = await checkTagIdTaken(tagCode);
+    if (content) {
+      setTagContent(content);
+    }
+  }
+
+  function route() {
+    if(tagContent == null || (tagContent[0] == '' && tagContent[1] == '')) {
+      console.log(tagContent);
+      navigate("/register", {replace: true});
+    }
+    else {
+      console.log("Tag was taken or tag code input error");
+    }
+  }
+
   const isTagTaken = (e) => {
     e.preventDefault();
     if (canSubmit) {
       console.log("TAG CODE ENTERED: ", tagCode);
       //query tag database, if tag is taken we need to throw some error to catch here
       //if response is not error -> route to user reg/pet reg
+      fetchTagContent(tagCode);
+      console.log(tagContent);
+      route();
     }
     else {
       console.log("NO TAG CODE ENTERED!");
