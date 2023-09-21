@@ -85,9 +85,6 @@ const NavBar = () => {
           <a href="/register">
             <h1 className="nav-menu-item">Register</h1>
           </a>
-          <a href="/input-code">
-            <h1 className="nav-menu-item">Input Code</h1>
-          </a>
         </div>
       );
     }

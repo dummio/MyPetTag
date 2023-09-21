@@ -17,7 +17,6 @@ import { checkTagIdTaken } from "../../../firebaseCommands";
 const TagCodeInputEditForm = () => {
   const [tagCode, setTagCodeReg] = useState("");
   const [canSubmit, setCanSubmit] = useState(false);
- // const [tagContent, setTagContent] = useState(null);
 
   const ValidateForm = () => {
     let isValid = false;
@@ -58,7 +57,7 @@ const TagCodeInputEditForm = () => {
   function route(tagContent) {
     if(tagContent != null && tagContent[0] == '' && tagContent[1] == '') {
       console.log(tagContent);
-      navigate("/register", {replace: true});
+      navigate("/create", {replace: true});
     }
     else {
       console.log("Tag was taken or tag code input error");

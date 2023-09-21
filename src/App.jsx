@@ -39,6 +39,7 @@ const App = () => {
         <Route path="/reset-password" element={<ResetForm />} />
         <Route path="/input-code" element={<InputCode />} />
         <Route path="/shop" element={<Shop />} />
+        <Route path="/create" element={<PetRegister />} />
         <Route path="/user" element={<User />}>
           <Route path=":userId" element={<UserId />}>
             <Route path="pet/:petId" element={<PetId />}>
@@ -46,7 +47,7 @@ const App = () => {
               <Route path="edit" element={<PetProfileEdit />} />
             </Route>
             <Route path="account" element={<Account />} />
-            <Route path="create" element={<PetRegister />} />
+            {/* <Route path="create" element={<PetRegister />} /> */}
           </Route>
         </Route>
         <Route path="*" element={<NotFound />} />
