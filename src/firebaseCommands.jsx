@@ -119,16 +119,25 @@ export async function logout() {
  * @param {*} vets_ A dictionary with keys "name", "phone", "addr", "licenseId", "microchipId"
  */
 export async function addPetToDatabase(
-  addr_,
-  behavior_,
+  name_,
+  species_,
   breed_,
   descr_,
-  name_,
-  sex_,
-  birthyear_,
+  birthDate_,
   weight_,
+  sex_,
+  addr_,
+  vaccines_,
+  conds_,
+  meds_,
+  allergies_,
+  healthInfo_,
+  aggressions_,
+  goodWith_,
+  behavior_,
   contacts_,
-  vets_
+  vets_,
+  imageUrl_
 ) {
   const uid = await authStateChangedWrapper();
   try {
@@ -141,20 +150,28 @@ export async function addPetToDatabase(
       petID_ = 0;
     }
 
-    console.log("adding pet with vet: ", vets_);
+    console.log("adding pet with vaccines: ", vaccines_);
     const pet = {
       petID: petID_,
       name: name_,
-      addr: addr_,
+      species: species_,
       breed: breed_,
-      sex: sex_,
-      birthyear: birthyear_,
-      weight: weight_,
       descr: descr_,
+      birthDate: birthDate_,
+      weight: weight_,
+      sex: sex_,
+      addr: addr_,
+      vaccines: vaccines_,
+      conds: conds_,
+      meds: meds_,
+      allergies: allergies_,
+      healthInfo: healthInfo_,
+      aggressions: aggressions_,
+      goodWith: goodWith_,
       behavior: behavior_,
       contacts: contacts_,
       vets: vets_,
-      // images: [],
+      imageUrl: imageUrl_,
     };
 
     console.log(pet);
@@ -265,7 +282,7 @@ export function sendPasswordReset(email) {
 }
 
 export async function getCurrentUserEmail() {
-  return await auth.currentUser.email;  
+  return await auth.currentUser.email;
 }
 
 export async function checkTagIdTaken(id) {
@@ -279,4 +296,28 @@ export async function checkTagIdTaken(id) {
     console.log(error);
   }
   return tagFields;
+}
+
+//gets all dog breeds woof
+export async function getDogBreeds() {
+  const dogBreedDocRef = doc(db, "dogBreeds", "Breeds");
+  const dogBreedSnap = await getDoc(dogBreedDocRef);
+
+  let dogBreeds = [];
+  const dogBreedList = dogBreedSnap.data().List;
+  for (let i = 0; i < dogBreedList.length; i++) {
+    dogBreeds.push({
+      label: dogBreedList[i],
+      value: dogBreedList[i],
+    });
+  }
+
+  // dogBreedSnap.data().List.array.forEach(element => {
+  //   dogBreeds.push({
+  //     label: element,
+  //     value: element,
+  //   })
+  // });
+  console.log(dogBreeds);
+  return dogBreeds;
 }

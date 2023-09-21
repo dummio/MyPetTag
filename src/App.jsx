@@ -25,6 +25,7 @@ import PetId from "./components/pets/petId";
 import PetProfileEdit from "./components/pages/petProfileEdit";
 import LogOut from "./components/logout/logout";
 import InputCode from "./components/pages/tagCodeInput";
+import PetRegister from "./components/pages/petRegister";
 
 const App = () => {
   return (
@@ -45,6 +46,7 @@ const App = () => {
               <Route path="edit" element={<PetProfileEdit />} />
             </Route>
             <Route path="account" element={<Account />} />
+            <Route path="create" element={<PetRegister />} />
           </Route>
         </Route>
         <Route path="*" element={<NotFound />} />

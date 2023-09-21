@@ -1,7 +1,8 @@
 // Import Firebase
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth"
-import { getFirestore, setDoc, doc } from "@firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { getFirestore, collection, addDoc } from "@firebase/firestore";
+import { getStorage } from "firebase/storage";
 
 export const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,

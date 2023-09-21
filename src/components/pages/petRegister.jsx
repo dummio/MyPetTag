@@ -7,21 +7,21 @@
 import React from "react";
 
 // Import Components
-import PetEdit from "../forms/petEdit/petEdit";
 import NavBar from "../navigation/navbar/navbar";
+import PetCreate from "../forms/petCreate/petCreate";
 
 /**
- * Pet Edit Page
+ * Pet Register Page
  *
  * @returns HTML Element
  */
-const PetProfileEdit = () => {
+const PetRegister = () => {
   return (
     <React.Fragment>
       <NavBar />
-      <PetEdit />
+      <PetCreate />
     </React.Fragment>
   );
 };
 
-export default PetProfileEdit;
+export default PetRegister;
