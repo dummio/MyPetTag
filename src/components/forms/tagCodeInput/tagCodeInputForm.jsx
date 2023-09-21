@@ -17,7 +17,7 @@ import { checkTagIdTaken } from "../../../firebaseCommands";
 const TagCodeInputEditForm = () => {
   const [tagCode, setTagCodeReg] = useState("");
   const [canSubmit, setCanSubmit] = useState(false);
-  const [tagContent, setTagContent] = useState(null);
+ // const [tagContent, setTagContent] = useState(null);
 
   const ValidateForm = () => {
     let isValid = false;
@@ -51,12 +51,12 @@ const TagCodeInputEditForm = () => {
   async function fetchTagContent() {
     const content = await checkTagIdTaken(tagCode);
     if (content) {
-      setTagContent(content);
+      route(content);
     }
   }
 
-  function route() {
-    if(tagContent == null || (tagContent[0] == '' && tagContent[1] == '')) {
+  function route(tagContent) {
+    if(tagContent != null && tagContent[0] == '' && tagContent[1] == '') {
       console.log(tagContent);
       navigate("/register", {replace: true});
     }
@@ -65,15 +65,11 @@ const TagCodeInputEditForm = () => {
     }
   }
 
-  const isTagTaken = (e) => {
+  const isTagTaken = async(e) => {
     e.preventDefault();
     if (canSubmit) {
       console.log("TAG CODE ENTERED: ", tagCode);
-      //query tag database, if tag is taken we need to throw some error to catch here
-      //if response is not error -> route to user reg/pet reg
-      fetchTagContent(tagCode);
-      console.log(tagContent);
-      route();
+      await fetchTagContent();
     }
     else {
       console.log("NO TAG CODE ENTERED!");
