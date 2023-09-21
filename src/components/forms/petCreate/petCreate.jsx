@@ -5,7 +5,12 @@
 
 // Import React
 import React, { useState, useEffect } from "react";
-import { addPetToDatabase, getDogBreeds } from "../../../firebaseCommands";
+import {
+  addPetToDatabase,
+  getDogBreeds,
+  isUserAuthenticated,
+  authStateChangedWrapper,
+} from "../../../firebaseCommands";
 import { useNavigate } from "react-router-dom";
 import { storage } from "../../../firebase-config";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -58,6 +63,35 @@ const PetCreate = () => {
   const [clinicPhone, setClinicPhone] = useState(null);
   const [vetName, setVetName] = useState(null);
   const [microchipId, setMicrochipId] = useState(null);
+
+  const [isAuthed, setIsAuthed] = useState(false);
+  const [uid, setUid] = useState(null);
+
+  useEffect(() => {
+    async function fetchUid() {
+      const uid_ = await authStateChangedWrapper();
+      if (uid_) {
+        setUid(uid_);
+      }
+    }
+
+    fetchUid().then(
+      (result) => {
+        console.log(result);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+
+    const getAuthState = async () => {
+      const data = await isUserAuthenticated();
+      console.log(data);
+      setIsAuthed(data);
+    };
+
+    getAuthState();
+  }, []);
 
   const ValidateForm = () => {
     let isValid = false;
@@ -144,7 +178,13 @@ const PetCreate = () => {
               .then((url) => {
                 setUrl(url);
                 console.log("url: ", url);
+                let tag = "";
+                const regex = /^\/tag\/[a-zA-Z0-9]{6}\/create$/;
+                if (regex.test(window.location.pathname)) {
+                  tag = window.location.pathname.split("/")[2];
+                }
                 addPetToDatabase(
+                  tag,
                   petName,
                   petSpecies,
                   petBreed,
@@ -172,7 +212,8 @@ const PetCreate = () => {
                   url
                 )
                   .then((response) => {
-                    setTimeout(navigate("../account", { replace: true }), 1000);
+                    const path = `/user/${uid}/account`;
+                    setTimeout(navigate(path, { replace: true }), 1000);
                   })
                   .catch((err) => {
                     console.debug(err);
@@ -214,7 +255,8 @@ const PetCreate = () => {
           ""
         )
           .then((response) => {
-            setTimeout(navigate("../account", { replace: true }), 1000);
+            const path = `/user/${uid}/account`;
+            setTimeout(navigate(path, { replace: true }), 1000);
           })
           .catch((err) => {
             console.debug(err);

@@ -119,6 +119,7 @@ export async function logout() {
  * @param {*} vets_ A dictionary with keys "name", "phone", "addr", "licenseId", "microchipId"
  */
 export async function addPetToDatabase(
+  tag_,
   name_,
   species_,
   breed_,
@@ -152,6 +153,7 @@ export async function addPetToDatabase(
 
     console.log("adding pet with vaccines: ", vaccines_);
     const pet = {
+      tag: tag_,
       petID: petID_,
       name: name_,
       species: species_,
@@ -181,6 +183,14 @@ export async function addPetToDatabase(
     } else {
       await updateDoc(userDocRef, {
         pets: arrayUnion(pet),
+      });
+    }
+
+    // Associate tag with this pet in tags collection
+    if (tag_) {
+      await setDoc(doc(db, "tags", tag_), {
+        Pet: petID_,
+        UserID: uid,
       });
     }
   } catch (error) {
