@@ -17,6 +17,7 @@ export const firebaseConfig = {
 const app = await initializeApp(firebaseConfig);
 export const auth = await getAuth(app);
 export const db = await getFirestore(app);
+export const storage = getStorage(app);
 
 // function generateRandomString(length) {
 //   const characters =
