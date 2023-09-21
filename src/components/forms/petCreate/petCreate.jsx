@@ -172,10 +172,7 @@ const PetCreate = () => {
                   url
                 )
                   .then((response) => {
-                    setTimeout(
-                      navigate("../../account", { replace: true }),
-                      1000
-                    );
+                    setTimeout(navigate("../account", { replace: true }), 1000);
                   })
                   .catch((err) => {
                     console.debug(err);
@@ -217,7 +214,7 @@ const PetCreate = () => {
           ""
         )
           .then((response) => {
-            setTimeout(navigate("../../account", { replace: true }), 1000);
+            setTimeout(navigate("../account", { replace: true }), 1000);
           })
           .catch((err) => {
             console.debug(err);

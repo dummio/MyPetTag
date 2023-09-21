@@ -32,21 +32,18 @@ const PetInformation = () => {
   const [petSex, setPetSex] = useState(null);
   const [petImage, setPetImage] = useState(null);
 
-  const [pet, setPet] = useState({
-    Image: PetImg,
-  });
-
   const calculateAge = (date) => {
     let dateObj = new Date(date);
     let currDate = new Date();
     let currAge = currDate.getFullYear() - dateObj.getFullYear();
-
     if (
       currDate.getMonth() < dateObj.getMonth() ||
       (currDate.getMonth() === dateObj.getMonth() &&
         currDate.getDate() < dateObj.getDate())
     ) {
       return currAge - 1;
+    } else {
+      return currAge;
     }
   };
 
@@ -56,7 +53,7 @@ const PetInformation = () => {
         "name",
         "breed",
         "descr",
-        "birthyear",
+        "birthDate",
         "weight",
         "sex",
         "imageUrl",
@@ -64,11 +61,19 @@ const PetInformation = () => {
         navigate("/*", { replace: true });
       });
       if (petData) {
-        let age = calculateAge(petData["birthDate"]);
+        console.log(petData);
+        console.log("db bd: ", petData["birthDate"]);
+
         setPetName(petData["name"]);
         setPetBreed(petData["breed"]);
         setPetDescr(petData["descr"]);
-        setPetAge(age);
+        let bd = petData["birthDate"];
+        if (bd) {
+          let age = calculateAge(petData["birthDate"]);
+          setPetAge(age);
+        } else {
+          setPetAge("N/A");
+        }
         setPetWeight(petData["weight"]);
         setPetSex(petData["sex"]);
         setPetImage(petData["imageUrl"]);
@@ -103,7 +108,13 @@ const PetInformation = () => {
         <div className="info-box">
           <p className="info-box-title">Age</p>
           <p className="info-box-value">
-            {petName ? (petAge ? petAge : "EST. 1y") : "Loading"}
+            {petName
+              ? petAge === "N/A"
+                ? petAge
+                : petAge == 1
+                ? petAge + " yr"
+                : petAge + " yrs"
+              : "Loading"}
           </p>
         </div>
         <div className="info-box">
