@@ -227,7 +227,13 @@ const PetCreate = () => {
             console.log("Error when uploading image: ", error);
           });
       } else {
+        let tag = "";
+        const regex = /^\/tag\/[a-zA-Z0-9]{6}\/create$/;
+        if (regex.test(window.location.pathname)) {
+          tag = window.location.pathname.split("/")[2];
+        }
         addPetToDatabase(
+          tag,
           petName,
           petSpecies,
           petBreed,
