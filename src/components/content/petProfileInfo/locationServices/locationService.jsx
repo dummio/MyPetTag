@@ -12,7 +12,6 @@ import "./locationService.css";
 //import emailJSCommands
 import { sendFoundPetEmail } from "../../../../emailJSCommands";
 
-
 /**
  * Gets Users current location and directs them
  * to the nearest vet clinic
@@ -38,17 +37,6 @@ const LocationService = () => {
       let closestEmergencyVet = `https://www.google.com/maps/dir/${lat}%2C${lon}/emergency+vet`;
 
       window.open(closestEmergencyVet, "blank_");
-
-      // alert(
-      //   "The closest emergency pet care center to your location (" +
-      //     lat +
-      //     ", " +
-      //     lon +
-      //     ") is the University Veterinary Hospital and Diagnostic Center. \
-      // \nAddress: 952 E 900 S, Salt Lake City, UT 84105 \
-      // \nPhone: 801-596-9005 \
-      // \n\nCall local animal control: 385-468-7387"
-      // );
     });
   };
 

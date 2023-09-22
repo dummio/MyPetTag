@@ -18,12 +18,16 @@ import ResetForm from "./components/forms/forgotPassword/resetForm";
 import Shop from "./components/pages/shop";
 import User from "./components/user/user";
 import UserId from "./components/user/userId";
+import Tag from "./components/tag/tag";
+import TagId from "./components/tag/tagId";
 import Account from "./components/pages/account";
 import NotFound from "./components/pages/404";
 import PetProfile from "./components/pages/petProfile";
 import PetId from "./components/pets/petId";
 import PetProfileEdit from "./components/pages/petProfileEdit";
 import LogOut from "./components/logout/logout";
+import InputCode from "./components/pages/tagCodeInput";
+import PetRegister from "./components/pages/petRegister";
 
 const App = () => {
   return (
@@ -35,7 +39,13 @@ const App = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/forgot" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetForm />} />
+        <Route path="/input-code" element={<InputCode />} />
         <Route path="/shop" element={<Shop />} />
+        <Route path="/tag" element={<Tag />}>
+          <Route path=":tagId" element={<TagId />}>
+            <Route path="create" element={<PetRegister />} />
+          </Route>
+        </Route>
         <Route path="/user" element={<User />}>
           <Route path=":userId" element={<UserId />}>
             <Route path="pet/:petId" element={<PetId />}>
@@ -43,6 +53,7 @@ const App = () => {
               <Route path="edit" element={<PetProfileEdit />} />
             </Route>
             <Route path="account" element={<Account />} />
+            {/* <Route path="create" element={<PetRegister />} /> */}
           </Route>
         </Route>
         <Route path="*" element={<NotFound />} />

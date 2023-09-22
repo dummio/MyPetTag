@@ -7,21 +7,21 @@
 import React from "react";
 
 // Import Components
-import PetEdit from "../forms/petEdit/petEdit";
+import TagCodeForm from "../forms/tagCodeInput/tagCodeInputForm";
 import NavBar from "../navigation/navbar/navbar";
 
 /**
- * Pet Edit Page
+ * Tag Code Input Page
  *
  * @returns HTML Element
  */
-const PetProfileEdit = () => {
+const TagCodeInput = () => {
   return (
     <React.Fragment>
       <NavBar />
-      <PetEdit />
+      <TagCodeForm />
     </React.Fragment>
   );
 };
 
-export default PetProfileEdit;
+export default TagCodeInput;

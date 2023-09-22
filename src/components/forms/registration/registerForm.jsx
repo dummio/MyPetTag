@@ -44,7 +44,7 @@ const RegisterForm = () => {
         .then((response) => {
           var uid = response;
           if (uid) {
-            var path = `/user/${uid}/pet/1/edit`;
+            var path = `/user/${uid}/account`;
             navigate(path, { replace: true });
           }
         })
