@@ -8,6 +8,7 @@ import React, { useEffect, useState } from "react";
 
 // Import CSS
 import PetImg from "../../../../images/pitbull.png";
+import DefaultImg from "../../../../images/profile-default.png";
 import "./petInformation.css";
 import { getPetData } from "../../../../firebaseCommands";
 
@@ -30,10 +31,22 @@ const PetInformation = () => {
   const [petAge, setPetAge] = useState(null);
   const [petWeight, setPetWeight] = useState(null);
   const [petSex, setPetSex] = useState(null);
+  const [petImage, setPetImage] = useState(null);
 
-  const [pet, setPet] = useState({
-    Image: PetImg,
-  });
+  const calculateAge = (date) => {
+    let dateObj = new Date(date);
+    let currDate = new Date();
+    let currAge = currDate.getFullYear() - dateObj.getFullYear();
+    if (
+      currDate.getMonth() < dateObj.getMonth() ||
+      (currDate.getMonth() === dateObj.getMonth() &&
+        currDate.getDate() < dateObj.getDate())
+    ) {
+      return currAge - 1;
+    } else {
+      return currAge;
+    }
+  };
 
   function calculateAgeFromDoB(date) {
     var dob = new Date(date);
@@ -69,21 +82,30 @@ const PetInformation = () => {
         "name",
         "breed",
         "descr",
-        "birthyear",
         "birthDate",
         "weight",
         "sex",
-      ]).catch(error => {
-        navigate('/*', {replace: true});
+        "imageUrl",
+      ]).catch((error) => {
+        navigate("/*", { replace: true });
       });
-      console.log("pet data in useEffect: ", petData);
       if (petData) {
+        console.log(petData);
+        console.log("db bd: ", petData["birthDate"]);
+
         setPetName(petData["name"]);
         setPetBreed(petData["breed"]);
         setPetDescr(petData["descr"]);
-        setPetAge(calculateAgeFromDoB(petData["birthDate"]));
+        let bd = petData["birthDate"];
+        if (bd) {
+          let age = calculateAge(petData["birthDate"]);
+          setPetAge(age);
+        } else {
+          setPetAge("N/A");
+        }
         setPetWeight(petData["weight"]);
         setPetSex(petData["sex"]);
+        setPetImage(petData["imageUrl"]);
       }
     }
     fetchPetData();
@@ -93,7 +115,7 @@ const PetInformation = () => {
     <div id="pet-information-container">
       <img
         className="pet-img"
-        src={pet.Image}
+        src={petImage ? petImage : DefaultImg}
         alt="Pet Img"
         width={157}
         height={157}
@@ -115,7 +137,13 @@ const PetInformation = () => {
         <div className="info-box">
           <p className="info-box-title">Age</p>
           <p className="info-box-value">
-            {petName ? (petAge ? petAge : "N/A") : "Loading"}
+            {petName
+              ? petAge === "N/A"
+                ? petAge
+                : petAge == 1
+                ? petAge + " yr"
+                : petAge + " yrs"
+              : "Loading"}
           </p>
         </div>
         <div className="info-box">

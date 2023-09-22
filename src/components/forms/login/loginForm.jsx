@@ -25,7 +25,6 @@ const LoginForm = () => {
   const [authState, setAuthState] = useState(false);
 
   const navigate = useNavigate();
-
   /**
    * Submits form input values to firebase and directs user to account page after auth.
    *

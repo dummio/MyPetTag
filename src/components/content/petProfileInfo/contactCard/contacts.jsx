@@ -25,9 +25,11 @@ const Contacts = () => {
 
   useEffect(() => {
     async function fetchPetData() {
-      const petContact = await getPetData(petID, ["contacts"]).catch(error => {
-        console.log(error);
-      });
+      const petContact = await getPetData(petID, ["contacts"]).catch(
+        (error) => {
+          console.log(error);
+        }
+      );
       if (petContact) {
         setContact(petContact["contacts"]);
       }
@@ -35,7 +37,6 @@ const Contacts = () => {
     fetchPetData();
   }, []);
 
-  console.log("KEVXUE@ ", contact);
   return (
     <div id="contacts-container">
       <div className="contacts-label-container">
