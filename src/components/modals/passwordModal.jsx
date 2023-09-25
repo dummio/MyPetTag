@@ -48,13 +48,7 @@ const PasswordModal = ({ showModal, setShowModal }) => {
                 (`~!@#$%^&*()-_+=|)
               </li>
             </ul>
-            <FontAwesomeIcon
-              icon={faX}
-              className="close-modal"
-              onClick={(e) => {
-                setShowModal((prev) => !prev);
-              }}
-            />
+            <FontAwesomeIcon icon={faX} className="close-modal" />
           </div>
         </div>
       ) : null}
