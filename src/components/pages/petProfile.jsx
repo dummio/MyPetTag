@@ -16,21 +16,46 @@ import BehaviorInformation from "../content/petProfileInfo/behaviorCard/behavior
 import VetProvider from "../content/petProfileInfo/vetProviderCard/vetProvider";
 import LocationService from "../content/petProfileInfo/locationServices/locationService";
 
+
+import { getUserAndPetIDFromTag } from "../../firebaseCommands";
 /**
  * Pet Profile Page
  *
  * @returns HTML Element
  */
-const PetProfile = () => {
+const PetProfile = async () => {
+  let pID = null;
+  let uID = null;
+  // async function getUidAndPid() {
+  //   if (window.location.pathname.split("/")[1] == "tag") {
+  //     const ids = await getUserAndPetIDFromTag(
+  //       window.location.pathname.split("/")[2]
+  //     );
+  //     pID = ids[1];
+  //     uID = ids[0];
+  //   } else {
+  //     pID = window.location.pathname.split("/")[4];
+  //   }
+  // }
+  // await getUidAndPid();
+  if (window.location.pathname.split("/")[1] == "tag") {
+    const ids = await getUserAndPetIDFromTag(
+      window.location.pathname.split("/")[2]
+    );
+    pID = ids[1];
+    uID = ids[0];
+  } else {
+    pID = window.location.pathname.split("/")[4];
+  }
   return (
     <React.Fragment>
       <NavBar />
-      <PetInformation />
-      <Contacts />
-      <Address />
-      <HealthInformation />
-      <BehaviorInformation />
-      <VetProvider />
+      <PetInformation userID={uID} petID={pID} />
+      <Contacts userID={uID} petID={pID} />
+      <Address userID={uID} petID={pID} />
+      <HealthInformation userID={uID} petID={pID} />
+      <BehaviorInformation userID={uID} petID={pID} />
+      <VetProvider userID={uID} petID={pID} />
       <LocationService />
     </React.Fragment>
   );

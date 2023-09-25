@@ -20,11 +20,11 @@ import { getPetData } from "../../../../firebaseCommands";
  *
  * @returns HTML Element
  */
-const VetProvider = () => {
+const VetProvider = ({ userID, petID }) => {
   const [hide, show] = useState(false);
 
   const [vet, setVet] = useState(null);
-  const petID = window.location.pathname.split("/")[4];
+  // const petID = window.location.pathname.split("/")[4];
 
   useEffect(() => {
     async function fetchPetData() {

@@ -227,8 +227,11 @@ export async function getUserData() {
  * @param {*} keys The pet fields to provide
  * @returns
  */
-export async function getPetData(petID, keys) {
-  const uid = await authStateChangedWrapper();
+export async function getPetData(uid, petID, keys) {
+  if(uid == null) {
+    console.log("whadaito: ", uid);
+    uid = await authStateChangedWrapper();
+  }
   try {
     const userDocRef = doc(db, "users", uid);
     const userDocSnap = await getDoc(userDocRef);
@@ -330,4 +333,11 @@ export async function getDogBreeds() {
   // });
   console.log(dogBreeds);
   return dogBreeds;
+}
+
+export async function getUserAndPetIDFromTag(tagID) {
+    const tagCodeRef = doc(db, "tags", tagID);
+    const tagCodeSnap = await getDoc(tagCodeRef);
+    console.log("HOWDYDO: ", tagCodeSnap.data().UserID);
+    return [tagCodeSnap.data().UserID, tagCodeSnap.data().Pet];
 }
