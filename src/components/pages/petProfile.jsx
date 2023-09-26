@@ -4,7 +4,7 @@
  */
 
 // Import React Modules
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 // Import Components
 import NavBar from "../navigation/navbar/navbar";
@@ -23,14 +23,17 @@ import { getUserAndPetIDFromTag } from "../../firebaseCommands";
  *
  * @returns HTML Element
  */
-const PetProfile = async () => {
-  let pID = null;
-  let uID = null;
-  // async function getUidAndPid() {
+const PetProfile = () => {
+  const [uID, setUID] = useState(null);
+  const [pID, setPID] = useState(null);
+  // let pID = null;
+  // let uID = null;
+  // function getUidAndPid() {
   //   if (window.location.pathname.split("/")[1] == "tag") {
-  //     const ids = await getUserAndPetIDFromTag(
+  //     let ids = [];
+  //     (async () => await getUserAndPetIDFromTag(
   //       window.location.pathname.split("/")[2]
-  //     );
+  //     )).then()();
   //     pID = ids[1];
   //     uID = ids[0];
   //   } else {
@@ -38,27 +41,50 @@ const PetProfile = async () => {
   //   }
   // }
   // await getUidAndPid();
-  if (window.location.pathname.split("/")[1] == "tag") {
-    const ids = await getUserAndPetIDFromTag(
-      window.location.pathname.split("/")[2]
+  // if (window.location.pathname.split("/")[1] == "tag") {
+  //   const ids = await getUserAndPetIDFromTag(
+  //     window.location.pathname.split("/")[2]
+  //   );
+  //   pID = ids[1];
+  //   uID = ids[0];
+  // } else {
+  //   pID = window.location.pathname.split("/")[4];
+  // }
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        if (window.location.pathname.split("/")[1] == "tag") {
+          const ids = await getUserAndPetIDFromTag(
+            window.location.pathname.split("/")[2]
+          );
+          setUID(ids[0]);
+          setPID(ids[1]);
+        }
+        else {
+          setPID(window.location.pathname.split("/")[4]);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchData();
+  }, []);
+
+  if (pID) {
+    return (
+      <React.Fragment>
+        <NavBar />
+        <PetInformation userID={uID} petID={pID} />
+        <Contacts userID={uID} petID={pID} />
+        <Address userID={uID} petID={pID} />
+        <HealthInformation userID={uID} petID={pID} />
+        <BehaviorInformation userID={uID} petID={pID} />
+        <VetProvider userID={uID} petID={pID} />
+        <LocationService />
+      </React.Fragment>
     );
-    pID = ids[1];
-    uID = ids[0];
-  } else {
-    pID = window.location.pathname.split("/")[4];
   }
-  return (
-    <React.Fragment>
-      <NavBar />
-      <PetInformation userID={uID} petID={pID} />
-      <Contacts userID={uID} petID={pID} />
-      <Address userID={uID} petID={pID} />
-      <HealthInformation userID={uID} petID={pID} />
-      <BehaviorInformation userID={uID} petID={pID} />
-      <VetProvider userID={uID} petID={pID} />
-      <LocationService />
-    </React.Fragment>
-  );
 };
 
 export default PetProfile;
