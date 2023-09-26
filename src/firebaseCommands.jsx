@@ -98,9 +98,11 @@ export async function logout() {
   signOut(auth)
     .then(() => {
       console.log("logout successful");
+      return true;
     })
     .catch((error) => {
       console.log("Error occurred logging out : ", error);
+      return false;
     });
 }
 
