@@ -28,6 +28,7 @@ import PetProfileEdit from "./components/pages/petProfileEdit";
 import LogOut from "./components/logout/logout";
 import InputCode from "./components/pages/tagCodeInput";
 import PetRegister from "./components/pages/petRegister";
+import AccountEdit from "./components/pages/accountEdit";
 
 const App = () => {
   return (
@@ -53,6 +54,7 @@ const App = () => {
               <Route path="edit" element={<PetProfileEdit />} />
             </Route>
             <Route path="account" element={<Account />} />
+            <Route path="settings" element={<AccountEdit />} />
             {/* <Route path="create" element={<PetRegister />} /> */}
           </Route>
         </Route>

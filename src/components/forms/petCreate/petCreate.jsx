@@ -413,7 +413,7 @@ const PetCreate = () => {
                 setPetDescr(e.target.value);
               }}
             />
-            <label>Pet Age</label>
+            <label>Pet Birth Date</label>
             <input
               className="form-input"
               type="date"

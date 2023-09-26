@@ -11,7 +11,7 @@ import PetProfileButton from "./petProfileButton";
 import "./accountInfo.css";
 import logo from "../../../images/paw.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen } from "@fortawesome/free-solid-svg-icons";
+import { faPen, faPlus } from "@fortawesome/free-solid-svg-icons";
 
 //import firebase helper function
 import { getUserData } from "../../../firebaseCommands";
@@ -38,8 +38,8 @@ const AccountInformation = () => {
   useEffect(() => {
     // Fetch user data when the component mounts
     async function fetchUserData() {
-      const userData = await getUserData().catch(error => {
-        navigate('/*', {replace: true});
+      const userData = await getUserData().catch((error) => {
+        navigate("/*", { replace: true });
       });
       if (userData) {
         setUser(userData[0]);
@@ -116,6 +116,13 @@ const AccountInformation = () => {
       <div id="pet-profiles-container">
         <div id="pet-container-name">
           <h2>Pet Profiles</h2>
+          <FontAwesomeIcon
+            icon={faPlus}
+            style={{ height: "31px" }}
+            onClick={() => {
+              navigate("/input-code", { replace: true });
+            }}
+          />
         </div>
         {realUser ? (
           realPet ? (

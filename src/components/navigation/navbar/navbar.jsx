@@ -55,21 +55,27 @@ const NavBar = () => {
    * @returns HTML Element
    */
   const AuthLinks = () => {
-    const path = `/user/${uid}/account`;
+    const account = `/user/${uid}/account`;
+    const settings = `/user/${uid}/settings`;
     if (isAuthed == true) {
       return (
         <div className="nav-menu">
           <a href="/shop">
             <h1 className="nav-menu-item">Shop</h1>
           </a>
-          <a href="/logout">
-            <h1 className="nav-menu-item">Logout</h1>
-          </a>
-          <a href={path}>
+          <a href={account}>
             <h1 className="nav-menu-item">Account</h1>
           </a>
+          <a href={settings}>
+            <h1 className="nav-menu-item">Settings</h1>
+          </a>
           <a href="/input-code">
-            <h1 className="nav-menu-item">Input Code</h1>
+            <h1 className="nav-menu-item">Create Pet</h1>
+          </a>
+          <a href="/logout">
+            <h1 className="nav-menu-item">
+              <span style={{ color: "crimson" }}>Logout</span>
+            </h1>
           </a>
         </div>
       );

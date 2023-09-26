@@ -119,7 +119,7 @@ const PetEdit = () => {
               rows={5}
               cols={50}
             />
-            <label>Pet Age</label>
+            <label>Pet Birth Date</label>
             <input
               className="form-input"
               type="date"
