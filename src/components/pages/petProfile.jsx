@@ -71,7 +71,7 @@ const PetProfile = () => {
     fetchData();
   }, []);
 
-  if (pID) {
+  if (pID != null) {
     return (
       <React.Fragment>
         <NavBar />
