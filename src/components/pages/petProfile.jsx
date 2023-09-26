@@ -26,30 +26,6 @@ import { getUserAndPetIDFromTag } from "../../firebaseCommands";
 const PetProfile = () => {
   const [uID, setUID] = useState(null);
   const [pID, setPID] = useState(null);
-  // let pID = null;
-  // let uID = null;
-  // function getUidAndPid() {
-  //   if (window.location.pathname.split("/")[1] == "tag") {
-  //     let ids = [];
-  //     (async () => await getUserAndPetIDFromTag(
-  //       window.location.pathname.split("/")[2]
-  //     )).then()();
-  //     pID = ids[1];
-  //     uID = ids[0];
-  //   } else {
-  //     pID = window.location.pathname.split("/")[4];
-  //   }
-  // }
-  // await getUidAndPid();
-  // if (window.location.pathname.split("/")[1] == "tag") {
-  //   const ids = await getUserAndPetIDFromTag(
-  //     window.location.pathname.split("/")[2]
-  //   );
-  //   pID = ids[1];
-  //   uID = ids[0];
-  // } else {
-  //   pID = window.location.pathname.split("/")[4];
-  // }
 
   useEffect(() => {
     async function fetchData() {
