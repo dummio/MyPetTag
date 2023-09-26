@@ -43,7 +43,7 @@
 }
 
 #settings-container {
-  width: 300px;
+  min-width: 300px;
 }
 
 #settings-container h3 {
@@ -64,6 +64,7 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  width: 300px;
 }
 
 #checkbox-container {
