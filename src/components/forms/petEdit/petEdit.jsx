@@ -116,7 +116,7 @@ const PetEdit = () => {
               onChange={handleChange}
             />
             <label>Pet Species</label>
-            <Select // TODO
+            <Select
               isClearable
               isSearchable
               closeMenuOnSelect={true}
@@ -125,7 +125,7 @@ const PetEdit = () => {
               onChange={(e) => setValue('petSpecies', e?.value, false)}
             />
             <label>Pet Breed</label>
-            <CreatableSelect // TODO
+            <CreatableSelect
               isClearable
               isSearchable
               closeMenuOnSelect={true}
@@ -159,7 +159,7 @@ const PetEdit = () => {
               style={{ appearance: 'textfield' }}
             />
             <label>Pet Sex</label>
-            <Select // TODO
+            <Select
               isClearable
               isSearchable
               closeMenuOnSelect={true}
@@ -191,7 +191,7 @@ const PetEdit = () => {
             <input
               className='form-input'
               type='text'
-              name='contactAddress' // TODO: Adapt for multiple contacts
+              name='address'
               onChange={handleChange}
               placeholder='1234 Park Ave, City, TX 12345'
             />
@@ -214,7 +214,7 @@ const PetEdit = () => {
         {petHealthHide && (
           <>
             <label>Vaccines</label>
-            <CreatableSelect // TODO
+            <CreatableSelect
               isMulti
               isClearable
               isSearchable
@@ -224,7 +224,7 @@ const PetEdit = () => {
               onChange={(e) => setValue('petVaccines', e?.value, false)}
             />
             <label>Health Conditions</label>
-            <CreatableSelect // TODO
+            <CreatableSelect
               isMulti
               isClearable
               isSearchable
@@ -234,7 +234,7 @@ const PetEdit = () => {
               onChange={(e) => setValue('petHealth', e?.value, false)}
             />
             <label>Medications</label>
-            <CreatableSelect // TODO
+            <CreatableSelect
               isMulti
               isClearable
               isSearchable
@@ -244,7 +244,7 @@ const PetEdit = () => {
               onChange={(e) => setValue('petMedications', e?.value, false)}
             />
             <label>Allergies</label>
-            <CreatableSelect // TODO
+            <CreatableSelect
               isMulti
               isClearable
               isSearchable
@@ -280,7 +280,7 @@ const PetEdit = () => {
         {petBehaviorHide && (
           <>
             <label>Aggressions</label>
-            <CreatableSelect // TODO
+            <CreatableSelect
               isMulti
               isClearable
               isSearchable
@@ -290,7 +290,7 @@ const PetEdit = () => {
               onChange={(e) => setValue('petAggressions', e?.value, false)}
             />
             <label>Good With</label>
-            <CreatableSelect // TODO
+            <CreatableSelect
               isMulti
               isClearable
               isSearchable
