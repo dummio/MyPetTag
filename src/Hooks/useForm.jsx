@@ -4,8 +4,8 @@
  */
 
 // Import React Modules
-import React, { useState } from "react";
-import { omit } from "lodash";
+import { useState } from 'react';
+import { omit } from 'lodash';
 
 /**
  * Returns hooks to use for form validation
@@ -16,77 +16,62 @@ function useForm(callback) {
   const [values, setValues] = useState({});
   const [errors, setErrors] = useState({});
 
-  function validate(event, name, value) {
+  function validate(name, value, required) {
     // A function to validate each input values
-    let required = event.target.required;
-
-    switch (name) {
-      case "email":
-        if (
-          !new RegExp(
-            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-          ).test(value)
-        ) {
-          if (required || value.length > 0) {
-            setErrors({
-              ...errors,
-              email: "Enter a valid email address.",
-            });
-          }
-        } else {
-          let newObj = omit(errors, "email");
-          setErrors(newObj);
-        }
-        break;
-      case "phone":
-        if (
-          !new RegExp(
-            /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/
-          ).test(value)
-        ) {
-          if (required || value.length > 0) {
-            setErrors({
-              ...errors,
-              phone: "Enter a valid phone number.",
-            });
-          }
-        } else {
-          let newObj = omit(errors, "phone");
-          setErrors(newObj);
-        }
-        break;
-      case "password":
-        if (
-          !new RegExp(
-            /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/
-          ).test(value)
-        ) {
-          if (required || value.length > 0) {
-            setErrors({
-              ...errors,
-              password:
-                "Password does not meet requirements.",
-            });
-          }
-        } else {
-          let newObj = omit(errors, "password");
-          setErrors(newObj);
-        }
-        break;
-      default:
-        if (
-          required &&
-          (value === null || value == undefined || value === "")
-        ) {
+    if (name === 'email') {
+      if (
+        !new RegExp(
+          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        ).test(value)
+      ) {
+        if (required || value.length > 0) {
           setErrors({
             ...errors,
-            [name]: "Field cannot be empty.",
+            [name]: 'Enter a valid email address.',
           });
-        } else {
-          let newObj = omit(errors, name);
-          setErrors(newObj);
         }
-        break;
+      } else {
+        let newObj = omit(errors, name);
+        setErrors(newObj);
+      }
+    } else if (name === 'phone' || name === 'contactPhone') {
+      if (
+        !new RegExp(
+          /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/
+        ).test(value)
+      ) {
+        if (required || value.length > 0) {
+          setErrors({
+            ...errors,
+            [name]: 'Enter a valid phone number.',
+          });
+        }
+      } else {
+        let newObj = omit(errors, name);
+        setErrors(newObj);
+      }
+    } else if (name === 'password') {
+      if (!new RegExp(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/).test(value)) {
+        if (required || value.length > 0) {
+          setErrors({
+            ...errors,
+            [name]: 'Password does not meet requirements.',
+          });
+        }
+      } else {
+        let newObj = omit(errors, name);
+        setErrors(newObj);
+      }
+    } else {
+      if (required && (value === null || value === undefined || value === '')) {
+        setErrors({
+          ...errors,
+          [name]: 'Field cannot be empty.',
+        });
+      } else {
+        let newObj = omit(errors, name);
+        setErrors(newObj);
+      }
     }
   }
 
@@ -94,13 +79,17 @@ function useForm(callback) {
     event.persist();
 
     let name = event.target.name;
-    let val = event.target.value;
+    let value = event.target.value;
 
-    validate(event, name, val);
+    setValue(name, value, event.target.required);
+  }
+
+  function setValue(name, value, required) {
+    validate(name, value, required);
 
     setValues({
       ...values,
-      [name]: val,
+      [name]: value,
     });
   }
 
@@ -117,6 +106,7 @@ function useForm(callback) {
     errors,
     handleChange,
     handleSubmit,
+    setValue,
   };
 }
 
