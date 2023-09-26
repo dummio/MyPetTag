@@ -36,6 +36,9 @@ const PetEdit = () => {
 
   function formSubmit() {
     console.debug(values, errors);
+    if (canSubmit) {
+      console.debug('Success!');
+    }
     return null;
   }
 
