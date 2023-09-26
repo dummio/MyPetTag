@@ -32,6 +32,7 @@ const PetEdit = () => {
   const [petHealthHide, setPetHealthHide] = useState(false);
   const [petBehaviorHide, setPetBehaviorHide] = useState(false);
   const [petVetHide, setPetVetHide] = useState(false);
+  const [canSubmit, setCanSubmit] = useState(false);
 
   function formSubmit() {
     console.debug(values, errors);
@@ -41,6 +42,11 @@ const PetEdit = () => {
   const { handleChange, values, errors, handleSubmit, setValue } = useForm(formSubmit);
 
   useEffect(() => {
+    if (Object.keys(errors).length === 0 && Object.keys(values).length !== 0) {
+      setCanSubmit(true);
+    } else {
+      setCanSubmit(false);
+    }
     console.debug(values, errors);
   }, [values, errors]);
 
