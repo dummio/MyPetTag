@@ -108,6 +108,7 @@ const PetEdit = () => {
               onChange={UploadImage}
             />
             <label>Pet Name</label>
+            <div className='error-container'>{errors.petName}</div>
             <input
               className='form-input'
               type='text'
@@ -116,6 +117,7 @@ const PetEdit = () => {
               onChange={handleChange}
             />
             <label>Pet Species</label>
+            <div className='error-container'>{errors.petSpecies}</div>
             <Select
               isClearable
               isSearchable
@@ -125,6 +127,7 @@ const PetEdit = () => {
               onChange={(e) => setValue('petSpecies', e?.value, false)}
             />
             <label>Pet Breed</label>
+            <div className='error-container'>{errors.petBreed}</div>
             <CreatableSelect
               isClearable
               isSearchable
@@ -134,14 +137,16 @@ const PetEdit = () => {
               onChange={(e) => setValue('petBreed', e?.value, false)}
             />
             <label>Pet Description</label>
+            <div className='error-container'>{errors.petDescription}</div>
             <textarea
               className='form-textarea'
               rows={5}
               cols={50}
-              name='description'
+              name='petDescription'
               onChange={handleChange}
             />
             <label>Pet Age</label>
+            <div className='error-container'>{errors.petDoB}</div>
             <input
               className='form-input'
               type='date'
@@ -151,14 +156,17 @@ const PetEdit = () => {
               onChange={handleChange}
             />
             <label>Pet Weight</label>
+            <div className='error-container'>{errors.petWeight}</div>
             <input
               className='form-input'
               type='number'
+              required
               name='weight'
               onChange={handleChange}
               style={{ appearance: 'textfield' }}
             />
             <label>Pet Sex</label>
+            <div className='error-container'>{errors.petSex}</div>
             <Select
               isClearable
               isSearchable
@@ -172,6 +180,7 @@ const PetEdit = () => {
               <FontAwesomeIcon icon={faPlus} style={{ height: '25px' }} />
             </div>
             {/* {TODO: Wrap in map to dynamically add more contacts} */}
+            <div className='error-container'>{errors.contactName}</div>
             <input
               className='form-input'
               type='text'
@@ -179,6 +188,7 @@ const PetEdit = () => {
               name='contactName' // TODO: Adapt for multiple contacts
               onChange={handleChange}
             />
+            <div className='error-container'>{errors.contactPhone}</div>
             <input
               className='form-input'
               type='tel'
@@ -188,6 +198,7 @@ const PetEdit = () => {
             />
             {/*------------------------------------------------------------------*/}
             <label>Address</label>
+            <div className='error-container'>{errors.address}</div>
             <input
               className='form-input'
               type='text'
@@ -214,6 +225,7 @@ const PetEdit = () => {
         {petHealthHide && (
           <>
             <label>Vaccines</label>
+            <div className='error-container'>{errors.petVaccines}</div>
             <CreatableSelect
               isMulti
               isClearable
@@ -224,6 +236,7 @@ const PetEdit = () => {
               onChange={(e) => setValue('petVaccines', e?.value, false)}
             />
             <label>Health Conditions</label>
+            <div className='error-container'>{errors.petHealth}</div>
             <CreatableSelect
               isMulti
               isClearable
@@ -234,6 +247,7 @@ const PetEdit = () => {
               onChange={(e) => setValue('petHealth', e?.value, false)}
             />
             <label>Medications</label>
+            <div className='error-container'>{errors.petMedications}</div>
             <CreatableSelect
               isMulti
               isClearable
@@ -244,6 +258,7 @@ const PetEdit = () => {
               onChange={(e) => setValue('petMedications', e?.value, false)}
             />
             <label>Allergies</label>
+            <div className='error-container'>{errors.petAllergies}</div>
             <CreatableSelect
               isMulti
               isClearable
@@ -254,6 +269,7 @@ const PetEdit = () => {
               onChange={(e) => setValue('petAlergies', e?.value, false)}
             />
             <label>Additional Information</label>
+            <div className='error-container'>{errors.healthDescription}</div>
             <textarea
               className='form-textarea'
               rows={5}
@@ -280,6 +296,7 @@ const PetEdit = () => {
         {petBehaviorHide && (
           <>
             <label>Aggressions</label>
+            <div className='error-container'>{errors.petAggressions}</div>
             <CreatableSelect
               isMulti
               isClearable
@@ -290,6 +307,7 @@ const PetEdit = () => {
               onChange={(e) => setValue('petAggressions', e?.value, false)}
             />
             <label>Good With</label>
+            <div className='error-container'>{errors.petGoodWith}</div>
             <CreatableSelect
               isMulti
               isClearable
@@ -300,6 +318,7 @@ const PetEdit = () => {
               onChange={(e) => setValue('petGoodWith', e?.value, false)}
             />
             <label>Additional Information</label>
+            <div className='error-container'>{errors.behaviorDescription}</div>
             <textarea
               className='form-textarea'
               rows={5}
@@ -325,6 +344,7 @@ const PetEdit = () => {
         </h2>
         {petVetHide && (
           <>
+            <div className='error-container'>{errors.clinicName}</div>
             <input
               className='form-input'
               type='text'
@@ -332,6 +352,7 @@ const PetEdit = () => {
               name='clinicName'
               onChange={handleChange}
             />
+            <div className='error-container'>{errors.clinicAddress}</div>
             <input
               className='form-input'
               type='text'
@@ -339,6 +360,7 @@ const PetEdit = () => {
               name='clinicAddress'
               onChange={handleChange}
             />
+            <div className='error-container'>{errors.clinicPhone}</div>
             <input
               className='form-input'
               type='tel'
@@ -346,6 +368,7 @@ const PetEdit = () => {
               name='clinicPhone'
               onChange={handleChange}
             />
+            <div className='error-container'>{errors.vetName}</div>
             <input
               className='form-input'
               type='text'
@@ -353,6 +376,7 @@ const PetEdit = () => {
               name='vetName'
               onChange={handleChange}
             />
+            <div className='error-container'>{errors.microchipID}</div>
             <input
               className='form-input'
               type='text'
