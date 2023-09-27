@@ -17,6 +17,8 @@ function useForm(callback) {
   const [errors, setErrors] = useState({});
 
   function validate(name, value, required) {
+    console.log(required);
+
     // A function to validate each input values
     if (name === 'email') {
       if (
@@ -62,6 +64,21 @@ function useForm(callback) {
         let newObj = omit(errors, name);
         setErrors(newObj);
       }
+    } else if (name === 'petWeight') {
+      if (required && (value === null || value === undefined || value === '')) {
+        setErrors({
+          ...errors,
+          [name]: 'Field cannot be empty.',
+        });
+      } else if (value < 1 || value > 400) {
+        setErrors({
+          ...errors,
+          [name]: 'Enter a valid weight.',
+        });
+      } else {
+        let newObj = omit(errors, name);
+        setErrors(newObj);
+      }
     } else {
       if (required && (value === null || value === undefined || value === '')) {
         setErrors({
@@ -95,6 +112,10 @@ function useForm(callback) {
 
   function handleSubmit(event) {
     if (event) event.preventDefault();
+
+    for (let key in values) {
+      validate(key, values[key]);
+    }
 
     if (Object.keys(errors).length === 0 && Object.keys(values).length !== 0) {
       callback();

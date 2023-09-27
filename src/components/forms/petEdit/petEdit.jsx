@@ -124,7 +124,8 @@ const PetEdit = () => {
               closeMenuOnSelect={true}
               styles={SelectStyles}
               options={options}
-              onChange={(e) => setValue('petSpecies', e?.value, false)}
+              required
+              onChange={(e) => setValue('petSpecies', e?.value, true)}
             />
             <label>Pet Breed</label>
             <div className='error-container'>{errors.petBreed}</div>
@@ -134,7 +135,8 @@ const PetEdit = () => {
               closeMenuOnSelect={true}
               styles={SelectStyles}
               options={options}
-              onChange={(e) => setValue('petBreed', e?.value, false)}
+              required
+              onChange={(e) => setValue('petBreed', e?.value, true)}
             />
             <label>Pet Description</label>
             <div className='error-container'>{errors.petDescription}</div>
@@ -161,7 +163,10 @@ const PetEdit = () => {
               className='form-input'
               type='number'
               required
-              name='weight'
+              name='petWeight'
+              min='1'
+              max='400'
+              step='1'
               onChange={handleChange}
               style={{ appearance: 'textfield' }}
             />
@@ -173,7 +178,8 @@ const PetEdit = () => {
               closeMenuOnSelect={true}
               styles={SelectStyles}
               options={options}
-              onChange={(e) => setValue('petSex', e?.value, false)}
+              required
+              onChange={(e) => setValue('petSex', e?.value, true)}
             />
             <div id='form-contacts-container'>
               <label>Contacts</label>
