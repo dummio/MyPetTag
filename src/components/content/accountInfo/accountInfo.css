@@ -99,6 +99,8 @@
 
 #pet-container-name {
   border-bottom: 5px solid #0f5738;
+  display: flex;
+  justify-content: space-between;
 }
 
 #pet-profiles-container h2 {
