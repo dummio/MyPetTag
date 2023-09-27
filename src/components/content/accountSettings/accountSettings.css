@@ -87,3 +87,8 @@
   margin: 0px 0px 10px 0px;
   font-size: 14px;
 }
+
+hr {
+  color: #0f5738;
+  border: 2px solid #0f5738;
+}
