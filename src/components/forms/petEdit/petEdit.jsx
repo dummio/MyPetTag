@@ -116,10 +116,11 @@ const PetEdit = () => {
             <textarea
               className="form-textarea"
               name="description"
+              placeholder="Please give a brief introduction about your pet?"
               rows={5}
               cols={50}
             />
-            <label>Pet Age</label>
+            <label>Pet Birth Date</label>
             <input
               className="form-input"
               type="date"
@@ -181,6 +182,7 @@ const PetEdit = () => {
               isClearable
               isSearchable
               closeMenuOnSelect={false}
+              placeholder="Select all that apply..."
               styles={SelectMultiStyles}
               options={options}
             />
@@ -190,6 +192,7 @@ const PetEdit = () => {
               isClearable
               isSearchable
               closeMenuOnSelect={false}
+              placeholder="Select all that apply..."
               styles={SelectMultiStyles}
               options={options}
             />
@@ -199,6 +202,7 @@ const PetEdit = () => {
               isClearable
               isSearchable
               closeMenuOnSelect={false}
+              placeholder="Select all that apply..."
               styles={SelectMultiStyles}
               options={options}
             />
@@ -208,6 +212,7 @@ const PetEdit = () => {
               isClearable
               isSearchable
               closeMenuOnSelect={false}
+              placeholder="Select all that apply..."
               styles={SelectMultiStyles}
               options={options}
             />
@@ -242,6 +247,7 @@ const PetEdit = () => {
               isClearable
               isSearchable
               closeMenuOnSelect={false}
+              placeholder="Select all that apply..."
               styles={SelectMultiStyles}
               options={options}
             />
@@ -251,6 +257,7 @@ const PetEdit = () => {
               isClearable
               isSearchable
               closeMenuOnSelect={false}
+              placeholder="Select all that apply..."
               styles={SelectMultiStyles}
               options={options}
             />

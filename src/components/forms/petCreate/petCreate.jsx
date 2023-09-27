@@ -407,13 +407,14 @@ const PetCreate = () => {
             <textarea
               className="form-textarea"
               name="description"
+              placeholder="Please give a brief introduction about your pet?"
               rows={5}
               cols={50}
               onChange={(e) => {
                 setPetDescr(e.target.value);
               }}
             />
-            <label>Pet Age</label>
+            <label>Pet Birth Date</label>
             <input
               className="form-input"
               type="date"
@@ -501,6 +502,7 @@ const PetCreate = () => {
               isClearable
               isSearchable
               closeMenuOnSelect={false}
+              placeholder="Select all that apply..."
               styles={SelectMultiStyles}
               options={Vaccines}
               onChange={(e) => {
@@ -515,6 +517,7 @@ const PetCreate = () => {
               isClearable
               isSearchable
               closeMenuOnSelect={false}
+              placeholder="Select all that apply..."
               styles={SelectMultiStyles}
               options={HealthConditions}
               onChange={(e) => {
@@ -529,6 +532,7 @@ const PetCreate = () => {
               isClearable
               isSearchable
               closeMenuOnSelect={false}
+              placeholder="Select all that apply..."
               styles={SelectMultiStyles}
               options={Medications}
               onChange={(e) => {
@@ -543,6 +547,7 @@ const PetCreate = () => {
               isClearable
               isSearchable
               closeMenuOnSelect={false}
+              placeholder="Select all that apply..."
               styles={SelectMultiStyles}
               options={Allergies}
               onChange={(e) => {
@@ -585,6 +590,7 @@ const PetCreate = () => {
               isClearable
               isSearchable
               closeMenuOnSelect={false}
+              placeholder="Select all that apply..."
               styles={SelectMultiStyles}
               options={PetAggressions}
               onChange={(e) => {
@@ -599,6 +605,7 @@ const PetCreate = () => {
               isClearable
               isSearchable
               closeMenuOnSelect={false}
+              placeholder="Select all that apply..."
               styles={SelectMultiStyles}
               options={PetGoodWith}
               onChange={(e) => {
