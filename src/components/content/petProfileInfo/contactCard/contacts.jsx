@@ -5,6 +5,7 @@
 
 // Import React Modules
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 // Import CSS
 import { faPhone } from "@fortawesome/free-solid-svg-icons";
@@ -46,9 +47,22 @@ const Contacts = () => {
         <p className="contact-title">
           {contact ? (contact["Name"] ? contact["Name"] : "N/A") : "Loading..."}
         </p>
-        <p className="contact-phone">
+        <a
+          className="contact-phone"
+          href={`tel:${
+            contact
+              ? contact["Phone"]
+                ? contact["Phone"]
+                : "N/A"
+              : "Loading..."
+          }`}
+        >
           <FontAwesomeIcon
-            style={{ color: "#000000", fontSize: "18px", paddingRight: "10px" }}
+            style={{
+              color: "#000000",
+              fontSize: "18px",
+              paddingRight: "10px",
+            }}
             icon={faPhone}
           />
           {contact
@@ -56,7 +70,7 @@ const Contacts = () => {
               ? contact["Phone"]
               : "N/A"
             : "Loading..."}
-        </p>
+        </a>
       </div>
     </div>
   );

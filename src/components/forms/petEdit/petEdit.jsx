@@ -181,13 +181,13 @@ const PetEdit = () => {
             <div className='error-container'>{errors.petDescription}</div>
             <textarea
               className='form-textarea'
+              placeholder='Please give a brief introduction about your pet?'
               rows={5}
               cols={50}
               name='petDescription'
               onChange={handleChange}
             />
-            <label>Pet Age</label>
-            <div className='error-container'>{errors.petDoB}</div>
+            <label>Pet Birth Date</label>
             <input
               className='form-input'
               type='date'
@@ -276,6 +276,7 @@ const PetEdit = () => {
               isClearable
               isSearchable
               closeMenuOnSelect={false}
+              placeholder='Select all that apply...'
               styles={SelectMultiStyles}
               options={emptyOptions}
               onChange={(e) => setValue('petVaccines', e?.value, false)}
@@ -287,6 +288,7 @@ const PetEdit = () => {
               isClearable
               isSearchable
               closeMenuOnSelect={false}
+              placeholder='Select all that apply...'
               styles={SelectMultiStyles}
               options={emptyOptions}
               onChange={(e) => setValue('petHealth', e?.value, false)}
@@ -298,6 +300,7 @@ const PetEdit = () => {
               isClearable
               isSearchable
               closeMenuOnSelect={false}
+              placeholder='Select all that apply...'
               styles={SelectMultiStyles}
               options={emptyOptions}
               onChange={(e) => setValue('petMedications', e?.value, false)}
@@ -309,6 +312,7 @@ const PetEdit = () => {
               isClearable
               isSearchable
               closeMenuOnSelect={false}
+              placeholder='Select all that apply...'
               styles={SelectMultiStyles}
               options={emptyOptions}
               onChange={(e) => setValue('petAllergies', e?.value, false)}
@@ -347,6 +351,7 @@ const PetEdit = () => {
               isClearable
               isSearchable
               closeMenuOnSelect={false}
+              placeholder='Select all that apply...'
               styles={SelectMultiStyles}
               options={PetAggressions}
               onChange={(e) => setValue('petAggressions', e?.value, false)}
@@ -358,6 +363,7 @@ const PetEdit = () => {
               isClearable
               isSearchable
               closeMenuOnSelect={false}
+              placeholder='Select all that apply...'
               styles={SelectMultiStyles}
               options={PetGoodWith}
               onChange={(e) => setValue('petGoodWith', e?.value, false)}
