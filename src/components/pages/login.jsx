@@ -9,6 +9,7 @@ import React from "react";
 // Import Components
 import LoginForm from "../forms/login/loginForm";
 import NavBar from "../navigation/navbar/navbar";
+import Alert from "../navigation/alert/alert";
 
 /**
  * Login Page
@@ -19,6 +20,7 @@ const Login = () => {
   return (
     <React.Fragment>
       <NavBar />
+      <Alert />
       <LoginForm />
     </React.Fragment>
   );
