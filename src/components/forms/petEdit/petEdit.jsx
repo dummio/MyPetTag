@@ -8,6 +8,7 @@ import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 import useForm from '../../../Hooks/useForm';
+import { getDogBreeds } from '../../../firebaseCommands';
 
 // Import CSS
 import './petEdit.css';
@@ -54,10 +55,48 @@ const PetEdit = () => {
   }, [values, errors]);
 
   // Temp Array
-  const options = [];
+  const PetTypes = [
+    { value: 'Dog', label: 'Dog' },
+    { value: 'Cat', label: 'Cat' },
+    { value: 'Other', label: 'Other' },
+  ];
+  const [PetBreeds, setPetBreeds] = useState([]);
+  const PetSex = [
+    { value: 'Male', label: 'Male' },
+    { value: 'Neutered Male', label: 'Neutered Male' },
+    { value: 'Female', label: 'Female' },
+    { value: 'Spayed Female', label: 'Spayed Female' },
+  ];
+  const PetAggressions = [
+    { value: 'Men', label: 'Men' },
+    { value: 'Women', label: 'Women' },
+    { value: 'Children', label: 'Children' },
+    { value: 'Cats', label: 'Cats' },
+    { value: 'Dogs', label: 'Dogs' },
+    { value: 'Other', label: 'Other' },
+  ];
+  const PetGoodWith = [
+    { value: 'Men', label: 'Men' },
+    { value: 'Women', label: 'Women' },
+    { value: 'Children', label: 'Children' },
+    { value: 'Cats', label: 'Cats' },
+    { value: 'Dogs', label: 'Dogs' },
+    { value: 'Other', label: 'Other' },
+  ];
 
-  // Temp Name
+  useEffect(() => {
+    async function fetchPetBreedInfo() {
+      const dogBreeds = await getDogBreeds();
+      if (dogBreeds) {
+        setPetBreeds(dogBreeds);
+      }
+    }
+    fetchPetBreedInfo();
+  }, []);
+
+  // Temp Info
   const pet = 'pet-name';
+  const emptyOptions = [];
 
   const UploadImage = (e) => {
     e.preventDefault();
@@ -123,7 +162,7 @@ const PetEdit = () => {
               isSearchable
               closeMenuOnSelect={true}
               styles={SelectStyles}
-              options={options}
+              options={PetTypes}
               required
               onChange={(e) => setValue('petSpecies', e?.value, true)}
             />
@@ -134,7 +173,7 @@ const PetEdit = () => {
               isSearchable
               closeMenuOnSelect={true}
               styles={SelectStyles}
-              options={options}
+              options={PetBreeds}
               required
               onChange={(e) => setValue('petBreed', e?.value, true)}
             />
@@ -177,7 +216,7 @@ const PetEdit = () => {
               isSearchable
               closeMenuOnSelect={true}
               styles={SelectStyles}
-              options={options}
+              options={PetSex}
               required
               onChange={(e) => setValue('petSex', e?.value, true)}
             />
@@ -238,7 +277,7 @@ const PetEdit = () => {
               isSearchable
               closeMenuOnSelect={false}
               styles={SelectMultiStyles}
-              options={options}
+              options={emptyOptions}
               onChange={(e) => setValue('petVaccines', e?.value, false)}
             />
             <label>Health Conditions</label>
@@ -249,7 +288,7 @@ const PetEdit = () => {
               isSearchable
               closeMenuOnSelect={false}
               styles={SelectMultiStyles}
-              options={options}
+              options={emptyOptions}
               onChange={(e) => setValue('petHealth', e?.value, false)}
             />
             <label>Medications</label>
@@ -260,7 +299,7 @@ const PetEdit = () => {
               isSearchable
               closeMenuOnSelect={false}
               styles={SelectMultiStyles}
-              options={options}
+              options={emptyOptions}
               onChange={(e) => setValue('petMedications', e?.value, false)}
             />
             <label>Allergies</label>
@@ -271,8 +310,8 @@ const PetEdit = () => {
               isSearchable
               closeMenuOnSelect={false}
               styles={SelectMultiStyles}
-              options={options}
-              onChange={(e) => setValue('petAlergies', e?.value, false)}
+              options={emptyOptions}
+              onChange={(e) => setValue('petAllergies', e?.value, false)}
             />
             <label>Additional Information</label>
             <div className='error-container'>{errors.healthDescription}</div>
@@ -309,7 +348,7 @@ const PetEdit = () => {
               isSearchable
               closeMenuOnSelect={false}
               styles={SelectMultiStyles}
-              options={options}
+              options={PetAggressions}
               onChange={(e) => setValue('petAggressions', e?.value, false)}
             />
             <label>Good With</label>
@@ -320,7 +359,7 @@ const PetEdit = () => {
               isSearchable
               closeMenuOnSelect={false}
               styles={SelectMultiStyles}
-              options={options}
+              options={PetGoodWith}
               onChange={(e) => setValue('petGoodWith', e?.value, false)}
             />
             <label>Additional Information</label>
