@@ -42,4 +42,6 @@
   font-size: 16px;
   margin: 0px;
   padding-right: 15px;
+  text-decoration: none;
+  color: inherit;
 }
