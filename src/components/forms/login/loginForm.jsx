@@ -4,14 +4,14 @@
  */
 
 // Import React Modules
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 // Import CSS
 import "./loginForm.css";
 import logo from "../../../images/paw.png";
 
 //import firebase helper function
-import { login } from "../../../firebaseCommands";
+import { login, isUserAuthenticated } from "../../../firebaseCommands";
 import { useNavigate } from "react-router-dom";
 
 /**
@@ -23,8 +23,20 @@ const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [authState, setAuthState] = useState(false);
+  //const [authID, setAuthID] = useState(null);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    async function fetchAuth() {
+      const isAuthed = await isUserAuthenticated();
+      if (isAuthed) {
+        navigate("/user/REMOVEME/account", { replace: true });
+      }
+    }
+    fetchAuth();
+  }, []);
+
   /**
    * Submits form input values to firebase and directs user to account page after auth.
    *

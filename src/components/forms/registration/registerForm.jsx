@@ -5,7 +5,7 @@
 
 // Import React Modules
 import React, { useEffect, useState } from "react";
-import { addNewUserToDatabase } from "../../../firebaseCommands";
+import { addNewUserToDatabase, isUserAuthenticated } from "../../../firebaseCommands";
 import { useNavigate } from "react-router-dom";
 import useForm from "../../../Hooks/useForm";
 
@@ -57,6 +57,13 @@ const RegisterForm = () => {
   const { handleChange, values, errors, handleSubmit } = useForm(formRegister);
 
   useEffect(() => {
+    async function fetchAuth() {
+      const isAuthed = await isUserAuthenticated();
+      if (isAuthed) {
+        navigate("/user/REMOVEME/account", { replace: true });
+      }
+    }
+    fetchAuth();
     if (
       Object.keys(errors).length === 0 &&
       Object.keys(values).length !== 0 &&

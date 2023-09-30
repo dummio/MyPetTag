@@ -19,13 +19,12 @@ import { getPetData } from "../../../../firebaseCommands";
  *
  * @returns HTML Element
  */
-const Address = () => {
-  const petID = window.location.pathname.split("/")[4];
+const Address = ({ userID, petID }) => {
   const [petAddr, setAddress] = useState(null);
 
   useEffect(() => {
     async function fetchPetData() {
-      const petAddr = await getPetData(petID, ["addr"]);
+      const petAddr = await getPetData(userID, petID, ["addr"]);
       if (petAddr) {
         setAddress(petAddr["addr"]);
       }

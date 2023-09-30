@@ -17,7 +17,7 @@ import { getPetData } from "../../../../firebaseCommands";
  *
  * @returns HTML Element
  */
-const HealthInformation = () => {
+const HealthInformation = ({ userID, petID }) => {
   // Render States
   const [hide, show] = useState(false);
 
@@ -27,7 +27,7 @@ const HealthInformation = () => {
   const [medications, setMedications] = useState([]);
   const [allergies, setAllergies] = useState([]);
   const [healthInfo, setHealthInfo] = useState("");
-  const petID = window.location.pathname.split("/")[4];
+  //const petID = window.location.pathname.split("/")[4];
 
   const ExpandTile = () => {
     show(!hide);
@@ -44,7 +44,7 @@ const HealthInformation = () => {
 
   useEffect(() => {
     async function fetchPetData() {
-      const petHealth = await getPetData(petID, [
+      const petHealth = await getPetData(userID, petID, [
         "vaccines",
         "conds",
         "meds",
