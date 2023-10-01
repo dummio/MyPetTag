@@ -29,6 +29,12 @@ import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
 
+// For cropping
+import Cropper from "react-easy-crop";
+import Slider from "@mui/base/Slider";
+import Button from "@mui/base/Button";
+import CropEasy from "../../crop/CropEasy";
+
 const PetCreate = () => {
   // Render States
   const [petInfoHide, setPetInfoHide] = useState(true);
@@ -66,6 +72,9 @@ const PetCreate = () => {
 
   const [isAuthed, setIsAuthed] = useState(false);
   const [uid, setUid] = useState(null);
+
+  const [openCrop, setOpenCrop] = useState(false);
+  const [photoURL, setPhotoURL] = useState(null);
 
   useEffect(() => {
     async function fetchUid() {
@@ -127,6 +136,8 @@ const PetCreate = () => {
 
     if (file) {
       setImage(file);
+      setPhotoURL(URL.createObjectURL(file));
+      setOpenCrop(true);
     }
   };
 
@@ -315,7 +326,7 @@ const PetCreate = () => {
     fetchPetBreedInfo();
   }, []);
 
-  return (
+  return !openCrop ? (
     <div id="create-container">
       <img
         className="logo"
@@ -693,6 +704,8 @@ const PetCreate = () => {
         />
       </form>
     </div>
+  ) : (
+    <CropEasy {...{ photoURL, setOpenCrop, setPhotoURL, setImage }} />
   );
 };
 
