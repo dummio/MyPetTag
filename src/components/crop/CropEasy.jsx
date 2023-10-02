@@ -13,7 +13,13 @@ import Cropper from "react-easy-crop";
 // import { useAuth } from "../../context/AuthContext";
 import getCroppedImg from "./utils/cropImage";
 
-const CropEasy = ({ photoURL, setOpenCrop, setPhotoURL, setImage }) => {
+const CropEasy = ({
+  photoURL,
+  openCrop,
+  setOpenCrop,
+  setPhotoURL,
+  setImage,
+}) => {
   //   const { setAlert, setLoading } = useAuth();
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
@@ -50,29 +56,31 @@ const CropEasy = ({ photoURL, setOpenCrop, setPhotoURL, setImage }) => {
   };
   return (
     <>
-      <DialogContent
-        dividers
-        sx={{
-          background: "#333",
-          position: "relative",
-          height: 400,
-          width: "auto",
-          minWidth: { sm: 500 },
-        }}
-      >
-        <Cropper
-          image={photoURL}
-          crop={crop}
-          zoom={zoom}
-          rotation={rotation}
-          aspect={1}
-          cropShape="round"
-          onZoomChange={setZoom}
-          onRotationChange={setRotation}
-          onCropChange={setCrop}
-          onCropComplete={cropComplete}
-        />
-      </DialogContent>
+      {openCrop ? (
+        <DialogContent
+          dividers
+          sx={{
+            background: "#333",
+            position: "relative",
+            height: 400,
+            width: "auto",
+            minWidth: { sm: 500 },
+          }}
+        >
+          <Cropper
+            image={photoURL}
+            crop={crop}
+            zoom={zoom}
+            rotation={rotation}
+            aspect={1}
+            cropShape="round"
+            onZoomChange={setZoom}
+            onRotationChange={setRotation}
+            onCropChange={setCrop}
+            onCropComplete={cropComplete}
+          />
+        </DialogContent>
+      ) : null}
       <DialogActions sx={{ flexDirection: "column", mx: 3, my: 2 }}>
         <Box sx={{ width: "100%", mb: 1 }}>
           <Box>

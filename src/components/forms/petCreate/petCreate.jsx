@@ -128,9 +128,11 @@ const PetCreate = () => {
   const UploadImage = (e) => {
     e.preventDefault();
     let file = e.target.files[0];
-    let image = URL.createObjectURL(file);
-    let profileImage = document.getElementById("pet-img");
-    profileImage.src = image;
+    if (file) {
+      let image = URL.createObjectURL(file);
+    }
+    // let profileImage = document.getElementById("pet-img");
+    // profileImage.src = image;
 
     if (file) {
       setImage(file);
@@ -280,6 +282,31 @@ const PetCreate = () => {
     }
   };
 
+  const UpdatePreviewImg = () => {
+    if (image) {
+      let profileImage = document.getElementById("pet-img");
+      let imagePrev = URL.createObjectURL(image);
+      profileImage.src = imagePrev;
+      console.log("updating the image in updatePreviewImg");
+    }
+  };
+
+  // const UploadImage = (e) => {
+  //   e.preventDefault();
+  //   let file = e.target.files[0];
+  //   let image = URL.createObjectURL(file);
+  //   // let profileImage = document.getElementById("pet-img");
+  //   // profileImage.src = image;
+
+  //   if (file) {
+  //     setImage(file);
+  //     setPhotoURL(URL.createObjectURL(file));
+  //     setOpenCrop(true);
+  //   }
+  // };
+
+  useEffect(UpdatePreviewImg, [image, openCrop]);
+
   // Select Arrays
   const PetTypes = [
     { value: "Dog", label: "Dog" },
@@ -324,7 +351,7 @@ const PetCreate = () => {
     fetchPetBreedInfo();
   }, []);
 
-  return !openCrop ? (
+  return (
     <div id="create-container">
       <img
         className="logo"
@@ -336,6 +363,12 @@ const PetCreate = () => {
       <div className="company-title">
         My<span style={{ color: "#75af96" }}>PetTag</span>
       </div>
+      {/* Conditionally render CropEasy */}
+      {openCrop && (
+        <CropEasy
+          {...{ photoURL, openCrop, setOpenCrop, setPhotoURL, setImage }}
+        />
+      )}
       <form id="create-form">
         <h1 id="create-form-title">Add New Pet</h1>
         <h2>
@@ -702,10 +735,15 @@ const PetCreate = () => {
           disabled={!canSubmit}
         />
       </form>
+      {/* <CropEasy
+        {...{ photoURL, openCrop, setOpenCrop, setPhotoURL, setImage }}
+      /> */}
     </div>
-  ) : (
-    <CropEasy {...{ photoURL, setOpenCrop, setPhotoURL, setImage }} />
   );
 };
 
 export default PetCreate;
+
+// : (
+//   <CropEasy {...{ photoURL, setOpenCrop, setPhotoURL, setImage }} />
+// )
