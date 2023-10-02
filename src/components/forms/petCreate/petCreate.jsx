@@ -4,7 +4,7 @@
  */
 
 // Import React
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   addPetToDatabase,
   getDogBreeds,
@@ -30,9 +30,6 @@ import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
 
 // For cropping
-import Cropper from "react-easy-crop";
-import Slider from "@mui/base/Slider";
-import Button from "@mui/base/Button";
 import CropEasy from "../../crop/CropEasy";
 
 const PetCreate = () => {
@@ -128,17 +125,32 @@ const PetCreate = () => {
   const UploadImage = (e) => {
     e.preventDefault();
     let file = e.target.files[0];
-    if (file) {
-      let image = URL.createObjectURL(file);
-    }
-    // let profileImage = document.getElementById("pet-img");
-    // profileImage.src = image;
 
-    if (file) {
+    if (file && file.type.startsWith("image/")) {
+      let image = URL.createObjectURL(file);
+      /* The cropper only displays if the selected file has changed.
+       * If the user selects the same file, the cropper wouldn't open,
+       * but we want it to open, so we set the file name value to null. */
+      document.getElementById("file-btn").value = null;
+
       setImage(file);
       setPhotoURL(URL.createObjectURL(file));
       setOpenCrop(true);
+
+      /* The dialog defaults to only image types, but users can upload
+       * a non-image file anyways, so this displays an error message. */
+    } else if (file && !file.type.startsWith("image/")) {
+      alert("Only image file types are supported.");
     }
+  };
+
+  const ClearImage = () => {
+    // e.preventDefault();
+    setImage(null);
+    setPhotoURL(null);
+    setOpenCrop(false);
+    let profileImage = document.getElementById("pet-img");
+    profileImage.src = defaultProfileImage;
   };
 
   useEffect(ValidateForm, [
@@ -287,23 +299,8 @@ const PetCreate = () => {
       let profileImage = document.getElementById("pet-img");
       let imagePrev = URL.createObjectURL(image);
       profileImage.src = imagePrev;
-      console.log("updating the image in updatePreviewImg");
     }
   };
-
-  // const UploadImage = (e) => {
-  //   e.preventDefault();
-  //   let file = e.target.files[0];
-  //   let image = URL.createObjectURL(file);
-  //   // let profileImage = document.getElementById("pet-img");
-  //   // profileImage.src = image;
-
-  //   if (file) {
-  //     setImage(file);
-  //     setPhotoURL(URL.createObjectURL(file));
-  //     setOpenCrop(true);
-  //   }
-  // };
 
   useEffect(UpdatePreviewImg, [image, openCrop]);
 
@@ -350,6 +347,12 @@ const PetCreate = () => {
     }
     fetchPetBreedInfo();
   }, []);
+
+  const fileInputRef = useRef(null);
+
+  const triggerFileInput = () => {
+    fileInputRef.current.click();
+  };
 
   return (
     <div id="create-container">
@@ -399,11 +402,32 @@ const PetCreate = () => {
               />
             </div>
             <input
+              id="file-btn"
+              ref={fileInputRef}
               className="form-input-file"
               type="file"
               accept="image/*"
+              title=" "
               onChange={UploadImage}
+              style={{ display: "none" }}
             />
+            <input
+              id="clear-image-btn"
+              type="button"
+              value="Upload Image"
+              onClick={triggerFileInput}
+            />
+
+            {image !== null && (
+              <input
+                id="clear-image-btn"
+                type="button"
+                value="Clear Image"
+                onClick={ClearImage}
+              />
+            )}
+
+            {/* <input className="form-input-file" onChange={UploadImage} /> */}
             <label>Pet Name</label>
             <div className="error-container">
               {petName === "" ? "Pet Name is Required" : null}
