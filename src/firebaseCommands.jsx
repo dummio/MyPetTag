@@ -326,15 +326,25 @@ export async function getDogBreeds() {
       value: dogBreedList[i],
     });
   }
-
-  // dogBreedSnap.data().List.array.forEach(element => {
-  //   dogBreeds.push({
-  //     label: element,
-  //     value: element,
-  //   })
-  // });
   console.log(dogBreeds);
   return dogBreeds;
+}
+
+//gets all cat breeds meow
+export async function getCatBreeds() {
+  const catBreedDocRef = doc(db, "catBreeds", "Breeds");
+  const catBreedSnap = await getDoc(catBreedDocRef);
+
+  let catBreeds = [];
+  const catBreedList = catBreedSnap.data().List;
+  for (let i = 0; i < catBreedList.length; i++) {
+    catBreeds.push({
+      label: catBreedList[i],
+      value: catBreedList[i],
+    });
+  }
+  console.log(catBreeds);
+  return catBreeds;
 }
 
 export async function getUserAndPetIDFromTag(tagID) {

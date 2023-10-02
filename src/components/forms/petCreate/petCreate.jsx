@@ -8,6 +8,7 @@ import React, { useState, useEffect } from "react";
 import {
   addPetToDatabase,
   getDogBreeds,
+  getCatBreeds,
   isUserAuthenticated,
   authStateChangedWrapper,
 } from "../../../firebaseCommands";
@@ -307,13 +308,17 @@ const PetCreate = () => {
 
   useEffect(() => {
     async function fetchPetBreedInfo() {
-      const dogBreeds = await getDogBreeds();
-      if (dogBreeds) {
-        setPetBreeds(dogBreeds);
+      let breeds = [];
+      if(petSpecies == 'Dog') {
+        breeds = await getDogBreeds();
       }
+      else if(petSpecies == 'Cat') {
+        breeds = await getCatBreeds();
+      }
+      setPetBreeds(breeds);
     }
     fetchPetBreedInfo();
-  }, []);
+  }, [petSpecies]);
 
   return (
     <div id="create-container">
