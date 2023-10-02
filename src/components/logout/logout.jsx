@@ -4,7 +4,7 @@
  */
 
 // Import React Modules
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../../firebaseCommands";
 
@@ -12,12 +12,18 @@ import { logout } from "../../firebaseCommands";
  * Logs user out and resets authentication.
  */
 const LogOut = () => {
+
   let navigate = useNavigate();
+
   useEffect(() => {
-    logout();
-    navigate("/", { replace: true });
-    console.log("HELLOWORLD");
-  });
+    logout()
+      .then(() => {
+        navigate("/", { replace: true });
+      })
+      .catch((error) => {
+        console.log("Error occurred:: ", error);
+      });
+  }, []);
 };
 
 export default LogOut;

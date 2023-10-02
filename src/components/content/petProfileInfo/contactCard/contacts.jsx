@@ -20,13 +20,13 @@ import { getPetData } from "../../../../firebaseCommands";
  *
  * @returns HTML Element
  */
-const Contacts = () => {
+const Contacts = ({ userID, petID }) => {
   const [contact, setContact] = useState(null);
-  const petID = window.location.pathname.split("/")[4];
+  // const petID = window.location.pathname.split("/")[4];
 
   useEffect(() => {
     async function fetchPetData() {
-      const petContact = await getPetData(petID, ["contacts"]).catch(
+      const petContact = await getPetData(userID, petID, ["contacts"]).catch(
         (error) => {
           console.log(error);
         }

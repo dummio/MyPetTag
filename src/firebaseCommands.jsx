@@ -98,9 +98,11 @@ export async function logout() {
   signOut(auth)
     .then(() => {
       console.log("logout successful");
+      return true;
     })
     .catch((error) => {
       console.log("Error occurred logging out : ", error);
+      return false;
     });
 }
 
@@ -227,8 +229,11 @@ export async function getUserData() {
  * @param {*} keys The pet fields to provide
  * @returns
  */
-export async function getPetData(petID, keys) {
-  const uid = await authStateChangedWrapper();
+export async function getPetData(uid, petID, keys) {
+  if(uid == null) {
+    console.log("whadaito: ", uid);
+    uid = await authStateChangedWrapper();
+  }
   try {
     const userDocRef = doc(db, "users", uid);
     const userDocSnap = await getDoc(userDocRef);
@@ -321,13 +326,30 @@ export async function getDogBreeds() {
       value: dogBreedList[i],
     });
   }
-
-  // dogBreedSnap.data().List.array.forEach(element => {
-  //   dogBreeds.push({
-  //     label: element,
-  //     value: element,
-  //   })
-  // });
   console.log(dogBreeds);
   return dogBreeds;
+}
+
+//gets all cat breeds meow
+export async function getCatBreeds() {
+  const catBreedDocRef = doc(db, "catBreeds", "Breeds");
+  const catBreedSnap = await getDoc(catBreedDocRef);
+
+  let catBreeds = [];
+  const catBreedList = catBreedSnap.data().List;
+  for (let i = 0; i < catBreedList.length; i++) {
+    catBreeds.push({
+      label: catBreedList[i],
+      value: catBreedList[i],
+    });
+  }
+  console.log(catBreeds);
+  return catBreeds;
+}
+
+export async function getUserAndPetIDFromTag(tagID) {
+    const tagCodeRef = doc(db, "tags", tagID);
+    const tagCodeSnap = await getDoc(tagCodeRef);
+    console.log("HOWDYDO: ", tagCodeSnap.data().UserID);
+    return [tagCodeSnap.data().UserID, tagCodeSnap.data().Pet];
 }

@@ -25,7 +25,12 @@ const LocationService = () => {
       let lon = position.coords.longitude;
 
       sendFoundPetEmail(lat, lon);
-      alert("You've alerted the owner that their pet was found at: '" + lat + ", " + lon);
+      alert(
+        "You've alerted the owner that their pet was found at: '" +
+          lat +
+          ", " +
+          lon
+      );
     });
   };
 

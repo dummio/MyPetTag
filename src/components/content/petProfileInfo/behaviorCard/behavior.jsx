@@ -17,7 +17,7 @@ import { getPetData } from "../../../../firebaseCommands";
  *
  * @returns HTML Element
  */
-const BehaviorInformation = () => {
+const BehaviorInformation = ({ userID, petID }) => {
   // Render States
   const [hide, show] = useState(false);
 
@@ -25,7 +25,7 @@ const BehaviorInformation = () => {
   const [aggressions, setAggressions] = useState([]);
   const [goodWith, setGoodWith] = useState([]);
   const [behaviorInfo, setBehaviorInfo] = useState("");
-  const petID = window.location.pathname.split("/")[4];
+  // const petID = window.location.pathname.split("/")[4];
 
   const ExpandTile = () => {
     show(!hide);
@@ -42,7 +42,7 @@ const BehaviorInformation = () => {
 
   useEffect(() => {
     async function fetchPetData() {
-      const petBehavior = await getPetData(petID, [
+      const petBehavior = await getPetData(userID, petID, [
         "aggressions",
         "goodWith",
         "behavior",
