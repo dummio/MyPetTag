@@ -50,29 +50,25 @@ const PetInformation = () => {
 
   function calculateAgeFromDoB(date) {
     var dob = new Date(date);
-    var today= new Date();
-    var allYears= today.getFullYear() - dob.getFullYear();
+    var today = new Date();
+    var allYears = today.getFullYear() - dob.getFullYear();
     var partialMonths = today.getMonth() - dob.getMonth();
     if (partialMonths < 0) {
-        allYears--;
-        partialMonths = partialMonths + 12;
+      allYears--;
+      partialMonths = partialMonths + 12;
     }
 
     let age;
     if (allYears <= 0) {
       age = partialMonths;
-      if (partialMonths === 0 || partialMonths > 1)
-        age += " Months";
-      else
-        age += " Month";
+      if (partialMonths === 0 || partialMonths > 1) age += " Months";
+      else age += " Month";
     } else {
       age = allYears;
-      if (allYears === 1)
-        age += " Year";
-      else
-        age += " Years";
+      if (allYears === 1) age += " Year";
+      else age += " Years";
     }
-  
+
     return age + " Old";
   }
 
@@ -121,6 +117,7 @@ const PetInformation = () => {
         height={157}
       />
       <p className="pet-name">{petName ? petName : "Loading..."}</p>
+      {/*Show as lost button if uid == null then user is logged in */}
       <p className="pet-breed">
         {petName ? (petBreed ? petBreed : "Breed not provided") : "Loading..."}
       </p>
