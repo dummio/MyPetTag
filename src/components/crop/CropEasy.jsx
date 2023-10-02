@@ -1,19 +1,3 @@
-// import React from "react";
-// import {DialogContent} from '@mui/material'
-// import Cropper from 'react-easy-crop'
-
-// const CropEasy = ({photoURL}) = {
-//  return <>
-//  <DialogContent dividers>
-//     <Cropper
-//     image = {photoURL}
-//     crop = {}
-//  <DialogContent/>
-//  </>
-// };
-
-// export default CropEasy;
-
 import { Cancel } from "@mui/icons-material";
 import CropIcon from "@mui/icons-material/Crop";
 import {
@@ -50,7 +34,6 @@ const CropEasy = ({ photoURL, setOpenCrop, setPhotoURL, setImage }) => {
       );
       setPhotoURL(url);
       setImage(file);
-      console.log("setting open crop to false");
       setOpenCrop(false);
     } catch (error) {
       //   setAlert({
@@ -83,6 +66,7 @@ const CropEasy = ({ photoURL, setOpenCrop, setPhotoURL, setImage }) => {
           zoom={zoom}
           rotation={rotation}
           aspect={1}
+          cropShape="round"
           onZoomChange={setZoom}
           onRotationChange={setRotation}
           onCropChange={setCrop}

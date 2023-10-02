@@ -104,9 +104,7 @@ const PetCreate = () => {
 
   const ValidateForm = () => {
     let isValid = false;
-
     if (petName) isValid = true;
-
     setCanSubmit(isValid);
   };
 
@@ -360,7 +358,8 @@ const PetCreate = () => {
             <div id="pet-img-container">
               <img
                 id="pet-img"
-                src={defaultProfileImage}
+                src={image ? image : defaultProfileImage}
+                // src={defaultProfileImage}
                 alt="profile-img"
                 width={157}
                 height={157}
@@ -418,7 +417,7 @@ const PetCreate = () => {
             <textarea
               className="form-textarea"
               name="description"
-              placeholder="Please give a brief introduction about your pet?"
+              placeholder="Provide a brief introduction about your pet"
               rows={5}
               cols={50}
               onChange={(e) => {
