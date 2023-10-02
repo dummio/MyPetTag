@@ -23,7 +23,10 @@ import SelectStyles from "../selectStyles/selectStyles";
 import SelectMultiStyles from "../selectStyles/selectMultiStyles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChevronDown,
+  faChevronRight,
+} from "@fortawesome/free-solid-svg-icons";
 
 // Import Modules
 import Select from "react-select";
@@ -382,7 +385,7 @@ const PetCreate = () => {
               paddingRight: "15px",
               cursor: "pointer",
             }}
-            icon={faChevronDown}
+            icon={petInfoHide ? faChevronDown : faChevronRight}
             onClick={() => {
               setPetInfoHide(!petInfoHide);
             }}
@@ -439,6 +442,7 @@ const PetCreate = () => {
               onChange={(e) => {
                 setPetName(e.target.value);
               }}
+              value={petName}
             />
             <label>Pet Species</label>
             <Select
@@ -454,6 +458,7 @@ const PetCreate = () => {
                   setPetSpecies(null);
                 }
               }}
+              // value={petSpecies}
             />
             <label>Pet Breed</label>
             <CreatableSelect
@@ -469,6 +474,7 @@ const PetCreate = () => {
                   setPetBreed(null);
                 }
               }}
+              // value={petBreed}
             />
             <label>Pet Description</label>
             <textarea
@@ -480,6 +486,7 @@ const PetCreate = () => {
               onChange={(e) => {
                 setPetDescr(e.target.value);
               }}
+              value={petDescr}
             />
             <label>Pet Birth Date</label>
             <input
@@ -489,6 +496,7 @@ const PetCreate = () => {
               onChange={(e) => {
                 setPetBirthDate(e.target.value);
               }}
+              value={petBirthDate}
             />
             <label>Pet Weight</label>
             <input
@@ -498,6 +506,7 @@ const PetCreate = () => {
               onChange={(e) => {
                 setPetWeight(e.target.value);
               }}
+              value={petWeight}
             />
             <label>Pet Sex</label>
             <Select
@@ -513,6 +522,7 @@ const PetCreate = () => {
                   setPetSex(null);
                 }
               }}
+              value={petSex}
             />
             <div id="form-contacts-container">
               <label>Contacts</label>
@@ -526,6 +536,7 @@ const PetCreate = () => {
               onChange={(e) => {
                 setPetContactName(e.target.value);
               }}
+              value={petContactName}
             />
             <input
               className="form-input"
@@ -534,6 +545,7 @@ const PetCreate = () => {
               onChange={(e) => {
                 setPetContactPhone(e.target.value);
               }}
+              value={petContactPhone}
             />
             {/*------------------------------------------------------------------*/}
             <label>Address</label>
@@ -544,6 +556,7 @@ const PetCreate = () => {
               onChange={(e) => {
                 setPetAddress(e.target.value);
               }}
+              value={petAddress}
             />
           </>
         )}
@@ -555,7 +568,7 @@ const PetCreate = () => {
               paddingRight: "15px",
               cursor: "pointer",
             }}
-            icon={faChevronDown}
+            icon={petHealthHide ? faChevronDown : faChevronRight}
             onClick={() => {
               setPetHealthHide(!petHealthHide);
             }}
@@ -577,6 +590,7 @@ const PetCreate = () => {
                 e.forEach((item) => newVaccines.push(item.value));
                 setPetVaccines(newVaccines);
               }}
+              value={petVaccines.map((value) => ({ value, label: value }))}
             />
             <label>Health Conditions</label>
             <CreatableSelect
@@ -592,6 +606,7 @@ const PetCreate = () => {
                 e.forEach((item) => newConds.push(item.value));
                 setPetConditions(newConds);
               }}
+              value={petConditions.map((value) => ({ value, label: value }))}
             />
             <label>Medications</label>
             <CreatableSelect
@@ -607,6 +622,7 @@ const PetCreate = () => {
                 e.forEach((item) => newMeds.push(item.value));
                 setPetMeds(newMeds);
               }}
+              value={petMeds.map((value) => ({ value, label: value }))}
             />
             <label>Allergies</label>
             <CreatableSelect
@@ -622,6 +638,7 @@ const PetCreate = () => {
                 e.forEach((item) => newAllergies.push(item.value));
                 setPetAllergies(newAllergies);
               }}
+              value={petAllergies.map((value) => ({ value, label: value }))}
             />
             <label>Additional Information</label>
             <textarea
@@ -632,6 +649,7 @@ const PetCreate = () => {
               onChange={(e) => {
                 setPetHealthInfo(e.target.value);
               }}
+              value={petHealthInfo}
             />
           </>
         )}
@@ -643,7 +661,7 @@ const PetCreate = () => {
               paddingRight: "15px",
               cursor: "pointer",
             }}
-            icon={faChevronDown}
+            icon={petBehaviorHide ? faChevronDown : faChevronRight}
             onClick={() => {
               setPetBehaviorHide(!petBehaviorHide);
             }}
@@ -665,6 +683,7 @@ const PetCreate = () => {
                 e.forEach((item) => newAggressions.push(item.value));
                 setPetAggressions(newAggressions);
               }}
+              value={petAggressions.map((value) => ({ value, label: value }))}
             />
             <label>Good With</label>
             <CreatableSelect
@@ -680,6 +699,7 @@ const PetCreate = () => {
                 e.forEach((item) => newGoodWith.push(item.value));
                 setPetGoodWith(newGoodWith);
               }}
+              value={petGoodWith.map((value) => ({ value, label: value }))}
             />
             <label>Additional Information</label>
             <textarea
@@ -690,6 +710,7 @@ const PetCreate = () => {
               onChange={(e) => {
                 setPetBehaviorInfo(e.target.value);
               }}
+              value={petBehaviorInfo}
             />
           </>
         )}
@@ -701,7 +722,7 @@ const PetCreate = () => {
               paddingRight: "15px",
               cursor: "pointer",
             }}
-            icon={faChevronDown}
+            icon={petVetHide ? faChevronDown : faChevronRight}
             onClick={() => {
               setPetVetHide(!petVetHide);
             }}
@@ -716,6 +737,7 @@ const PetCreate = () => {
               onChange={(e) => {
                 setClinicName(e.target.value);
               }}
+              value={clinicName}
             />
             <input
               className="form-input"
@@ -724,6 +746,7 @@ const PetCreate = () => {
               onChange={(e) => {
                 setClinicAddr(e.target.value);
               }}
+              value={clinicAddr}
             />
             <input
               className="form-input"
@@ -732,6 +755,7 @@ const PetCreate = () => {
               onChange={(e) => {
                 setClinicPhone(e.target.value);
               }}
+              value={clinicPhone}
             />
             <input
               className="form-input"
@@ -740,6 +764,7 @@ const PetCreate = () => {
               onChange={(e) => {
                 setVetName(e.target.value);
               }}
+              value={vetName}
             />
             <input
               className="form-input"
@@ -748,6 +773,7 @@ const PetCreate = () => {
               onChange={(e) => {
                 setMicrochipId(e.target.value);
               }}
+              value={microchipId}
             />
           </>
         )}
