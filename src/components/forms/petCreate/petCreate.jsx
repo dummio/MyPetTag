@@ -297,15 +297,15 @@ const PetCreate = () => {
     }
   };
 
-  const UpdatePreviewImg = () => {
-    if (image) {
-      let profileImage = document.getElementById("pet-img");
-      let imagePrev = URL.createObjectURL(image);
-      profileImage.src = imagePrev;
-    }
-  };
+  // const UpdatePreviewImg = () => {
+  //   if (image) {
+  //     let profileImage = document.getElementById("pet-img");
+  //     let imagePrev = URL.createObjectURL(image);
+  //     profileImage.src = imagePrev;
+  //   }
+  // };
 
-  useEffect(UpdatePreviewImg, [image, openCrop]);
+  // useEffect(UpdatePreviewImg, [image, openCrop]);
 
   // Select Arrays
   const PetTypes = [
@@ -388,6 +388,9 @@ const PetCreate = () => {
             icon={petInfoHide ? faChevronDown : faChevronRight}
             onClick={() => {
               setPetInfoHide(!petInfoHide);
+              // if (!petInfoHide) {
+              //   UpdatePreviewImg();
+              // }
             }}
           />
         </h2>
@@ -397,8 +400,8 @@ const PetCreate = () => {
             <div id="pet-img-container">
               <img
                 id="pet-img"
-                src={image ? image : defaultProfileImage}
-                // src={defaultProfileImage}
+                // src={image ? image : defaultProfileImage}
+                src={image ? URL.createObjectURL(image) : defaultProfileImage}
                 alt="profile-img"
                 width={157}
                 height={157}
@@ -454,11 +457,15 @@ const PetCreate = () => {
               onChange={(e) => {
                 if (e) {
                   setPetSpecies(e.value);
+                  console.log(e, "value: ", e.value);
                 } else {
+                  console.log("setting species to null");
                   setPetSpecies(null);
                 }
               }}
-              // value={petSpecies}
+              value={
+                petSpecies ? { value: petSpecies, label: petSpecies } : null
+              }
             />
             <label>Pet Breed</label>
             <CreatableSelect
@@ -474,7 +481,7 @@ const PetCreate = () => {
                   setPetBreed(null);
                 }
               }}
-              // value={petBreed}
+              value={petBreed ? { value: petBreed, label: petBreed } : null}
             />
             <label>Pet Description</label>
             <textarea
@@ -522,7 +529,7 @@ const PetCreate = () => {
                   setPetSex(null);
                 }
               }}
-              value={petSex}
+              value={petSex ? { value: petSex, label: petSex } : null}
             />
             <div id="form-contacts-container">
               <label>Contacts</label>
