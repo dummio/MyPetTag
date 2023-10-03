@@ -1,0 +1,15 @@
+.overlay-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  align-items: center;
+  justify-content: center;
+  z-index: 500; /* Adjust the z-index as needed */
+}
+
+.overlay-container {
+  background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+}
