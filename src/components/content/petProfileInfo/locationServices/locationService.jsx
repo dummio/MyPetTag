@@ -11,6 +11,7 @@ import "./locationService.css";
 
 //import emailJSCommands
 import { sendFoundPetEmail } from "../../../../emailJSCommands";
+import { writeUserAlert } from "../../../../firebaseCommands";
 
 /**
  * Gets Users current location and directs them
@@ -18,13 +19,14 @@ import { sendFoundPetEmail } from "../../../../emailJSCommands";
  *
  * @returns HTML Element
  */
-const LocationService = () => {
+const LocationService = ({ userID, petID }) => {
   const GetLocation = () => {
     navigator.geolocation.getCurrentPosition((position) => {
       let lat = position.coords.latitude;
       let lon = position.coords.longitude;
 
       sendFoundPetEmail(lat, lon);
+      writeUserAlert(userID, petID, "Tag location shared!");
       alert(
         "You've alerted the owner that their pet was found at: '" +
           lat +
@@ -40,7 +42,7 @@ const LocationService = () => {
       let lon = position.coords.longitude;
 
       let closestEmergencyVet = `https://www.google.com/maps/dir/${lat}%2C${lon}/emergency+vet`;
-
+      writeUserAlert(userID, petID, "Emergency vet selected!");
       window.open(closestEmergencyVet, "blank_");
     });
   };

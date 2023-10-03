@@ -386,7 +386,7 @@ export async function getPetHealthConditions() {
 
   let petHealthConditions = [];
   const petHealthConditionsList = petHealthSnap.data().conditions;
-  for(let i = 0; i < petHealthConditionsList.length; i++) {
+  for (let i = 0; i < petHealthConditionsList.length; i++) {
     petHealthConditions.push({
       label: petHealthConditionsList[i],
       value: petHealthConditionsList[i],
@@ -395,9 +395,51 @@ export async function getPetHealthConditions() {
   return petHealthConditions;
 }
 
+//read
+export async function readUserAlerts() {
+  try {
+    const uid = await authStateChangedWrapper();
+    const userDocRef = doc(db, "users", uid);
+    const userDocSnap = await getDoc(userDocRef);
+    return userDocSnap.data().alerts;
+  } catch(error) {
+    console.log(error);
+  }
+}
+
+//write
+export async function writeUserAlert(uid, pid, message) {
+  try {
+    const userDocRef = doc(db, "users", uid);
+    const userDocSnap = await getDoc(userDocRef);
+    const petName = await getPetData(uid, pid, ["name"]);
+    const dateObj = new Date();
+    let month = dateObj.getUTCMonth() + 1;
+    let day = dateObj.getUTCDate();
+    let year = dateObj.getUTCFullYear();
+    const timeStamp = year + "/" + month + "/" + day;
+    const alert = {
+      pet: petName,
+      time: timeStamp, 
+      msg: message,
+    };
+
+    if (userDocSnap.get("alerts") == null) {
+      setDoc(userDocRef, { alerts: [alert] }, { merge: true });
+    } else {
+      await updateDoc(userDocRef, {
+        alerts: arrayUnion(alert),
+      });
+    }
+  } catch(error) {
+    console.log(error);
+  }
+}
+//delete
+
 export async function getUserAndPetIDFromTag(tagID) {
-    const tagCodeRef = doc(db, "tags", tagID);
-    const tagCodeSnap = await getDoc(tagCodeRef);
-    console.log("HOWDYDO: ", tagCodeSnap.data().UserID);
-    return [tagCodeSnap.data().UserID, tagCodeSnap.data().Pet];
+  const tagCodeRef = doc(db, "tags", tagID);
+  const tagCodeSnap = await getDoc(tagCodeRef);
+  console.log("HOWDYDO: ", tagCodeSnap.data().UserID);
+  return [tagCodeSnap.data().UserID, tagCodeSnap.data().Pet];
 }

@@ -57,7 +57,7 @@ const PetProfile = () => {
         <HealthInformation userID={uID} petID={pID} />
         <BehaviorInformation userID={uID} petID={pID} />
         <VetProvider userID={uID} petID={pID} />
-        <LocationService />
+        <LocationService userID={uID} petID={pID}/>
       </React.Fragment>
     );
   }
