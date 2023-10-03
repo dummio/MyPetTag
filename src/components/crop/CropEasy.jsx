@@ -59,79 +59,79 @@ const CropEasy = ({
     <>
       {openCrop ? (
         <div className="overlay-container">
-          {" "}
-          {/* Apply the overlay container */}
-          <DialogContent
-            dividers
-            sx={{
-              background: "#333",
-              position: "relative",
-              height: 400,
-              width: "auto",
-              minWidth: { sm: 500 },
-            }}
-          >
-            <Cropper
-              image={photoURL}
-              crop={crop}
-              zoom={zoom}
-              rotation={rotation}
-              aspect={1}
-              cropShape="round"
-              onZoomChange={setZoom}
-              onRotationChange={setRotation}
-              onCropChange={setCrop}
-              onCropComplete={cropComplete}
-            />
-          </DialogContent>
-          <DialogActions sx={{ flexDirection: "column", mx: 3, my: 2 }}>
-            <Box sx={{ width: "50%", mb: 1 }}>
-              <Box>
-                <Typography>Zoom: {zoomPercent(zoom)}</Typography>
-                <Slider
-                  valueLabelDisplay="auto"
-                  valueLabelFormat={zoomPercent}
-                  min={1}
-                  max={3}
-                  step={0.1}
-                  value={zoom}
-                  onChange={(e, zoom) => setZoom(zoom)}
-                />
+          <div className="crop-container">
+            <DialogContent className="crop-container-options">
+              <Cropper
+                image={photoURL}
+                crop={crop}
+                zoom={zoom}
+                rotation={rotation}
+                aspect={1}
+                cropShape="round"
+                onZoomChange={setZoom}
+                onRotationChange={setRotation}
+                onCropChange={setCrop}
+                onCropComplete={cropComplete}
+              />
+            </DialogContent>
+            <DialogActions className="crop-container-settings">
+              <Box className="crop-container-buttons">
+                <Box>
+                  <Typography>Zoom: {zoomPercent(zoom)}</Typography>
+                  <Slider
+                    style={{
+                      color: "#0f5738",
+                    }}
+                    valueLabelDisplay="auto"
+                    valueLabelFormat={zoomPercent}
+                    min={1}
+                    max={3}
+                    step={0.1}
+                    value={zoom}
+                    onChange={(e, zoom) => setZoom(zoom)}
+                  />
+                </Box>
+                <Box>
+                  <Typography>Rotation: {rotation + "°"}</Typography>
+                  <Slider
+                    style={{
+                      color: "#0f5738",
+                    }}
+                    valueLabelDisplay="auto"
+                    min={0}
+                    max={360}
+                    value={rotation}
+                    onChange={(e, rotation) => setRotation(rotation)}
+                  />
+                </Box>
               </Box>
-              <Box>
-                <Typography>Rotation: {rotation + "°"}</Typography>
-                <Slider
-                  valueLabelDisplay="auto"
-                  min={0}
-                  max={360}
-                  value={rotation}
-                  onChange={(e, rotation) => setRotation(rotation)}
-                />
+              <Box
+                sx={{
+                  display: "flex",
+                  gap: 3,
+                  flexWrap: "wrap",
+                  marginBottom: "16px",
+                }}
+              >
+                <Button
+                  style={{ backgroundColor: "#0f5738", borderRadius: "12px" }}
+                  variant="contained"
+                  startIcon={<Cancel />}
+                  onClick={() => setOpenCrop(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  style={{ backgroundColor: "#0f5738", borderRadius: "12px" }}
+                  variant="contained"
+                  startIcon={<CropIcon />}
+                  onClick={cropImage}
+                >
+                  Crop
+                </Button>
               </Box>
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                gap: 2,
-                flexWrap: "wrap",
-              }}
-            >
-              <Button
-                variant="outlined"
-                startIcon={<Cancel />}
-                onClick={() => setOpenCrop(false)}
-              >
-                Cancel
-              </Button>
-              <Button
-                variant="contained"
-                startIcon={<CropIcon />}
-                onClick={cropImage}
-              >
-                Crop
-              </Button>
-            </Box>
-          </DialogActions>
+            </DialogActions>
+          </div>
         </div>
       ) : null}
     </>
