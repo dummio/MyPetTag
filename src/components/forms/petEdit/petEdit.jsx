@@ -4,21 +4,21 @@
  */
 
 // Import React Modules
-import React, { useState } from "react";
+import React, { useEffect, useState } from 'react';
+import Select from 'react-select';
+import CreatableSelect from 'react-select/creatable';
+import useForm from '../../../Hooks/useForm';
+import { getDogBreeds } from '../../../firebaseCommands';
 
 // Import CSS
-import "./petEdit.css";
-import logo from "../../../images/paw.png";
-import defaultProfileImage from "../../../images/profile-default.png";
-import SelectStyles from "../selectStyles/selectStyles";
-import SelectMultiStyles from "../selectStyles/selectMultiStyles";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
-
-// Import Modules
-import Select from "react-select";
-import CreatableSelect from "react-select/creatable";
+import './petEdit.css';
+import logo from '../../../images/paw.png';
+import defaultProfileImage from '../../../images/profile-default.png';
+import SelectStyles from '../selectStyles/selectStyles';
+import SelectMultiStyles from '../selectStyles/selectMultiStyles';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
 /**
  * Displays Pet Profile Information that is editable by the user.
@@ -33,42 +33,94 @@ const PetEdit = () => {
   const [petHealthHide, setPetHealthHide] = useState(false);
   const [petBehaviorHide, setPetBehaviorHide] = useState(false);
   const [petVetHide, setPetVetHide] = useState(false);
+  const [canSubmit, setCanSubmit] = useState(false);
+
+  function formSubmit() {
+    console.debug(values, errors);
+    if (canSubmit) {
+      console.debug('Success!');
+    }
+    return null;
+  }
+
+  const { handleChange, values, errors, handleSubmit, setValue } = useForm(formSubmit);
+
+  useEffect(() => {
+    if (Object.keys(errors).length === 0 && Object.keys(values).length !== 0) {
+      setCanSubmit(true);
+    } else {
+      setCanSubmit(false);
+    }
+    console.debug(values, errors);
+  }, [values, errors]);
 
   // Temp Array
-  const options = [];
+  const PetTypes = [
+    { value: 'Dog', label: 'Dog' },
+    { value: 'Cat', label: 'Cat' },
+    { value: 'Other', label: 'Other' },
+  ];
+  const [PetBreeds, setPetBreeds] = useState([]);
+  const PetSex = [
+    { value: 'Male', label: 'Male' },
+    { value: 'Neutered Male', label: 'Neutered Male' },
+    { value: 'Female', label: 'Female' },
+    { value: 'Spayed Female', label: 'Spayed Female' },
+  ];
+  const PetAggressions = [
+    { value: 'Men', label: 'Men' },
+    { value: 'Women', label: 'Women' },
+    { value: 'Children', label: 'Children' },
+    { value: 'Cats', label: 'Cats' },
+    { value: 'Dogs', label: 'Dogs' },
+    { value: 'Other', label: 'Other' },
+  ];
+  const PetGoodWith = [
+    { value: 'Men', label: 'Men' },
+    { value: 'Women', label: 'Women' },
+    { value: 'Children', label: 'Children' },
+    { value: 'Cats', label: 'Cats' },
+    { value: 'Dogs', label: 'Dogs' },
+    { value: 'Other', label: 'Other' },
+  ];
 
-  // Temp Name
-  const pet = "pet-name";
+  useEffect(() => {
+    async function fetchPetBreedInfo() {
+      const dogBreeds = await getDogBreeds();
+      if (dogBreeds) {
+        setPetBreeds(dogBreeds);
+      }
+    }
+    fetchPetBreedInfo();
+  }, []);
+
+  // Temp Info
+  const pet = 'pet-name';
+  const emptyOptions = [];
 
   const UploadImage = (e) => {
     e.preventDefault();
     let file = e.target.files[0];
     let image = URL.createObjectURL(file);
-    let profileImage = document.getElementById("pet-img");
+    let profileImage = document.getElementById('pet-img');
     profileImage.src = image;
   };
 
   return (
-    <div id="edit-container">
-      <img
-        className="logo"
-        src={logo}
-        alt="MyPetTag"
-        width={250}
-        height={250}
-      />
-      <div className="company-title">
-        My<span style={{ color: "#75af96" }}>PetTag</span>
+    <div id='edit-container'>
+      <img className='logo' src={logo} alt='MyPetTag' width={250} height={250} />
+      <div className='company-title'>
+        My<span style={{ color: '#75af96' }}>PetTag</span>
       </div>
-      <form id="edit-form">
-        <h1 id="edit-form-title">Editing {pet}</h1>
+      <form id='edit-form' onSubmit={handleSubmit}>
+        <h1 id='edit-form-title'>Editing {pet}</h1>
         <h2>
-          Pet Information{" "}
+          Pet Information{' '}
           <FontAwesomeIcon
             style={{
-              fontSize: "20px",
-              paddingRight: "15px",
-              cursor: "pointer",
+              fontSize: '20px',
+              paddingRight: '15px',
+              cursor: 'pointer',
             }}
             icon={faChevronDown}
             onClick={() => {
@@ -79,94 +131,135 @@ const PetEdit = () => {
         {petInfoHide && (
           <>
             <label>Upload Pet Picture</label>
-            <div id="pet-img-container">
+            <div id='pet-img-container'>
               <img
-                id="pet-img"
+                id='pet-img'
                 src={defaultProfileImage}
-                alt="profile-img"
+                alt='profile-img'
                 width={157}
                 height={157}
               />
             </div>
             <input
-              className="form-input-file"
-              type="file"
-              accept="image/*"
+              className='form-input-file'
+              type='file'
+              accept='image/*'
               onChange={UploadImage}
             />
             <label>Pet Name</label>
-            <input className="form-input" type="text" />
+            <div className='error-container'>{errors.petName}</div>
+            <input
+              className='form-input'
+              type='text'
+              required
+              name='petName'
+              onChange={handleChange}
+            />
             <label>Pet Species</label>
+            <div className='error-container'>{errors.petSpecies}</div>
             <Select
               isClearable
               isSearchable
               closeMenuOnSelect={true}
               styles={SelectStyles}
-              options={options}
+              options={PetTypes}
+              required
+              onChange={(e) => setValue('petSpecies', e?.value, true)}
             />
             <label>Pet Breed</label>
+            <div className='error-container'>{errors.petBreed}</div>
             <CreatableSelect
               isClearable
               isSearchable
               closeMenuOnSelect={true}
               styles={SelectStyles}
-              options={options}
+              options={PetBreeds}
+              required
+              onChange={(e) => setValue('petBreed', e?.value, true)}
             />
             <label>Pet Description</label>
+            <div className='error-container'>{errors.petDescription}</div>
             <textarea
-              className="form-textarea"
-              name="description"
-              placeholder="Please give a brief introduction about your pet?"
+              className='form-textarea'
+              placeholder='Please give a brief introduction about your pet?'
               rows={5}
               cols={50}
+              name='petDescription'
+              onChange={handleChange}
             />
             <label>Pet Birth Date</label>
             <input
-              className="form-input"
-              type="date"
-              style={{ appearance: "textfield" }}
+              className='form-input'
+              type='date'
+              style={{ appearance: 'textfield' }}
+              required
+              name='petDoB'
+              onChange={handleChange}
             />
             <label>Pet Weight</label>
+            <div className='error-container'>{errors.petWeight}</div>
             <input
-              className="form-input"
-              type="number"
-              style={{ appearance: "textfield" }}
+              className='form-input'
+              type='number'
+              required
+              name='petWeight'
+              min='1'
+              max='400'
+              step='1'
+              onChange={handleChange}
+              style={{ appearance: 'textfield' }}
             />
             <label>Pet Sex</label>
+            <div className='error-container'>{errors.petSex}</div>
             <Select
               isClearable
               isSearchable
               closeMenuOnSelect={true}
               styles={SelectStyles}
-              options={options}
+              options={PetSex}
+              required
+              onChange={(e) => setValue('petSex', e?.value, true)}
             />
-            <div id="form-contacts-container">
+            <div id='form-contacts-container'>
               <label>Contacts</label>
-              <FontAwesomeIcon icon={faPlus} style={{ height: "25px" }} />
+              <FontAwesomeIcon icon={faPlus} style={{ height: '25px' }} />
             </div>
-            {/* {Wrap in map to dynamically add more contacts} */}
-            <input className="form-input" type="text" placeholder="Name" />
+            {/* {TODO: Wrap in map to dynamically add more contacts} */}
+            <div className='error-container'>{errors.contactName}</div>
             <input
-              className="form-input"
-              type="text"
-              placeholder="Phone Number"
+              className='form-input'
+              type='text'
+              placeholder='Name'
+              name='contactName' // TODO: Adapt for multiple contacts
+              onChange={handleChange}
+            />
+            <div className='error-container'>{errors.contactPhone}</div>
+            <input
+              className='form-input'
+              type='tel'
+              placeholder='Phone Number'
+              name='contactPhone' // TODO: Adapt for multiple contacts
+              onChange={handleChange}
             />
             {/*------------------------------------------------------------------*/}
             <label>Address</label>
+            <div className='error-container'>{errors.address}</div>
             <input
-              className="form-input"
-              type="text"
-              placeholder="1234 Park Ave, City, TX 12345"
+              className='form-input'
+              type='text'
+              name='address'
+              onChange={handleChange}
+              placeholder='1234 Park Ave, City, TX 12345'
             />
           </>
         )}
         <h2>
-          Health Information{" "}
+          Health Information{' '}
           <FontAwesomeIcon
             style={{
-              fontSize: "20px",
-              paddingRight: "15px",
-              cursor: "pointer",
+              fontSize: '20px',
+              paddingRight: '15px',
+              cursor: 'pointer',
             }}
             icon={faChevronDown}
             onClick={() => {
@@ -177,61 +270,71 @@ const PetEdit = () => {
         {petHealthHide && (
           <>
             <label>Vaccines</label>
+            <div className='error-container'>{errors.petVaccines}</div>
             <CreatableSelect
               isMulti
               isClearable
               isSearchable
               closeMenuOnSelect={false}
-              placeholder="Select all that apply..."
+              placeholder='Select all that apply...'
               styles={SelectMultiStyles}
-              options={options}
+              options={emptyOptions}
+              onChange={(e) => setValue('petVaccines', e?.value, false)}
             />
             <label>Health Conditions</label>
+            <div className='error-container'>{errors.petHealth}</div>
             <CreatableSelect
               isMulti
               isClearable
               isSearchable
               closeMenuOnSelect={false}
-              placeholder="Select all that apply..."
+              placeholder='Select all that apply...'
               styles={SelectMultiStyles}
-              options={options}
+              options={emptyOptions}
+              onChange={(e) => setValue('petHealth', e?.value, false)}
             />
             <label>Medications</label>
+            <div className='error-container'>{errors.petMedications}</div>
             <CreatableSelect
               isMulti
               isClearable
               isSearchable
               closeMenuOnSelect={false}
-              placeholder="Select all that apply..."
+              placeholder='Select all that apply...'
               styles={SelectMultiStyles}
-              options={options}
+              options={emptyOptions}
+              onChange={(e) => setValue('petMedications', e?.value, false)}
             />
             <label>Allergies</label>
+            <div className='error-container'>{errors.petAllergies}</div>
             <CreatableSelect
               isMulti
               isClearable
               isSearchable
               closeMenuOnSelect={false}
-              placeholder="Select all that apply..."
+              placeholder='Select all that apply...'
               styles={SelectMultiStyles}
-              options={options}
+              options={emptyOptions}
+              onChange={(e) => setValue('petAllergies', e?.value, false)}
             />
             <label>Additional Information</label>
+            <div className='error-container'>{errors.healthDescription}</div>
             <textarea
-              className="form-textarea"
-              name="description"
+              className='form-textarea'
               rows={5}
               cols={50}
+              name='healthDescription'
+              onChange={handleChange}
             />
           </>
         )}
         <h2>
-          Behavior Information{" "}
+          Behavior Information{' '}
           <FontAwesomeIcon
             style={{
-              fontSize: "20px",
-              paddingRight: "15px",
-              cursor: "pointer",
+              fontSize: '20px',
+              paddingRight: '15px',
+              cursor: 'pointer',
             }}
             icon={faChevronDown}
             onClick={() => {
@@ -242,41 +345,47 @@ const PetEdit = () => {
         {petBehaviorHide && (
           <>
             <label>Aggressions</label>
+            <div className='error-container'>{errors.petAggressions}</div>
             <CreatableSelect
               isMulti
               isClearable
               isSearchable
               closeMenuOnSelect={false}
-              placeholder="Select all that apply..."
+              placeholder='Select all that apply...'
               styles={SelectMultiStyles}
-              options={options}
+              options={PetAggressions}
+              onChange={(e) => setValue('petAggressions', e?.value, false)}
             />
             <label>Good With</label>
+            <div className='error-container'>{errors.petGoodWith}</div>
             <CreatableSelect
               isMulti
               isClearable
               isSearchable
               closeMenuOnSelect={false}
-              placeholder="Select all that apply..."
+              placeholder='Select all that apply...'
               styles={SelectMultiStyles}
-              options={options}
+              options={PetGoodWith}
+              onChange={(e) => setValue('petGoodWith', e?.value, false)}
             />
             <label>Additional Information</label>
+            <div className='error-container'>{errors.behaviorDescription}</div>
             <textarea
-              className="form-textarea"
-              name="description"
+              className='form-textarea'
               rows={5}
               cols={50}
+              name='behaviorDescription'
+              onChange={handleChange}
             />
           </>
         )}
         <h2>
-          Vet Information{" "}
+          Vet Information{' '}
           <FontAwesomeIcon
             style={{
-              fontSize: "20px",
-              paddingRight: "15px",
-              cursor: "pointer",
+              fontSize: '20px',
+              paddingRight: '15px',
+              cursor: 'pointer',
             }}
             icon={faChevronDown}
             onClick={() => {
@@ -286,44 +395,51 @@ const PetEdit = () => {
         </h2>
         {petVetHide && (
           <>
+            <div className='error-container'>{errors.clinicName}</div>
             <input
-              className="form-input"
-              type="text"
-              placeholder="Clinic Name"
+              className='form-input'
+              type='text'
+              placeholder='Clinic Name'
+              name='clinicName'
+              onChange={handleChange}
             />
+            <div className='error-container'>{errors.clinicAddress}</div>
             <input
-              className="form-input"
-              type="text"
-              placeholder="Clinic Address"
+              className='form-input'
+              type='text'
+              placeholder='Clinic Address'
+              name='clinicAddress'
+              onChange={handleChange}
             />
+            <div className='error-container'>{errors.clinicPhone}</div>
             <input
-              className="form-input"
-              type="text"
-              placeholder="Clinic Phone #"
+              className='form-input'
+              type='tel'
+              placeholder='Clinic Phone #'
+              name='clinicPhone'
+              onChange={handleChange}
             />
-            <input className="form-input" type="text" placeholder="Vet Name" />
+            <div className='error-container'>{errors.vetName}</div>
             <input
-              className="form-input"
-              type="text"
-              placeholder="Microchip ID"
+              className='form-input'
+              type='text'
+              placeholder='Vet Name'
+              name='vetName'
+              onChange={handleChange}
+            />
+            <div className='error-container'>{errors.microchipID}</div>
+            <input
+              className='form-input'
+              type='text'
+              placeholder='Microchip ID'
+              name='microchipID'
+              onChange={handleChange}
             />
           </>
         )}
-        <div id="edit-form-btns">
-          <input
-            id="cancel-btn"
-            type="submit"
-            value="Cancel"
-            onClick={() => {}}
-            disabled={() => {}}
-          />
-          <input
-            id="save-btn"
-            type="submit"
-            value="Save"
-            onClick={() => {}}
-            disabled={() => {}}
-          />
+        <div id='edit-form-btns'>
+          <input id='cancel-btn' type='submit' value='Cancel' />
+          <input id='save-btn' type='submit' value='Save' />
         </div>
       </form>
     </div>

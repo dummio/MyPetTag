@@ -4,7 +4,7 @@
  */
 
 // Import React
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   addPetToDatabase,
   getDogBreeds,
@@ -24,11 +24,17 @@ import SelectStyles from "../selectStyles/selectStyles";
 import SelectMultiStyles from "../selectStyles/selectMultiStyles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChevronDown,
+  faChevronRight,
+} from "@fortawesome/free-solid-svg-icons";
 
 // Import Modules
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
+
+// For cropping
+import CropEasy from "../../crop/CropEasy";
 
 const PetCreate = () => {
   // Render States
@@ -68,6 +74,9 @@ const PetCreate = () => {
   const [isAuthed, setIsAuthed] = useState(false);
   const [uid, setUid] = useState(null);
 
+  const [openCrop, setOpenCrop] = useState(false);
+  const [photoURL, setPhotoURL] = useState(null);
+
   useEffect(() => {
     async function fetchUid() {
       const uid_ = await authStateChangedWrapper();
@@ -96,9 +105,7 @@ const PetCreate = () => {
 
   const ValidateForm = () => {
     let isValid = false;
-
     if (petName) isValid = true;
-
     setCanSubmit(isValid);
   };
 
@@ -122,13 +129,32 @@ const PetCreate = () => {
   const UploadImage = (e) => {
     e.preventDefault();
     let file = e.target.files[0];
-    let image = URL.createObjectURL(file);
-    let profileImage = document.getElementById("pet-img");
-    profileImage.src = image;
 
-    if (file) {
+    if (file && file.type.startsWith("image/")) {
+      let image = URL.createObjectURL(file);
+      /* The cropper only displays if the selected file has changed.
+       * If the user selects the same file, the cropper wouldn't open,
+       * but we want it to open, so we set the file name value to null. */
+      document.getElementById("file-btn").value = null;
+
       setImage(file);
+      setPhotoURL(URL.createObjectURL(file));
+      setOpenCrop(true);
+
+      /* The dialog defaults to only image types, but users can upload
+       * a non-image file anyways, so this displays an error message. */
+    } else if (file && !file.type.startsWith("image/")) {
+      alert("Only image file types are supported.");
     }
+  };
+
+  const ClearImage = () => {
+    // e.preventDefault();
+    setImage(null);
+    setPhotoURL(null);
+    setOpenCrop(false);
+    let profileImage = document.getElementById("pet-img");
+    profileImage.src = defaultProfileImage;
   };
 
   useEffect(ValidateForm, [
@@ -272,6 +298,16 @@ const PetCreate = () => {
     }
   };
 
+  // const UpdatePreviewImg = () => {
+  //   if (image) {
+  //     let profileImage = document.getElementById("pet-img");
+  //     let imagePrev = URL.createObjectURL(image);
+  //     profileImage.src = imagePrev;
+  //   }
+  // };
+
+  // useEffect(UpdatePreviewImg, [image, openCrop]);
+
   // Select Arrays
   const PetTypes = [
     { value: "Dog", label: "Dog" },
@@ -320,6 +356,12 @@ const PetCreate = () => {
     fetchPetBreedInfo();
   }, [petSpecies]);
 
+  const fileInputRef = useRef(null);
+
+  const triggerFileInput = () => {
+    fileInputRef.current.click();
+  };
+
   return (
     <div id="create-container">
       <img
@@ -332,6 +374,12 @@ const PetCreate = () => {
       <div className="company-title">
         My<span style={{ color: "#75af96" }}>PetTag</span>
       </div>
+      {/* Conditionally render CropEasy */}
+      {openCrop && (
+        <CropEasy
+          {...{ photoURL, openCrop, setOpenCrop, setPhotoURL, setImage }}
+        />
+      )}
       <form id="create-form">
         <h1 id="create-form-title">Add New Pet</h1>
         <h2>
@@ -342,9 +390,12 @@ const PetCreate = () => {
               paddingRight: "15px",
               cursor: "pointer",
             }}
-            icon={faChevronDown}
+            icon={petInfoHide ? faChevronDown : faChevronRight}
             onClick={() => {
               setPetInfoHide(!petInfoHide);
+              // if (!petInfoHide) {
+              //   UpdatePreviewImg();
+              // }
             }}
           />
         </h2>
@@ -354,18 +405,40 @@ const PetCreate = () => {
             <div id="pet-img-container">
               <img
                 id="pet-img"
-                src={defaultProfileImage}
+                // src={image ? image : defaultProfileImage}
+                src={image ? URL.createObjectURL(image) : defaultProfileImage}
                 alt="profile-img"
                 width={157}
                 height={157}
               />
             </div>
             <input
+              id="file-btn"
+              ref={fileInputRef}
               className="form-input-file"
               type="file"
               accept="image/*"
+              title=" "
               onChange={UploadImage}
+              style={{ display: "none" }}
             />
+            <input
+              id="clear-image-btn"
+              type="button"
+              value="Upload Image"
+              onClick={triggerFileInput}
+            />
+
+            {image !== null && (
+              <input
+                id="clear-image-btn"
+                type="button"
+                value="Clear Image"
+                onClick={ClearImage}
+              />
+            )}
+
+            {/* <input className="form-input-file" onChange={UploadImage} /> */}
             <label>Pet Name</label>
             <div className="error-container">
               {petName === "" ? "Pet Name is Required" : null}
@@ -377,6 +450,7 @@ const PetCreate = () => {
               onChange={(e) => {
                 setPetName(e.target.value);
               }}
+              value={petName}
             />
             <label>Pet Species</label>
             <Select
@@ -388,10 +462,15 @@ const PetCreate = () => {
               onChange={(e) => {
                 if (e) {
                   setPetSpecies(e.value);
+                  console.log(e, "value: ", e.value);
                 } else {
+                  console.log("setting species to null");
                   setPetSpecies(null);
                 }
               }}
+              value={
+                petSpecies ? { value: petSpecies, label: petSpecies } : null
+              }
             />
             <label>Pet Breed</label>
             <CreatableSelect
@@ -407,17 +486,19 @@ const PetCreate = () => {
                   setPetBreed(null);
                 }
               }}
+              value={petBreed ? { value: petBreed, label: petBreed } : null}
             />
             <label>Pet Description</label>
             <textarea
               className="form-textarea"
               name="description"
-              placeholder="Please give a brief introduction about your pet?"
+              placeholder="Provide a brief introduction about your pet"
               rows={5}
               cols={50}
               onChange={(e) => {
                 setPetDescr(e.target.value);
               }}
+              value={petDescr}
             />
             <label>Pet Birth Date</label>
             <input
@@ -427,6 +508,7 @@ const PetCreate = () => {
               onChange={(e) => {
                 setPetBirthDate(e.target.value);
               }}
+              value={petBirthDate}
             />
             <label>Pet Weight</label>
             <input
@@ -436,6 +518,7 @@ const PetCreate = () => {
               onChange={(e) => {
                 setPetWeight(e.target.value);
               }}
+              value={petWeight}
             />
             <label>Pet Sex</label>
             <Select
@@ -451,6 +534,7 @@ const PetCreate = () => {
                   setPetSex(null);
                 }
               }}
+              value={petSex ? { value: petSex, label: petSex } : null}
             />
             <div id="form-contacts-container">
               <label>Contacts</label>
@@ -464,6 +548,7 @@ const PetCreate = () => {
               onChange={(e) => {
                 setPetContactName(e.target.value);
               }}
+              value={petContactName}
             />
             <input
               className="form-input"
@@ -472,6 +557,7 @@ const PetCreate = () => {
               onChange={(e) => {
                 setPetContactPhone(e.target.value);
               }}
+              value={petContactPhone}
             />
             {/*------------------------------------------------------------------*/}
             <label>Address</label>
@@ -482,6 +568,7 @@ const PetCreate = () => {
               onChange={(e) => {
                 setPetAddress(e.target.value);
               }}
+              value={petAddress}
             />
           </>
         )}
@@ -493,7 +580,7 @@ const PetCreate = () => {
               paddingRight: "15px",
               cursor: "pointer",
             }}
-            icon={faChevronDown}
+            icon={petHealthHide ? faChevronDown : faChevronRight}
             onClick={() => {
               setPetHealthHide(!petHealthHide);
             }}
@@ -515,6 +602,7 @@ const PetCreate = () => {
                 e.forEach((item) => newVaccines.push(item.value));
                 setPetVaccines(newVaccines);
               }}
+              value={petVaccines.map((value) => ({ value, label: value }))}
             />
             <label>Health Conditions</label>
             <CreatableSelect
@@ -530,6 +618,7 @@ const PetCreate = () => {
                 e.forEach((item) => newConds.push(item.value));
                 setPetConditions(newConds);
               }}
+              value={petConditions.map((value) => ({ value, label: value }))}
             />
             <label>Medications</label>
             <CreatableSelect
@@ -545,6 +634,7 @@ const PetCreate = () => {
                 e.forEach((item) => newMeds.push(item.value));
                 setPetMeds(newMeds);
               }}
+              value={petMeds.map((value) => ({ value, label: value }))}
             />
             <label>Allergies</label>
             <CreatableSelect
@@ -560,6 +650,7 @@ const PetCreate = () => {
                 e.forEach((item) => newAllergies.push(item.value));
                 setPetAllergies(newAllergies);
               }}
+              value={petAllergies.map((value) => ({ value, label: value }))}
             />
             <label>Additional Information</label>
             <textarea
@@ -570,6 +661,7 @@ const PetCreate = () => {
               onChange={(e) => {
                 setPetHealthInfo(e.target.value);
               }}
+              value={petHealthInfo}
             />
           </>
         )}
@@ -581,7 +673,7 @@ const PetCreate = () => {
               paddingRight: "15px",
               cursor: "pointer",
             }}
-            icon={faChevronDown}
+            icon={petBehaviorHide ? faChevronDown : faChevronRight}
             onClick={() => {
               setPetBehaviorHide(!petBehaviorHide);
             }}
@@ -603,6 +695,7 @@ const PetCreate = () => {
                 e.forEach((item) => newAggressions.push(item.value));
                 setPetAggressions(newAggressions);
               }}
+              value={petAggressions.map((value) => ({ value, label: value }))}
             />
             <label>Good With</label>
             <CreatableSelect
@@ -618,6 +711,7 @@ const PetCreate = () => {
                 e.forEach((item) => newGoodWith.push(item.value));
                 setPetGoodWith(newGoodWith);
               }}
+              value={petGoodWith.map((value) => ({ value, label: value }))}
             />
             <label>Additional Information</label>
             <textarea
@@ -628,6 +722,7 @@ const PetCreate = () => {
               onChange={(e) => {
                 setPetBehaviorInfo(e.target.value);
               }}
+              value={petBehaviorInfo}
             />
           </>
         )}
@@ -639,7 +734,7 @@ const PetCreate = () => {
               paddingRight: "15px",
               cursor: "pointer",
             }}
-            icon={faChevronDown}
+            icon={petVetHide ? faChevronDown : faChevronRight}
             onClick={() => {
               setPetVetHide(!petVetHide);
             }}
@@ -654,6 +749,7 @@ const PetCreate = () => {
               onChange={(e) => {
                 setClinicName(e.target.value);
               }}
+              value={clinicName}
             />
             <input
               className="form-input"
@@ -662,6 +758,7 @@ const PetCreate = () => {
               onChange={(e) => {
                 setClinicAddr(e.target.value);
               }}
+              value={clinicAddr}
             />
             <input
               className="form-input"
@@ -670,6 +767,7 @@ const PetCreate = () => {
               onChange={(e) => {
                 setClinicPhone(e.target.value);
               }}
+              value={clinicPhone}
             />
             <input
               className="form-input"
@@ -678,6 +776,7 @@ const PetCreate = () => {
               onChange={(e) => {
                 setVetName(e.target.value);
               }}
+              value={vetName}
             />
             <input
               className="form-input"
@@ -686,6 +785,7 @@ const PetCreate = () => {
               onChange={(e) => {
                 setMicrochipId(e.target.value);
               }}
+              value={microchipId}
             />
           </>
         )}
@@ -697,8 +797,15 @@ const PetCreate = () => {
           disabled={!canSubmit}
         />
       </form>
+      {/* <CropEasy
+        {...{ photoURL, openCrop, setOpenCrop, setPhotoURL, setImage }}
+      /> */}
     </div>
   );
 };
 
 export default PetCreate;
+
+// : (
+//   <CropEasy {...{ photoURL, setOpenCrop, setPhotoURL, setImage }} />
+// )
