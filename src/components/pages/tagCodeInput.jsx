@@ -9,6 +9,7 @@ import React from "react";
 // Import Components
 import TagCodeForm from "../forms/tagCodeInput/tagCodeInputForm";
 import NavBar from "../navigation/navbar/navbar";
+import Alert from "../navigation/alert/alert";
 
 /**
  * Tag Code Input Page
@@ -19,6 +20,7 @@ const TagCodeInput = () => {
   return (
     <React.Fragment>
       <NavBar />
+      <Alert />
       <TagCodeForm />
     </React.Fragment>
   );

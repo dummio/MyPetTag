@@ -11,7 +11,7 @@ import PetProfileButton from "./petProfileButton";
 import "./accountInfo.css";
 import logo from "../../../images/paw.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPen, faPlus, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 
 //import firebase helper function
 import { getUserData } from "../../../firebaseCommands";
@@ -116,13 +116,23 @@ const AccountInformation = () => {
       <div id="pet-profiles-container">
         <div id="pet-container-name">
           <h2>Pet Profiles</h2>
-          <FontAwesomeIcon
-            icon={faPlus}
-            style={{ height: "31px" }}
-            onClick={() => {
-              navigate("/input-code", { replace: true });
-            }}
-          />
+          <div id="pet-container-icons">
+            <FontAwesomeIcon
+              icon={faPlus}
+              style={{ height: "31px", marginRight: "12px", cursor: "pointer" }}
+              onClick={() => {
+                navigate("/input-code", { replace: true });
+              }}
+            />
+
+            <FontAwesomeIcon
+              icon={faTrashCan}
+              style={{ height: "31px", cursor: "pointer" }}
+              onClick={() => {
+                navigate("/input-code", { replace: true });
+              }}
+            />
+          </div>
         </div>
         {realUser ? (
           realPet ? (

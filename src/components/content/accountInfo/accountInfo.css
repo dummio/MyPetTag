@@ -119,7 +119,31 @@
   margin-top: 20px;
 }
 
+.pet-profile-button:hover {
+  filter: brightness(75%);
+  box-shadow: 0px 8px 10px 0px rgba(0, 0, 0, 0.2);
+}
+
+.pet-profile-button:focus {
+  filter: brightness(75%);
+  box-shadow: 0px 8px 10px 0px rgba(0, 0, 0, 0.2);
+}
+
 .pet-profile-button p {
   font-size: 20px;
   margin: 0px 0px 0px 15px;
+}
+
+.pet-profile-button-link {
+  text-decoration: none;
+  color: inherit;
+  display: inherit;
+  justify-content: center;
+  align-items: center;
+}
+
+.pet-profile-icon-link {
+  font-size: 20px;
+  margin-right: 15px;
+  cursor: pointer;
 }

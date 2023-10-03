@@ -9,6 +9,7 @@ import React from "react";
 // Import Components
 import NavBar from "../navigation/navbar/navbar";
 import AccountSettings from "../content/accountSettings/accountSettings";
+import Alert from "../navigation/alert/alert";
 
 /**
  * User Account Page
@@ -19,6 +20,7 @@ const AccountEdit = () => {
   return (
     <React.Fragment>
       <NavBar />
+      <Alert />
       <AccountSettings />
     </React.Fragment>
   );

@@ -117,6 +117,7 @@ const PetInformation = ({ userID, petID }) => {
         height={157}
       />
       <p className="pet-name">{petName ? petName : "Loading..."}</p>
+      {/*Show as lost button if uid == null then user is logged in */}
       <p className="pet-breed">
         {petName ? (petBreed ? petBreed : "Breed not provided") : "Loading..."}
       </p>
