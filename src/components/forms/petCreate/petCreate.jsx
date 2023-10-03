@@ -8,9 +8,12 @@ import React, { useState, useEffect } from "react";
 import {
   addPetToDatabase,
   getDogBreeds,
+  getDogVaccines,
   getCatBreeds,
   isUserAuthenticated,
   authStateChangedWrapper,
+  getCatVaccines,
+  getPetHealthConditions,
 } from "../../../firebaseCommands";
 import { useNavigate } from "react-router-dom";
 import { storage } from "../../../firebase-config";
@@ -285,8 +288,8 @@ const PetCreate = () => {
     { value: "Spayed Female", label: "Spayed Female" },
   ];
   const [PetBreeds, setPetBreeds] = useState([]);
-  const Vaccines = [];
-  const HealthConditions = [];
+  const [Vaccines, setVaccines] = useState([]);
+  const [HealthConditions, setHealthConditions] = useState([]);
   const Medications = [];
   const Allergies = [];
   const PetAggressions = [
@@ -319,6 +322,28 @@ const PetCreate = () => {
     }
     fetchPetBreedInfo();
   }, [petSpecies]);
+
+  useEffect(() => {
+    async function fetchVaccines() {
+      let vaccines = [];
+      if(petSpecies == 'Dog') {
+        vaccines = await getDogVaccines();
+      }
+      else if(petSpecies == 'Cat') {
+        vaccines = await getCatVaccines();
+      }
+      setVaccines(vaccines);
+    }
+    fetchVaccines();
+  }, [petSpecies]);
+
+  useEffect(() => {
+    async function fetchPetHealthConditions() {
+      const conditions = await getPetHealthConditions();
+      setHealthConditions(conditions);
+    }
+    fetchPetHealthConditions();
+  }, []);
 
   return (
     <div id="create-container">

@@ -347,6 +347,54 @@ export async function getCatBreeds() {
   return catBreeds;
 }
 
+export async function getDogVaccines() {
+  const dogVaccineDocRef = doc(db, "dogBreeds", "vaccines");
+  const dogVaccineSnap = await getDoc(dogVaccineDocRef);
+
+  let dogVaccines = [];
+  const dogVaccinesList = dogVaccineSnap.data().vaccine;
+  console.log(dogVaccineSnap);
+  for (let i = 0; i < dogVaccinesList.length; i++) {
+    dogVaccines.push({
+      label: dogVaccinesList[i],
+      value: dogVaccinesList[i],
+    });
+  }
+  console.log(dogVaccines);
+  return dogVaccines;
+}
+
+export async function getCatVaccines() {
+  const catVaccineDocRef = doc(db, "catBreeds", "vaccines");
+  const catVaccineSnap = await getDoc(catVaccineDocRef);
+
+  let catVaccines = [];
+  const catVaccinesList = catVaccineSnap.data().vaccine;
+  for (let i = 0; i < catVaccinesList.length; i++) {
+    catVaccines.push({
+      label: catVaccinesList[i],
+      value: catVaccinesList[i],
+    });
+  }
+  console.log(catVaccines);
+  return catVaccines;
+}
+
+export async function getPetHealthConditions() {
+  const petHealthDocRef = doc(db, "pet", "healthConditions");
+  const petHealthSnap = await getDoc(petHealthDocRef);
+
+  let petHealthConditions = [];
+  const petHealthConditionsList = petHealthSnap.data().conditions;
+  for(let i = 0; i < petHealthConditionsList.length; i++) {
+    petHealthConditions.push({
+      label: petHealthConditionsList[i],
+      value: petHealthConditionsList[i],
+    });
+  }
+  return petHealthConditions;
+}
+
 export async function getUserAndPetIDFromTag(tagID) {
     const tagCodeRef = doc(db, "tags", tagID);
     const tagCodeSnap = await getDoc(tagCodeRef);
