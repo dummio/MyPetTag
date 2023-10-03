@@ -1,4 +1,4 @@
-import { db, auth } from "./firebase-config";
+import { db, auth, storage } from "./firebase-config";
 import {
   doc,
   updateDoc,
@@ -148,10 +148,15 @@ export async function addPetToDatabase(
     const userDocSnap = await getDoc(userDocRef);
 
     //console.log(userDocSnap.data());
-    var petID_ = userDocSnap.data().pets?.length;
-    if (petID_ == undefined) {
-      petID_ = 0;
-    }
+    const numPets = userDocSnap.data().pets?.length;
+    // if (petID_ == undefined) {
+    //   petID_ = 0;
+    // }
+
+    const petID_ =
+      numPets === undefined
+        ? 0
+        : userDocSnap.data().pets[numPets - 1].petID + 1;
 
     console.log("adding pet with vaccines: ", vaccines_);
     const pet = {
@@ -201,6 +206,47 @@ export async function addPetToDatabase(
   }
 }
 
+export async function removePetFromDatabase(petID) {
+  const uid = await authStateChangedWrapper();
+
+  try {
+    const userDocRef = doc(db, "users", uid);
+    const userDocSnap = await getDoc(userDocRef);
+
+    let petData = {};
+    if (userDocSnap.exists()) {
+      const petsList = userDocSnap.data().pets;
+
+      console.log("here's the pet you're deleting: ", petsList[petID]);
+      const tagToRenew = petsList[petID]["tag"];
+      const urlToDelete = petsList[petID]["imageUrl"];
+      const storageRef = storageRef.refFromURL(urlToDelete);
+
+      storageRef()
+        .delete()
+        .catch((error) => {
+          console.log("Error when deleting image: ", error);
+        });
+
+      // for (let i = 0; i < petsList.length; i++) {
+      //   const currPet = petsList[i];
+      //   if (currPet["petID"] == petID) {
+      //     // for (let j = 0; j < keys.length; j++) {
+      //     //   const currKey = keys[j];
+      //     //   petData[currKey] = currPet[currKey];
+      //     // }
+      //     // return petData;
+      //   }
+      // }
+    } else {
+      // throw new Error("User does not have any pets!");
+      return null;
+    }
+  } catch (error) {
+    console.log("Error occurred getting pet data: ", error);
+  }
+}
+
 /**
  * Returns user data to populate user home page
  * @returns
@@ -230,7 +276,7 @@ export async function getUserData() {
  * @returns
  */
 export async function getPetData(uid, petID, keys) {
-  if(uid == null) {
+  if (uid == null) {
     console.log("whadaito: ", uid);
     uid = await authStateChangedWrapper();
   }
@@ -348,8 +394,8 @@ export async function getCatBreeds() {
 }
 
 export async function getUserAndPetIDFromTag(tagID) {
-    const tagCodeRef = doc(db, "tags", tagID);
-    const tagCodeSnap = await getDoc(tagCodeRef);
-    console.log("HOWDYDO: ", tagCodeSnap.data().UserID);
-    return [tagCodeSnap.data().UserID, tagCodeSnap.data().Pet];
+  const tagCodeRef = doc(db, "tags", tagID);
+  const tagCodeSnap = await getDoc(tagCodeRef);
+  console.log("HOWDYDO: ", tagCodeSnap.data().UserID);
+  return [tagCodeSnap.data().UserID, tagCodeSnap.data().Pet];
 }
