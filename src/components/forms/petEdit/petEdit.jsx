@@ -7,8 +7,10 @@
 import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
 import CreatableSelect from 'react-select/creatable';
-import useForm from '../../../Hooks/useForm';
+import { useForm } from 'react-hook-form';
 import { getDogBreeds } from '../../../firebaseCommands';
+import { Patterns } from '../../../constants';
+import get from 'lodash/get';
 
 // Import CSS
 import './petEdit.css';
@@ -33,26 +35,15 @@ const PetEdit = () => {
   const [petHealthHide, setPetHealthHide] = useState(false);
   const [petBehaviorHide, setPetBehaviorHide] = useState(false);
   const [petVetHide, setPetVetHide] = useState(false);
-  const [canSubmit, setCanSubmit] = useState(false);
 
-  function formSubmit() {
-    console.debug(values, errors);
-    if (canSubmit) {
-      console.debug('Success!');
-    }
-    return null;
-  }
-
-  const { handleChange, values, errors, handleSubmit, setValue } = useForm(formSubmit);
-
-  useEffect(() => {
-    if (Object.keys(errors).length === 0 && Object.keys(values).length !== 0) {
-      setCanSubmit(true);
-    } else {
-      setCanSubmit(false);
-    }
-    console.debug(values, errors);
-  }, [values, errors]);
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm({
+    mode: 'onTouched',
+  });
 
   // Temp Array
   const PetTypes = [
@@ -94,6 +85,10 @@ const PetEdit = () => {
     fetchPetBreedInfo();
   }, []);
 
+  function formSubmit(data) {
+    console.log(errors);
+  }
+
   // Temp Info
   const pet = 'pet-name';
   const emptyOptions = [];
@@ -106,13 +101,15 @@ const PetEdit = () => {
     profileImage.src = image;
   };
 
+  console.log(watch());
+
   return (
     <div id='edit-container'>
       <img className='logo' src={logo} alt='MyPetTag' width={250} height={250} />
       <div className='company-title'>
         My<span style={{ color: '#75af96' }}>PetTag</span>
       </div>
-      <form id='edit-form' onSubmit={handleSubmit}>
+      <form id='edit-form' onSubmit={handleSubmit(formSubmit)}>
         <h1 id='edit-form-title'>Editing {pet}</h1>
         <h2>
           Pet Information{' '}
@@ -147,108 +144,123 @@ const PetEdit = () => {
               onChange={UploadImage}
             />
             <label>Pet Name</label>
-            <div className='error-container'>{errors.petName}</div>
+            <div className='error-container'>
+              {errors.petName && get(errors, 'petName.message')}
+            </div>
             <input
               className='form-input'
               type='text'
-              required
-              name='petName'
-              onChange={handleChange}
+              {...register('petName', { required: 'Pet Name cannot be blank.' })}
             />
             <label>Pet Species</label>
-            <div className='error-container'>{errors.petSpecies}</div>
+            <div className='error-container'>
+              {errors.petSpecies && get(errors, 'petSpecies.message')}
+            </div>
             <Select
               isClearable
               isSearchable
               closeMenuOnSelect={true}
               styles={SelectStyles}
               options={PetTypes}
-              required
-              onChange={(e) => setValue('petSpecies', e?.value, true)}
             />
             <label>Pet Breed</label>
-            <div className='error-container'>{errors.petBreed}</div>
+            <div className='error-container'></div>
             <CreatableSelect
               isClearable
               isSearchable
               closeMenuOnSelect={true}
               styles={SelectStyles}
               options={PetBreeds}
-              required
-              onChange={(e) => setValue('petBreed', e?.value, true)}
             />
             <label>Pet Description</label>
-            <div className='error-container'>{errors.petDescription}</div>
+            <div className='error-container'>
+              {errors.petDescription && get(errors, 'petDescription.message')}
+            </div>
             <textarea
               className='form-textarea'
               placeholder='Please give a brief introduction about your pet?'
               rows={5}
               cols={50}
-              name='petDescription'
-              onChange={handleChange}
+              {...register('petDescription')}
             />
             <label>Pet Birth Date</label>
+            <div className='error-container'>
+              {errors.petBirthday && get(errors, 'petBirthday.message')}
+            </div>
             <input
               className='form-input'
               type='date'
               style={{ appearance: 'textfield' }}
-              required
-              name='petDoB'
-              onChange={handleChange}
+              {...register('petBirthday', { required: 'Pet Birth Date cannot be blank.' })}
             />
             <label>Pet Weight</label>
-            <div className='error-container'>{errors.petWeight}</div>
+            <div className='error-container'>
+              {errors.petWeight && get(errors, 'petWeight.message')}
+            </div>
             <input
               className='form-input'
               type='number'
-              required
-              name='petWeight'
-              min='1'
-              max='400'
               step='1'
-              onChange={handleChange}
+              {...register('petWeight', {
+                required: 'Pet Weight cannot be blank.',
+                min: {
+                  value: 1,
+                  message: 'Enter a valid weight.',
+                },
+                max: {
+                  value: 400,
+                  message: 'Enter a valid weight',
+                },
+              })}
               style={{ appearance: 'textfield' }}
             />
             <label>Pet Sex</label>
-            <div className='error-container'>{errors.petSex}</div>
+            <div className='error-container'>{errors.petSex && get(errors, 'petSex.message')}</div>
             <Select
               isClearable
               isSearchable
               closeMenuOnSelect={true}
               styles={SelectStyles}
               options={PetSex}
-              required
-              onChange={(e) => setValue('petSex', e?.value, true)}
             />
             <div id='form-contacts-container'>
               <label>Contacts</label>
               <FontAwesomeIcon icon={faPlus} style={{ height: '25px' }} />
             </div>
             {/* {TODO: Wrap in map to dynamically add more contacts} */}
-            <div className='error-container'>{errors.contactName}</div>
+            <div className='error-container'>
+              {errors.contactName && get(errors, 'contactName.message')}
+            </div>
             <input
               className='form-input'
               type='text'
               placeholder='Name'
-              name='contactName' // TODO: Adapt for multiple contacts
-              onChange={handleChange}
+              {...register('contactName')} // TODO: Adapt for multiple contacts
             />
-            <div className='error-container'>{errors.contactPhone}</div>
+            <div className='error-container'>
+              {errors.contactPhone && get(errors, 'contactPhone.message')}
+            </div>
             <input
               className='form-input'
               type='tel'
               placeholder='Phone Number'
-              name='contactPhone' // TODO: Adapt for multiple contacts
-              onChange={handleChange}
+              {...register('contactPhone', {
+                pattern: {
+                  value: Patterns.PHONE_REGEX,
+                  message: 'Enter a valid phone number.',
+                },
+              })} // TODO: Adapt for multiple contacts
             />
             {/*------------------------------------------------------------------*/}
             <label>Address</label>
-            <div className='error-container'>{errors.address}</div>
+            <div className='error-container'>
+              {errors.address && get(errors, 'contactPhone.message')}
+            </div>
             <input
               className='form-input'
               type='text'
               name='address'
-              onChange={handleChange}
+              {...register('address')}
               placeholder='1234 Park Ave, City, TX 12345'
             />
           </>
@@ -270,7 +282,7 @@ const PetEdit = () => {
         {petHealthHide && (
           <>
             <label>Vaccines</label>
-            <div className='error-container'>{errors.petVaccines}</div>
+            <div className='error-container'></div>
             <CreatableSelect
               isMulti
               isClearable
@@ -279,10 +291,9 @@ const PetEdit = () => {
               placeholder='Select all that apply...'
               styles={SelectMultiStyles}
               options={emptyOptions}
-              onChange={(e) => setValue('petVaccines', e?.value, false)}
             />
             <label>Health Conditions</label>
-            <div className='error-container'>{errors.petHealth}</div>
+            <div className='error-container'></div>
             <CreatableSelect
               isMulti
               isClearable
@@ -291,10 +302,9 @@ const PetEdit = () => {
               placeholder='Select all that apply...'
               styles={SelectMultiStyles}
               options={emptyOptions}
-              onChange={(e) => setValue('petHealth', e?.value, false)}
             />
             <label>Medications</label>
-            <div className='error-container'>{errors.petMedications}</div>
+            <div className='error-container'></div>
             <CreatableSelect
               isMulti
               isClearable
@@ -303,10 +313,9 @@ const PetEdit = () => {
               placeholder='Select all that apply...'
               styles={SelectMultiStyles}
               options={emptyOptions}
-              onChange={(e) => setValue('petMedications', e?.value, false)}
             />
             <label>Allergies</label>
-            <div className='error-container'>{errors.petAllergies}</div>
+            <div className='error-container'></div>
             <CreatableSelect
               isMulti
               isClearable
@@ -315,16 +324,17 @@ const PetEdit = () => {
               placeholder='Select all that apply...'
               styles={SelectMultiStyles}
               options={emptyOptions}
-              onChange={(e) => setValue('petAllergies', e?.value, false)}
             />
             <label>Additional Information</label>
-            <div className='error-container'>{errors.healthDescription}</div>
+            <div className='error-container'>
+              {errors.healthDescription && get(errors, 'healthDescription.message')}
+            </div>
             <textarea
               className='form-textarea'
               rows={5}
               cols={50}
               name='healthDescription'
-              onChange={handleChange}
+              {...register('healthDescription')}
             />
           </>
         )}
@@ -345,7 +355,7 @@ const PetEdit = () => {
         {petBehaviorHide && (
           <>
             <label>Aggressions</label>
-            <div className='error-container'>{errors.petAggressions}</div>
+            <div className='error-container'></div>
             <CreatableSelect
               isMulti
               isClearable
@@ -354,10 +364,9 @@ const PetEdit = () => {
               placeholder='Select all that apply...'
               styles={SelectMultiStyles}
               options={PetAggressions}
-              onChange={(e) => setValue('petAggressions', e?.value, false)}
             />
             <label>Good With</label>
-            <div className='error-container'>{errors.petGoodWith}</div>
+            <div className='error-container'></div>
             <CreatableSelect
               isMulti
               isClearable
@@ -366,16 +375,16 @@ const PetEdit = () => {
               placeholder='Select all that apply...'
               styles={SelectMultiStyles}
               options={PetGoodWith}
-              onChange={(e) => setValue('petGoodWith', e?.value, false)}
             />
             <label>Additional Information</label>
-            <div className='error-container'>{errors.behaviorDescription}</div>
+            <div className='error-container'>
+              {errors.behaviorDescription && get(errors, 'behaviorDescription.message')}
+            </div>
             <textarea
               className='form-textarea'
               rows={5}
               cols={50}
-              name='behaviorDescription'
-              onChange={handleChange}
+              {...register('behaviorDescription')}
             />
           </>
         )}
@@ -395,45 +404,55 @@ const PetEdit = () => {
         </h2>
         {petVetHide && (
           <>
-            <div className='error-container'>{errors.clinicName}</div>
+            <div className='error-container'>
+              {errors.clinicName && get(errors, 'contactPhone.clinicName')}
+            </div>
             <input
               className='form-input'
               type='text'
               placeholder='Clinic Name'
-              name='clinicName'
-              onChange={handleChange}
+              {...register('clinicName')}
             />
-            <div className='error-container'>{errors.clinicAddress}</div>
+            <div className='error-container'>
+              {errors.clinicAddress && get(errors, 'contactPhone.clinicAddress')}
+            </div>
             <input
               className='form-input'
               type='text'
               placeholder='Clinic Address'
-              name='clinicAddress'
-              onChange={handleChange}
+              {...register('clinicAddress')}
             />
-            <div className='error-container'>{errors.clinicPhone}</div>
+            <div className='error-container'>
+              {errors.clinicPhone && get(errors, 'clinicPhone.message')}
+            </div>
             <input
               className='form-input'
               type='tel'
               placeholder='Clinic Phone #'
-              name='clinicPhone'
-              onChange={handleChange}
+              {...register('clinicPhone', {
+                pattern: {
+                  value: Patterns.PHONE_REGEX,
+                  message: 'Enter a valid phone number.',
+                },
+              })}
             />
-            <div className='error-container'>{errors.vetName}</div>
+            <div className='error-container'>
+              {errors.vetName && get(errors, 'vetName.message')}
+            </div>
             <input
               className='form-input'
               type='text'
               placeholder='Vet Name'
-              name='vetName'
-              onChange={handleChange}
+              {...register('vetName')}
             />
-            <div className='error-container'>{errors.microchipID}</div>
+            <div className='error-container'>
+              {errors.microchipID && get(errors, 'microchipID.message')}
+            </div>
             <input
               className='form-input'
               type='text'
               placeholder='Microchip ID'
-              name='microchipID'
-              onChange={handleChange}
+              {...register('microchipID')}
             />
           </>
         )}
