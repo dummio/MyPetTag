@@ -6,10 +6,10 @@
 // Import React Modules
 import React from "react";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // Import CSS
-import { faEye } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faPen, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 /**
@@ -27,28 +27,23 @@ export default class PetProfileButton extends React.Component {
 
   render() {
     return (
-      <div className="pet-profile-button">
-        <p>{this.state.name}</p>
-        <Link
-          to={`../pet/${this.state.petId}/profile/`}
-          style={{
-            textDecoration: "none",
-            color: "inherit",
-            display: "inherit",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <FontAwesomeIcon
-            style={{
-              fontSize: "20px",
-              marginRight: "15px",
-              cursor: "pointer",
-            }}
-            icon={faEye}
-          />
-        </Link>
-      </div>
+      <Link
+        className="pet-profile-button-link"
+        to={`../pet/${this.state.petId}/profile/`}
+      >
+        <div className="pet-profile-button">
+          <p>{this.state.name}</p>
+          <Link
+            className="pet-profile-button-link"
+            to={`../pet/${this.state.petId}/edit/`}
+          >
+            <FontAwesomeIcon
+              className="pet-profile-icon-link"
+              icon={faPenToSquare}
+            />
+          </Link>
+        </div>
+      </Link>
     );
   }
 }
