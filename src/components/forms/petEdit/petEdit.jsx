@@ -120,7 +120,7 @@ const PetEdit = () => {
         clinicAddress: petData["vets"]["addr"],
         clinicPhone: petData["vets"]["phone"],
         vetName: petData["vets"]["vetName"],
-        microchipID: petData["vets"]["microhipId"],
+        microchipID: petData["vets"]["microchipId"],
       };
     } catch (error) {
       console.log(

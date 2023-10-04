@@ -329,7 +329,6 @@ export async function getPetData(uid, petID, keys) {
             const currKey = keys[j];
             petData[currKey] = currPet[currKey];
           }
-          console.log("Here's the petdata from firebase commands: ", petData);
           return petData;
         }
       }
