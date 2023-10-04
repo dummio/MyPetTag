@@ -396,9 +396,10 @@ export async function getDogBreeds() {
   let dogBreeds = [];
   const dogBreedList = dogBreedSnap.data().List;
   for (let i = 0; i < dogBreedList.length; i++) {
+    const dogBreed = capitalizeWords(dogBreedList[i]);
     dogBreeds.push({
-      label: dogBreedList[i],
-      value: dogBreedList[i],
+      label: dogBreed,
+      value: dogBreed,
     });
   }
   // console.log(dogBreeds);
@@ -413,9 +414,10 @@ export async function getCatBreeds() {
   let catBreeds = [];
   const catBreedList = catBreedSnap.data().List;
   for (let i = 0; i < catBreedList.length; i++) {
+    const catBreed = capitalizeWords(catBreedList[i]);
     catBreeds.push({
-      label: catBreedList[i],
-      value: catBreedList[i],
+      label: catBreed,
+      value: catBreed,
     });
   }
   // console.log(catBreeds);
@@ -427,4 +429,25 @@ export async function getUserAndPetIDFromTag(tagID) {
   const tagCodeSnap = await getDoc(tagCodeRef);
   console.log("HOWDYDO: ", tagCodeSnap.data().UserID);
   return [tagCodeSnap.data().UserID, tagCodeSnap.data().Pet];
+}
+
+function capitalizeWords(inputString) {
+  // Split the input string into an array of words
+  const words = inputString.split(" ");
+
+  // Capitalize the first letter of each word
+  const capitalizedWords = words.map((word) => {
+    // Check if the word is not empty
+    if (word.length > 0) {
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    } else {
+      // Handle empty words (e.g., consecutive spaces)
+      return "";
+    }
+  });
+
+  // Join the capitalized words back into a string
+  const resultString = capitalizedWords.join(" ");
+
+  return resultString;
 }
