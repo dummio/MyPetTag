@@ -48,6 +48,7 @@ const PetEdit = () => {
 
   const [openCrop, setOpenCrop] = useState(false);
   const [photoURL, setPhotoURL] = useState(null);
+  const [originalImage, setOriginalImage] = useState(null);
   const [image, setImage] = useState(null);
 
   async function getInitialValues() {
@@ -77,7 +78,7 @@ const PetEdit = () => {
 
       console.log("gonna return petData stuff");
       if (petData["imageUrl"]) {
-        setImage(petData["imageUrl"]);
+        setOriginalImage(petData["imageUrl"]);
       }
       return {
         petName: petData["name"],
@@ -238,6 +239,7 @@ const PetEdit = () => {
   const ClearImage = () => {
     // e.preventDefault();
     setImage(null);
+    setOriginalImage(null);
     setPhotoURL(null);
     setOpenCrop(false);
     let profileImage = document.getElementById("pet-img");
@@ -290,7 +292,13 @@ const PetEdit = () => {
             <div id="pet-img-container">
               <img
                 id="pet-img"
-                src={image ? image : defaultProfileImage}
+                src={
+                  image
+                    ? URL.createObjectURL(image)
+                    : originalImage
+                    ? originalImage
+                    : defaultProfileImage
+                }
                 alt="profile-img"
                 width={157}
                 height={157}
@@ -313,7 +321,7 @@ const PetEdit = () => {
               onClick={triggerFileInput}
             />
 
-            {image !== null && (
+            {(image !== null || originalImage !== null) && (
               <input
                 id="clear-image-btn"
                 type="button"
