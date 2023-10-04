@@ -345,10 +345,9 @@ const PetCreate = () => {
   useEffect(() => {
     async function fetchPetBreedInfo() {
       let breeds = [];
-      if(petSpecies == 'Dog') {
+      if (petSpecies == "Dog") {
         breeds = await getDogBreeds();
-      }
-      else if(petSpecies == 'Cat') {
+      } else if (petSpecies == "Cat") {
         breeds = await getCatBreeds();
       }
       setPetBreeds(breeds);
@@ -393,9 +392,6 @@ const PetCreate = () => {
             icon={petInfoHide ? faChevronDown : faChevronRight}
             onClick={() => {
               setPetInfoHide(!petInfoHide);
-              // if (!petInfoHide) {
-              //   UpdatePreviewImg();
-              // }
             }}
           />
         </h2>
@@ -405,7 +401,6 @@ const PetCreate = () => {
             <div id="pet-img-container">
               <img
                 id="pet-img"
-                // src={image ? image : defaultProfileImage}
                 src={image ? URL.createObjectURL(image) : defaultProfileImage}
                 alt="profile-img"
                 width={157}

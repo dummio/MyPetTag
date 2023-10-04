@@ -230,7 +230,7 @@ export async function getUserData() {
  * @returns
  */
 export async function getPetData(uid, petID, keys) {
-  if(uid == null) {
+  if (uid == null) {
     console.log("whadaito: ", uid);
     uid = await authStateChangedWrapper();
   }
@@ -254,6 +254,7 @@ export async function getPetData(uid, petID, keys) {
             const currKey = keys[j];
             petData[currKey] = currPet[currKey];
           }
+          console.log("Here's the petdata from firebase commands: ", petData);
           return petData;
         }
       }
@@ -326,7 +327,7 @@ export async function getDogBreeds() {
       value: dogBreedList[i],
     });
   }
-  console.log(dogBreeds);
+  // console.log(dogBreeds);
   return dogBreeds;
 }
 
@@ -343,13 +344,13 @@ export async function getCatBreeds() {
       value: catBreedList[i],
     });
   }
-  console.log(catBreeds);
+  // console.log(catBreeds);
   return catBreeds;
 }
 
 export async function getUserAndPetIDFromTag(tagID) {
-    const tagCodeRef = doc(db, "tags", tagID);
-    const tagCodeSnap = await getDoc(tagCodeRef);
-    console.log("HOWDYDO: ", tagCodeSnap.data().UserID);
-    return [tagCodeSnap.data().UserID, tagCodeSnap.data().Pet];
+  const tagCodeRef = doc(db, "tags", tagID);
+  const tagCodeSnap = await getDoc(tagCodeRef);
+  console.log("HOWDYDO: ", tagCodeSnap.data().UserID);
+  return [tagCodeSnap.data().UserID, tagCodeSnap.data().Pet];
 }
