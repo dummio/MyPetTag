@@ -7,7 +7,7 @@
 import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
 import CreatableSelect from 'react-select/creatable';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { getDogBreeds } from '../../../firebaseCommands';
 import { Patterns } from '../../../constants';
 import get from 'lodash/get';
@@ -37,6 +37,7 @@ const PetEdit = () => {
   const [petVetHide, setPetVetHide] = useState(false);
 
   const {
+    control,
     register,
     handleSubmit,
     watch,
@@ -156,21 +157,39 @@ const PetEdit = () => {
             <div className='error-container'>
               {errors.petSpecies && get(errors, 'petSpecies.message')}
             </div>
-            <Select
-              isClearable
-              isSearchable
-              closeMenuOnSelect={true}
-              styles={SelectStyles}
-              options={PetTypes}
+            <Controller
+              name='petSpecies'
+              control={control}
+              rules={{ required: 'Pet Species cannot be blank.' }}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  isClearable
+                  isSearchable
+                  closeMenuOnSelect={true}
+                  styles={SelectStyles}
+                  options={PetTypes}
+                />
+              )}
             />
             <label>Pet Breed</label>
-            <div className='error-container'></div>
-            <CreatableSelect
-              isClearable
-              isSearchable
-              closeMenuOnSelect={true}
-              styles={SelectStyles}
-              options={PetBreeds}
+            <div className='error-container'>
+              {errors.petBreed && get(errors, 'petBreed.message')}
+            </div>
+            <Controller
+              name='petBreed'
+              control={control}
+              rules={{ required: 'Pet Breed cannot be blank.' }}
+              render={({ field }) => (
+                <CreatableSelect
+                  {...field}
+                  isClearable
+                  isSearchable
+                  closeMenuOnSelect={true}
+                  styles={SelectStyles}
+                  options={PetBreeds}
+                />
+              )}
             />
             <label>Pet Description</label>
             <div className='error-container'>
@@ -216,12 +235,20 @@ const PetEdit = () => {
             />
             <label>Pet Sex</label>
             <div className='error-container'>{errors.petSex && get(errors, 'petSex.message')}</div>
-            <Select
-              isClearable
-              isSearchable
-              closeMenuOnSelect={true}
-              styles={SelectStyles}
-              options={PetSex}
+            <Controller
+              name='petSex'
+              control={control}
+              rules={{ required: 'Pet Sex cannot be blank.' }}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  isClearable
+                  isSearchable
+                  closeMenuOnSelect={true}
+                  styles={SelectStyles}
+                  options={PetSex}
+                />
+              )}
             />
             <div id='form-contacts-container'>
               <label>Contacts</label>
@@ -282,48 +309,84 @@ const PetEdit = () => {
         {petHealthHide && (
           <>
             <label>Vaccines</label>
-            <div className='error-container'></div>
-            <CreatableSelect
-              isMulti
-              isClearable
-              isSearchable
-              closeMenuOnSelect={false}
-              placeholder='Select all that apply...'
-              styles={SelectMultiStyles}
-              options={emptyOptions}
+            <div className='error-container'>
+              {errors.petVaccines && get(errors, 'petVaccines.message')}
+            </div>
+            <Controller
+              name='petVaccines'
+              control={control}
+              render={({ field }) => (
+                <CreatableSelect
+                  {...field}
+                  isMulti
+                  isClearable
+                  isSearchable
+                  closeMenuOnSelect={false}
+                  placeholder='Select all that apply...'
+                  styles={SelectMultiStyles}
+                  options={emptyOptions}
+                />
+              )}
             />
             <label>Health Conditions</label>
-            <div className='error-container'></div>
-            <CreatableSelect
-              isMulti
-              isClearable
-              isSearchable
-              closeMenuOnSelect={false}
-              placeholder='Select all that apply...'
-              styles={SelectMultiStyles}
-              options={emptyOptions}
+            <div className='error-container'>
+              {errors.petHealth && get(errors, 'petHealth.message')}
+            </div>
+            <Controller
+              name='petHealth'
+              control={control}
+              render={({ field }) => (
+                <CreatableSelect
+                  {...field}
+                  isMulti
+                  isClearable
+                  isSearchable
+                  closeMenuOnSelect={false}
+                  placeholder='Select all that apply...'
+                  styles={SelectMultiStyles}
+                  options={emptyOptions}
+                />
+              )}
             />
             <label>Medications</label>
-            <div className='error-container'></div>
-            <CreatableSelect
-              isMulti
-              isClearable
-              isSearchable
-              closeMenuOnSelect={false}
-              placeholder='Select all that apply...'
-              styles={SelectMultiStyles}
-              options={emptyOptions}
+            <div className='error-container'>
+              {errors.petMedications && get(errors, 'petMedications.message')}
+            </div>
+            <Controller
+              name='petMedications'
+              control={control}
+              render={({ field }) => (
+                <CreatableSelect
+                  {...field}
+                  isMulti
+                  isClearable
+                  isSearchable
+                  closeMenuOnSelect={false}
+                  placeholder='Select all that apply...'
+                  styles={SelectMultiStyles}
+                  options={emptyOptions}
+                />
+              )}
             />
             <label>Allergies</label>
-            <div className='error-container'></div>
-            <CreatableSelect
-              isMulti
-              isClearable
-              isSearchable
-              closeMenuOnSelect={false}
-              placeholder='Select all that apply...'
-              styles={SelectMultiStyles}
-              options={emptyOptions}
+            <div className='error-container'>
+              {errors.petAllergies && get(errors, 'petAllergies.message')}
+            </div>
+            <Controller
+              name='petAllergies'
+              control={control}
+              render={({ field }) => (
+                <CreatableSelect
+                  {...field}
+                  isMulti
+                  isClearable
+                  isSearchable
+                  closeMenuOnSelect={false}
+                  placeholder='Select all that apply...'
+                  styles={SelectMultiStyles}
+                  options={emptyOptions}
+                />
+              )}
             />
             <label>Additional Information</label>
             <div className='error-container'>
@@ -355,26 +418,44 @@ const PetEdit = () => {
         {petBehaviorHide && (
           <>
             <label>Aggressions</label>
-            <div className='error-container'></div>
-            <CreatableSelect
-              isMulti
-              isClearable
-              isSearchable
-              closeMenuOnSelect={false}
-              placeholder='Select all that apply...'
-              styles={SelectMultiStyles}
-              options={PetAggressions}
+            <div className='error-container'>
+              {errors.petAggressions && get(errors, 'petAggressions.message')}
+            </div>
+            <Controller
+              name='petAggressions'
+              control={control}
+              render={({ field }) => (
+                <CreatableSelect
+                  {...field}
+                  isMulti
+                  isClearable
+                  isSearchable
+                  closeMenuOnSelect={false}
+                  placeholder='Select all that apply...'
+                  styles={SelectMultiStyles}
+                  options={PetAggressions}
+                />
+              )}
             />
             <label>Good With</label>
-            <div className='error-container'></div>
-            <CreatableSelect
-              isMulti
-              isClearable
-              isSearchable
-              closeMenuOnSelect={false}
-              placeholder='Select all that apply...'
-              styles={SelectMultiStyles}
-              options={PetGoodWith}
+            <div className='error-container'>
+              {errors.petGoodWith && get(errors, 'petGoodWith.message')}
+            </div>
+            <Controller
+              name='petGoodWith'
+              control={control}
+              render={({ field }) => (
+                <CreatableSelect
+                  {...field}
+                  isMulti
+                  isClearable
+                  isSearchable
+                  closeMenuOnSelect={false}
+                  placeholder='Select all that apply...'
+                  styles={SelectMultiStyles}
+                  options={PetGoodWith}
+                />
+              )}
             />
             <label>Additional Information</label>
             <div className='error-container'>
