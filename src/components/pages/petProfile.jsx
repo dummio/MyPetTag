@@ -16,7 +16,6 @@ import BehaviorInformation from "../content/petProfileInfo/behaviorCard/behavior
 import VetProvider from "../content/petProfileInfo/vetProviderCard/vetProvider";
 import LocationService from "../content/petProfileInfo/locationServices/locationService";
 
-
 import { getUserAndPetIDFromTag } from "../../firebaseCommands";
 /**
  * Pet Profile Page
@@ -36,8 +35,7 @@ const PetProfile = () => {
           );
           setUID(ids[0]);
           setPID(ids[1]);
-        }
-        else {
+        } else {
           setPID(window.location.pathname.split("/")[4]);
         }
       } catch (error) {
@@ -48,6 +46,7 @@ const PetProfile = () => {
   }, []);
 
   if (pID != null) {
+    console.log(uID, " ", pID);
     return (
       <React.Fragment>
         <NavBar />
@@ -57,7 +56,7 @@ const PetProfile = () => {
         <HealthInformation userID={uID} petID={pID} />
         <BehaviorInformation userID={uID} petID={pID} />
         <VetProvider userID={uID} petID={pID} />
-        <LocationService userID={uID} petID={pID}/>
+        <LocationService userID={uID} petID={pID} />
       </React.Fragment>
     );
   }

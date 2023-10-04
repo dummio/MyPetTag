@@ -272,7 +272,11 @@ const PetEdit = () => {
       )}
       <form id="edit-form" onSubmit={handleSubmit(formSubmit)}>
         <h1 id="edit-form-title">Editing {pet}</h1>
-        <h2>
+        <h2
+          onClick={() => {
+            setPetInfoHide(!petInfoHide);
+          }}
+        >
           Pet Information{" "}
           <FontAwesomeIcon
             style={{
@@ -281,9 +285,6 @@ const PetEdit = () => {
               cursor: "pointer",
             }}
             icon={petInfoHide ? faChevronDown : faChevronRight}
-            onClick={() => {
-              setPetInfoHide(!petInfoHide);
-            }}
           />
         </h2>
         {petInfoHide && (
@@ -484,7 +485,11 @@ const PetEdit = () => {
             />
           </>
         )}
-        <h2>
+        <h2
+          onClick={() => {
+            setPetHealthHide(!petHealthHide);
+          }}
+        >
           Health Information{" "}
           <FontAwesomeIcon
             style={{
@@ -493,9 +498,6 @@ const PetEdit = () => {
               cursor: "pointer",
             }}
             icon={petHealthHide ? faChevronDown : faChevronRight}
-            onClick={() => {
-              setPetHealthHide(!petHealthHide);
-            }}
           />
         </h2>
         {petHealthHide && (
@@ -594,7 +596,11 @@ const PetEdit = () => {
             />
           </>
         )}
-        <h2>
+        <h2
+          onClick={() => {
+            setPetBehaviorHide(!petBehaviorHide);
+          }}
+        >
           Behavior Information{" "}
           <FontAwesomeIcon
             style={{
@@ -603,9 +609,6 @@ const PetEdit = () => {
               cursor: "pointer",
             }}
             icon={petBehaviorHide ? faChevronDown : faChevronRight}
-            onClick={() => {
-              setPetBehaviorHide(!petBehaviorHide);
-            }}
           />
         </h2>
         {petBehaviorHide && (
@@ -663,7 +666,11 @@ const PetEdit = () => {
             />
           </>
         )}
-        <h2>
+        <h2
+          onClick={() => {
+            setPetVetHide(!petVetHide);
+          }}
+        >
           Vet Information{" "}
           <FontAwesomeIcon
             style={{
@@ -672,9 +679,6 @@ const PetEdit = () => {
               cursor: "pointer",
             }}
             icon={petVetHide ? faChevronDown : faChevronRight}
-            onClick={() => {
-              setPetVetHide(!petVetHide);
-            }}
           />
         </h2>
         {petVetHide && (
