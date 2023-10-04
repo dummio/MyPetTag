@@ -1,4 +1,4 @@
-import { db, auth } from "./firebase-config";
+import { db, auth, storage } from "./firebase-config";
 import {
   doc,
   updateDoc,
@@ -6,7 +6,11 @@ import {
   collection,
   getDoc,
   arrayUnion,
+  runTransaction,
+  writeBatch,
 } from "firebase/firestore";
+
+import { ref, deleteObject } from "firebase/storage";
 
 import {
   getAuth,
@@ -148,10 +152,15 @@ export async function addPetToDatabase(
     const userDocSnap = await getDoc(userDocRef);
 
     //console.log(userDocSnap.data());
-    var petID_ = userDocSnap.data().pets?.length;
-    if (petID_ == undefined) {
-      petID_ = 0;
-    }
+    const numPets = userDocSnap.data().pets?.length;
+    // if (petID_ == undefined) {
+    //   petID_ = 0;
+    // }
+
+    const petID_ =
+      numPets === undefined
+        ? 0
+        : userDocSnap.data().pets[numPets - 1].petID + 1;
 
     console.log("adding pet with vaccines: ", vaccines_);
     const pet = {
@@ -201,6 +210,73 @@ export async function addPetToDatabase(
   }
 }
 
+export async function removePetFromDatabase(petID) {
+  const uid = await authStateChangedWrapper();
+
+  try {
+    const userDocRef = doc(db, "users", uid);
+    const userDocSnap = await getDoc(userDocRef);
+
+    if (userDocSnap.exists()) {
+      const petsList = userDocSnap.data().pets;
+
+      let urlToDelete = null;
+      let tagToRenew = null;
+
+      // Find the pet to delete and retrieve its imageUrl and tag
+      for (let i = 0; i < petsList.length; i++) {
+        const currPet = petsList[i];
+        if (currPet.petID === petID) {
+          urlToDelete = currPet.imageUrl;
+          tagToRenew = currPet.tag;
+          // Remove the pet from the petsList
+          petsList.splice(i, 1);
+          break; // Exit the loop since we found the pet
+        }
+      }
+
+      // Delete the image, then delete both the pet and the pet from the tag
+      // in a batch. Deleting the image in the same batch did not work
+      if (urlToDelete) {
+        const imageRef = ref(storage, urlToDelete);
+        deleteObject(imageRef)
+          .catch((error) => {
+            console.log("Error when deleting image: ", error);
+          })
+          .then(async () => {
+            // Delete the pet: Delete petsList where pet["petID"] == petID
+            const batch = writeBatch(db);
+            batch.update(userDocRef, { pets: petsList });
+            // Then, in the tags document, modify the document that has a key of tagToRenew
+            // defined above. Change the fields "Pet" and "UserID" of this document to be empty
+            if (tagToRenew) {
+              const tagDocRef = doc(db, "tags", tagToRenew);
+              batch.update(tagDocRef, { Pet: "", UserID: "" });
+            }
+
+            await batch.commit();
+          });
+      } else {
+        // Delete the pet: Delete petsList where pet["petID"] == petID
+        const batch = writeBatch(db);
+        batch.update(userDocRef, { pets: petsList });
+        // Then, in the tags document, modify the document that has a key of tagToRenew
+        // defined above. Change the fields "Pet" and "UserID" of this document to be empty
+        if (tagToRenew) {
+          const tagDocRef = doc(db, "tags", tagToRenew);
+          batch.update(tagDocRef, { Pet: "", UserID: "" });
+        }
+
+        await batch.commit();
+      }
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.log("Error occurred removing pet: ", error);
+  }
+}
+
 /**
  * Returns user data to populate user home page
  * @returns
@@ -230,7 +306,7 @@ export async function getUserData() {
  * @returns
  */
 export async function getPetData(uid, petID, keys) {
-  if(uid == null) {
+  if (uid == null) {
     console.log("whadaito: ", uid);
     uid = await authStateChangedWrapper();
   }
@@ -242,11 +318,10 @@ export async function getPetData(uid, petID, keys) {
     if (userDocSnap.exists()) {
       // for-each loops are misbehaving. Use regular for-loops for now:
       const petsList = userDocSnap.data().pets;
-      // For now, searching through the entire pets array to find the one
-      // with the right petID is useless, since petIDs are currently the same
-      // as their index in the list. ie, we could just do petsList[petID].
-      // In the future, however, this won't be the case, so we search through
-      // the array.
+      // Searching through the petsList for the correct petID may seem like
+      // too much work since petIDs are initially assigned as the index of
+      // the pet in the petsList, but this is actually a necessary step
+      // since deleting pets can make the petIDs not match the indices.
       for (let i = 0; i < petsList.length; i++) {
         const currPet = petsList[i];
         if (currPet["petID"] == petID) {
@@ -348,8 +423,8 @@ export async function getCatBreeds() {
 }
 
 export async function getUserAndPetIDFromTag(tagID) {
-    const tagCodeRef = doc(db, "tags", tagID);
-    const tagCodeSnap = await getDoc(tagCodeRef);
-    console.log("HOWDYDO: ", tagCodeSnap.data().UserID);
-    return [tagCodeSnap.data().UserID, tagCodeSnap.data().Pet];
+  const tagCodeRef = doc(db, "tags", tagID);
+  const tagCodeSnap = await getDoc(tagCodeRef);
+  console.log("HOWDYDO: ", tagCodeSnap.data().UserID);
+  return [tagCodeSnap.data().UserID, tagCodeSnap.data().Pet];
 }

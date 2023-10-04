@@ -11,10 +11,15 @@ import PetProfileButton from "./petProfileButton";
 import "./accountInfo.css";
 import logo from "../../../images/paw.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen, faPlus, faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPen,
+  faPlus,
+  faTrashCan,
+  faX,
+} from "@fortawesome/free-solid-svg-icons";
 
 //import firebase helper function
-import { getUserData } from "../../../firebaseCommands";
+import { getUserData, removePetFromDatabase } from "../../../firebaseCommands";
 
 import { useNavigate } from "react-router-dom";
 
@@ -33,6 +38,9 @@ const AccountInformation = () => {
   const [realUser, setUser] = useState(null);
   const [realEmail, setEmail] = useState(null);
   const [realPet, setRealPet] = useState(null);
+  const [deleting, setDeleting] = useState(false);
+  const [selectedPet, setSelectedPet] = useState(null);
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -53,8 +61,46 @@ const AccountInformation = () => {
     }
     fetchUserData();
   }, []);
-  console.log("USER 2 DATA: ", realUser);
-  console.log("rEaL pEt DaTa: ", realPet);
+
+  const renderPetButtons = () => {
+    console.log("RENDERING BUTTONS");
+    if (realUser) {
+      if (realPet) {
+        return realPet.map((userPet) => (
+          <PetProfileButton
+            key={userPet.Key}
+            petId={userPet.Key}
+            name={userPet.Name}
+            deleting={deleting}
+            setSelectedPet={setSelectedPet} // Pass the setSelectedPet function
+            setShowConfirmation={setShowConfirmation}
+          />
+        ));
+      } else {
+        return <p>No pets</p>;
+      }
+    } else {
+      return <p>Loading pets...</p>;
+    }
+  };
+
+  useEffect(() => {
+    renderPetButtons();
+  }, [deleting]);
+
+  const handlePetDeletion = async () => {
+    console.log("selected pet being deleted: ", selectedPet);
+    await removePetFromDatabase(selectedPet["id"]);
+
+    const updatedRealPet = realPet.filter(
+      (userPet) => userPet.Key !== selectedPet["id"]
+    );
+    setRealPet(updatedRealPet);
+
+    setSelectedPet(null);
+    setShowConfirmation(false);
+    setDeleting(false);
+  };
 
   return (
     <div id="account-container">
@@ -126,28 +172,24 @@ const AccountInformation = () => {
             />
 
             <FontAwesomeIcon
-              icon={faTrashCan}
+              icon={deleting ? faX : faTrashCan}
               style={{ height: "31px", cursor: "pointer" }}
               onClick={() => {
-                navigate("/input-code", { replace: true });
+                setDeleting(!deleting);
+                console.log("deleting: ", deleting);
               }}
             />
           </div>
         </div>
-        {realUser ? (
-          realPet ? (
-            realPet.map((userPet) => (
-              <PetProfileButton
-                key={userPet.Key}
-                petId={userPet.Key}
-                name={userPet.Name}
-              />
-            ))
-          ) : (
-            <p>No pets</p>
-          )
-        ) : (
-          <p>Loading pets...</p>
+        {renderPetButtons()}
+        {showConfirmation && (
+          <div className="confirmation-overlay">
+            <div className="confirmation-box">
+              <p>Are you sure you want to delete {selectedPet?.name}?</p>
+              <button onClick={handlePetDeletion}>Yes</button>
+              <button onClick={() => setShowConfirmation(false)}>No</button>
+            </div>
+          </div>
         )}
       </div>
     </div>
