@@ -8,7 +8,7 @@ import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 import { useForm, Controller } from 'react-hook-form';
-import { getDogBreeds } from '../../../firebaseCommands';
+import { getDogBreeds, getCatBreeds } from '../../../firebaseCommands';
 import { Patterns } from '../../../constants';
 import get from 'lodash/get';
 
@@ -36,14 +36,61 @@ const PetEdit = () => {
   const [petBehaviorHide, setPetBehaviorHide] = useState(false);
   const [petVetHide, setPetVetHide] = useState(false);
 
+  async function getInitialValues() {
+    return {
+      petName: 'DefaultName',
+      petSpecies: { label: 'Dog', value: 'Dog' },
+      petBreed: { label: 'beagle', value: 'beagle' },
+      petDescription: 'DefaultDesc',
+      petSex: { label: 'Male', value: 'Male' },
+      petBirthday: '1970-01-01',
+      petWeight: '69',
+      contactName: 'DefaultContact',
+      contactPhone: '+1(801)555-1234',
+      address: '123 Main St. SLC, UT, 84101',
+      petVaccines: [
+        { label: 'COVID-19', value: 'COVID-19' },
+        { label: 'HIV', value: 'HIV' },
+      ],
+      petHealth: [
+        { label: 'diabetes', value: 'diabetes' },
+        { label: 'epilepsy', value: 'epilepsy' },
+      ],
+      petMedications: [
+        { label: 'Tylenol', value: 'Tylenol' },
+        { label: 'Cannabis', value: 'Cannabis' },
+      ],
+      petAllergies: [
+        { label: 'Humans', value: 'Humans' },
+        { label: 'Dogs', value: 'Dogs' },
+      ],
+      healthDescription: 'Tends to sleep all day.',
+      petAggressions: [
+        { label: 'Women', value: 'Women' },
+        { label: 'Children', value: 'Children' },
+      ],
+      petGoodWith: [
+        { label: 'Men', value: 'Men' },
+        { label: 'Cats', value: 'Cats' },
+      ],
+      behaviorDescription: 'Does not get along with the fax machine.',
+      clinicName: 'Default Clinic',
+      clinicAddress: '123 Pet Way SLC, UT, 84101',
+      clinicPhone: '+1(801)555-6969',
+      vetName: 'Default Vet',
+      microchipID: '1234-234-1234',
+    };
+  }
+
   const {
     control,
     register,
-    handleSubmit,
     watch,
+    handleSubmit,
     formState: { errors },
   } = useForm({
     mode: 'onTouched',
+    defaultValues: getInitialValues,
   });
 
   // Temp Array
@@ -52,6 +99,8 @@ const PetEdit = () => {
     { value: 'Cat', label: 'Cat' },
     { value: 'Other', label: 'Other' },
   ];
+  const [CatBreeds, setCatBreeds] = useState([]);
+  const [DogBreeds, setDogBreeds] = useState([]);
   const [PetBreeds, setPetBreeds] = useState([]);
   const PetSex = [
     { value: 'Male', label: 'Male' },
@@ -77,14 +126,36 @@ const PetEdit = () => {
   ];
 
   useEffect(() => {
-    async function fetchPetBreedInfo() {
+    async function fetchDogBreedInfo() {
       const dogBreeds = await getDogBreeds();
       if (dogBreeds) {
-        setPetBreeds(dogBreeds);
+        setDogBreeds(dogBreeds);
+        console.log(dogBreeds);
       }
     }
-    fetchPetBreedInfo();
+    async function fetchCatBreedInfo() {
+      const catBreeds = await getCatBreeds();
+      if (catBreeds) {
+        setCatBreeds(catBreeds);
+        console.log(catBreeds);
+      }
+    }
+    fetchDogBreedInfo();
+    fetchCatBreedInfo();
   }, []);
+
+  const petSpecies = watch('petSpecies');
+  useEffect(() => {
+    console.log(petSpecies);
+    let selectedSpecies = get(petSpecies, 'value');
+    if (selectedSpecies === 'Dog') {
+      setPetBreeds(DogBreeds);
+    } else if (selectedSpecies === 'Cat') {
+      setPetBreeds(CatBreeds);
+    } else {
+      setPetBreeds([]);
+    }
+  }, [petSpecies, CatBreeds, DogBreeds]);
 
   function formSubmit(data) {
     console.log(errors);
@@ -101,8 +172,6 @@ const PetEdit = () => {
     let profileImage = document.getElementById('pet-img');
     profileImage.src = image;
   };
-
-  console.log(watch());
 
   return (
     <div id='edit-container'>
