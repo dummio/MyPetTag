@@ -401,7 +401,7 @@ export async function getDogBreeds() {
       value: dogBreedList[i],
     });
   }
-  console.log(dogBreeds);
+  // console.log(dogBreeds);
   return dogBreeds;
 }
 
@@ -418,7 +418,7 @@ export async function getCatBreeds() {
       value: catBreedList[i],
     });
   }
-  console.log(catBreeds);
+  // console.log(catBreeds);
   return catBreeds;
 }
 

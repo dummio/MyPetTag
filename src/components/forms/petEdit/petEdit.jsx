@@ -4,21 +4,33 @@
  */
 
 // Import React Modules
-import React, { useEffect, useState } from 'react';
-import Select from 'react-select';
-import CreatableSelect from 'react-select/creatable';
-import useForm from '../../../Hooks/useForm';
-import { getDogBreeds } from '../../../firebaseCommands';
+import React, { useEffect, useState, useRef } from "react";
+import Select from "react-select";
+import CreatableSelect from "react-select/creatable";
+import { useForm, Controller } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import {
+  getDogBreeds,
+  getCatBreeds,
+  getPetData,
+} from "../../../firebaseCommands";
+import { Patterns } from "../../../constants";
+import get from "lodash/get";
 
 // Import CSS
-import './petEdit.css';
-import logo from '../../../images/paw.png';
-import defaultProfileImage from '../../../images/profile-default.png';
-import SelectStyles from '../selectStyles/selectStyles';
-import SelectMultiStyles from '../selectStyles/selectMultiStyles';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import "./petEdit.css";
+import logo from "../../../images/paw.png";
+import defaultProfileImage from "../../../images/profile-default.png";
+import SelectStyles from "../selectStyles/selectStyles";
+import SelectMultiStyles from "../selectStyles/selectMultiStyles";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChevronDown,
+  faChevronRight,
+} from "@fortawesome/free-solid-svg-icons";
+// For cropping
+import CropEasy from "../../crop/CropEasy";
 
 /**
  * Displays Pet Profile Information that is editable by the user.
@@ -33,96 +45,240 @@ const PetEdit = () => {
   const [petHealthHide, setPetHealthHide] = useState(false);
   const [petBehaviorHide, setPetBehaviorHide] = useState(false);
   const [petVetHide, setPetVetHide] = useState(false);
-  const [canSubmit, setCanSubmit] = useState(false);
 
-  function formSubmit() {
-    console.debug(values, errors);
-    if (canSubmit) {
-      console.debug('Success!');
+  const [openCrop, setOpenCrop] = useState(false);
+  const [photoURL, setPhotoURL] = useState(null);
+  const [image, setImage] = useState(null);
+
+  async function getInitialValues() {
+    const petID = window.location.pathname.split("/")[4];
+    try {
+      const petData = await getPetData(null, petID, [
+        "name",
+        "species",
+        "breed",
+        "descr",
+        "birthDate",
+        "weight",
+        "sex",
+        "imageUrl",
+        "contacts", // TODO: Currently {Name: ... Phone: ...}
+        "addr",
+        "vaccines",
+        "conds",
+        "meds",
+        "allergies",
+        "healthInfo",
+        "aggressions",
+        "goodWith",
+        "behavior",
+        "vets", // {addr:..., clinicName:..., microhipId:..., phone:..., vetName:...}
+      ]);
+
+      console.log("gonna return petData stuff");
+      if (petData["imageUrl"]) {
+        setImage(petData["imageUrl"]);
+      }
+      return {
+        petName: petData["name"],
+        petSpecies: { label: petData["species"], value: petData["species"] },
+        petBreed: { label: petData["breed"], value: petData["breed"] },
+        petDescription: petData["descr"],
+        petSex: { label: petData["sex"], value: petData["sex"] },
+        petBirthday: petData["birthDate"],
+        petWeight: petData["weight"],
+        contactName: petData["contacts"]["Name"],
+        contactPhone: petData["contacts"]["Phone"],
+        address: petData["addr"],
+        petVaccines: petData["vaccines"].map((vaccine) => ({
+          label: vaccine,
+          value: vaccine,
+        })),
+        petHealth: petData["conds"].map((vaccine) => ({
+          label: vaccine,
+          value: vaccine,
+        })),
+        petMedications: petData["meds"].map((vaccine) => ({
+          label: vaccine,
+          value: vaccine,
+        })),
+        petAllergies: petData["allergies"].map((vaccine) => ({
+          label: vaccine,
+          value: vaccine,
+        })),
+        healthDescription: petData["healthInfo"],
+        petAggressions: petData["aggressions"].map((vaccine) => ({
+          label: vaccine,
+          value: vaccine,
+        })),
+        petGoodWith: petData["goodWith"].map((vaccine) => ({
+          label: vaccine,
+          value: vaccine,
+        })),
+        behaviorDescription: petData["behavior"],
+        clinicName: petData["vets"]["clinicName"],
+        clinicAddress: petData["vets"]["addr"],
+        clinicPhone: petData["vets"]["phone"],
+        vetName: petData["vets"]["vetName"],
+        microchipID: petData["vets"]["microchipId"],
+      };
+    } catch (error) {
+      console.log(
+        "Error retrieving pet data for prepopulating error form: ",
+        error
+      );
+      return {};
     }
-    return null;
   }
 
-  const { handleChange, values, errors, handleSubmit, setValue } = useForm(formSubmit);
-
-  useEffect(() => {
-    if (Object.keys(errors).length === 0 && Object.keys(values).length !== 0) {
-      setCanSubmit(true);
-    } else {
-      setCanSubmit(false);
-    }
-    console.debug(values, errors);
-  }, [values, errors]);
+  const {
+    control,
+    register,
+    watch,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    mode: "onTouched",
+    defaultValues: getInitialValues,
+  });
 
   // Temp Array
   const PetTypes = [
-    { value: 'Dog', label: 'Dog' },
-    { value: 'Cat', label: 'Cat' },
-    { value: 'Other', label: 'Other' },
+    { value: "Dog", label: "Dog" },
+    { value: "Cat", label: "Cat" },
+    { value: "Other", label: "Other" },
   ];
+  const [CatBreeds, setCatBreeds] = useState([]);
+  const [DogBreeds, setDogBreeds] = useState([]);
   const [PetBreeds, setPetBreeds] = useState([]);
   const PetSex = [
-    { value: 'Male', label: 'Male' },
-    { value: 'Neutered Male', label: 'Neutered Male' },
-    { value: 'Female', label: 'Female' },
-    { value: 'Spayed Female', label: 'Spayed Female' },
+    { value: "Male", label: "Male" },
+    { value: "Neutered Male", label: "Neutered Male" },
+    { value: "Female", label: "Female" },
+    { value: "Spayed Female", label: "Spayed Female" },
   ];
   const PetAggressions = [
-    { value: 'Men', label: 'Men' },
-    { value: 'Women', label: 'Women' },
-    { value: 'Children', label: 'Children' },
-    { value: 'Cats', label: 'Cats' },
-    { value: 'Dogs', label: 'Dogs' },
-    { value: 'Other', label: 'Other' },
+    { value: "Men", label: "Men" },
+    { value: "Women", label: "Women" },
+    { value: "Children", label: "Children" },
+    { value: "Cats", label: "Cats" },
+    { value: "Dogs", label: "Dogs" },
+    { value: "Other", label: "Other" },
   ];
   const PetGoodWith = [
-    { value: 'Men', label: 'Men' },
-    { value: 'Women', label: 'Women' },
-    { value: 'Children', label: 'Children' },
-    { value: 'Cats', label: 'Cats' },
-    { value: 'Dogs', label: 'Dogs' },
-    { value: 'Other', label: 'Other' },
+    { value: "Men", label: "Men" },
+    { value: "Women", label: "Women" },
+    { value: "Children", label: "Children" },
+    { value: "Cats", label: "Cats" },
+    { value: "Dogs", label: "Dogs" },
+    { value: "Other", label: "Other" },
   ];
 
   useEffect(() => {
-    async function fetchPetBreedInfo() {
+    async function fetchDogBreedInfo() {
       const dogBreeds = await getDogBreeds();
       if (dogBreeds) {
-        setPetBreeds(dogBreeds);
+        setDogBreeds(dogBreeds);
       }
     }
-    fetchPetBreedInfo();
+    async function fetchCatBreedInfo() {
+      const catBreeds = await getCatBreeds();
+      if (catBreeds) {
+        setCatBreeds(catBreeds);
+      }
+    }
+    fetchDogBreedInfo();
+    fetchCatBreedInfo();
   }, []);
 
+  const petSpecies = watch("petSpecies");
+  useEffect(() => {
+    let selectedSpecies = get(petSpecies, "value");
+    if (selectedSpecies === "Dog") {
+      setPetBreeds(DogBreeds);
+    } else if (selectedSpecies === "Cat") {
+      setPetBreeds(CatBreeds);
+    } else {
+      setPetBreeds([]);
+    }
+  }, [petSpecies, CatBreeds, DogBreeds]);
+
+  function formSubmit(data) {
+    console.log(errors);
+    console.log(data);
+  }
+  console.log(watch());
+
   // Temp Info
-  const pet = 'pet-name';
+  const pet = "pet-name";
   const emptyOptions = [];
 
   const UploadImage = (e) => {
     e.preventDefault();
     let file = e.target.files[0];
-    let image = URL.createObjectURL(file);
-    let profileImage = document.getElementById('pet-img');
-    profileImage.src = image;
+
+    if (file && file.type.startsWith("image/")) {
+      let image = URL.createObjectURL(file);
+      /* The cropper only displays if the selected file has changed.
+       * If the user selects the same file, the cropper wouldn't open,
+       * but we want it to open, so we set the file name value to null. */
+      document.getElementById("file-btn").value = null;
+
+      setImage(file);
+      setPhotoURL(URL.createObjectURL(file));
+      setOpenCrop(true);
+
+      /* The dialog defaults to only image types, but users can upload
+       * a non-image file anyways, so this displays an error message. */
+    } else if (file && !file.type.startsWith("image/")) {
+      alert("Only image file types are supported.");
+    }
+  };
+
+  const ClearImage = () => {
+    // e.preventDefault();
+    setImage(null);
+    setPhotoURL(null);
+    setOpenCrop(false);
+    let profileImage = document.getElementById("pet-img");
+    profileImage.src = defaultProfileImage;
+  };
+
+  const fileInputRef = useRef(null);
+
+  const triggerFileInput = () => {
+    fileInputRef.current.click();
   };
 
   return (
-    <div id='edit-container'>
-      <img className='logo' src={logo} alt='MyPetTag' width={250} height={250} />
-      <div className='company-title'>
-        My<span style={{ color: '#75af96' }}>PetTag</span>
+    <div id="edit-container">
+      <img
+        className="logo"
+        src={logo}
+        alt="MyPetTag"
+        width={250}
+        height={250}
+      />
+      <div className="company-title">
+        My<span style={{ color: "#75af96" }}>PetTag</span>
       </div>
-      <form id='edit-form' onSubmit={handleSubmit}>
-        <h1 id='edit-form-title'>Editing {pet}</h1>
+      {/* Conditionally render CropEasy */}
+      {openCrop && (
+        <CropEasy
+          {...{ photoURL, openCrop, setOpenCrop, setPhotoURL, setImage }}
+        />
+      )}
+      <form id="edit-form" onSubmit={handleSubmit(formSubmit)}>
+        <h1 id="edit-form-title">Editing {pet}</h1>
         <h2>
-          Pet Information{' '}
+          Pet Information{" "}
           <FontAwesomeIcon
             style={{
-              fontSize: '20px',
-              paddingRight: '15px',
-              cursor: 'pointer',
+              fontSize: "20px",
+              paddingRight: "15px",
+              cursor: "pointer",
             }}
-            icon={faChevronDown}
+            icon={petInfoHide ? faChevronDown : faChevronRight}
             onClick={() => {
               setPetInfoHide(!petInfoHide);
             }}
@@ -131,137 +287,204 @@ const PetEdit = () => {
         {petInfoHide && (
           <>
             <label>Upload Pet Picture</label>
-            <div id='pet-img-container'>
+            <div id="pet-img-container">
               <img
-                id='pet-img'
-                src={defaultProfileImage}
-                alt='profile-img'
+                id="pet-img"
+                src={image ? image : defaultProfileImage}
+                alt="profile-img"
                 width={157}
                 height={157}
               />
             </div>
             <input
-              className='form-input-file'
-              type='file'
-              accept='image/*'
+              id="file-btn"
+              ref={fileInputRef}
+              className="form-input-file"
+              type="file"
+              accept="image/*"
+              title=" "
               onChange={UploadImage}
+              style={{ display: "none" }}
             />
-            <label>Pet Name</label>
-            <div className='error-container'>{errors.petName}</div>
             <input
-              className='form-input'
-              type='text'
-              required
-              name='petName'
-              onChange={handleChange}
+              id="clear-image-btn"
+              type="button"
+              value="Upload Image"
+              onClick={triggerFileInput}
+            />
+
+            {image !== null && (
+              <input
+                id="clear-image-btn"
+                type="button"
+                value="Clear Image"
+                onClick={ClearImage}
+              />
+            )}
+
+            <label>Pet Name</label>
+            <div className="error-container">
+              {errors.petName && get(errors, "petName.message")}
+            </div>
+            <input
+              className="form-input"
+              type="text"
+              {...register("petName", {
+                required: "Pet Name cannot be blank.",
+              })}
             />
             <label>Pet Species</label>
-            <div className='error-container'>{errors.petSpecies}</div>
-            <Select
-              isClearable
-              isSearchable
-              closeMenuOnSelect={true}
-              styles={SelectStyles}
-              options={PetTypes}
-              required
-              onChange={(e) => setValue('petSpecies', e?.value, true)}
+            <div className="error-container">
+              {errors.petSpecies && get(errors, "petSpecies.message")}
+            </div>
+            <Controller
+              name="petSpecies"
+              control={control}
+              rules={{ required: "Pet Species cannot be blank." }}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  isClearable
+                  isSearchable
+                  closeMenuOnSelect={true}
+                  styles={SelectStyles}
+                  options={PetTypes}
+                />
+              )}
             />
             <label>Pet Breed</label>
-            <div className='error-container'>{errors.petBreed}</div>
-            <CreatableSelect
-              isClearable
-              isSearchable
-              closeMenuOnSelect={true}
-              styles={SelectStyles}
-              options={PetBreeds}
-              required
-              onChange={(e) => setValue('petBreed', e?.value, true)}
+            <div className="error-container">
+              {errors.petBreed && get(errors, "petBreed.message")}
+            </div>
+            <Controller
+              name="petBreed"
+              control={control}
+              rules={{ required: "Pet Breed cannot be blank." }}
+              render={({ field }) => (
+                <CreatableSelect
+                  {...field}
+                  isClearable
+                  isSearchable
+                  closeMenuOnSelect={true}
+                  styles={SelectStyles}
+                  options={PetBreeds}
+                />
+              )}
             />
             <label>Pet Description</label>
-            <div className='error-container'>{errors.petDescription}</div>
+            <div className="error-container">
+              {errors.petDescription && get(errors, "petDescription.message")}
+            </div>
             <textarea
-              className='form-textarea'
-              placeholder='Please give a brief introduction about your pet?'
+              className="form-textarea"
+              placeholder="Please give a brief introduction about your pet?"
               rows={5}
               cols={50}
-              name='petDescription'
-              onChange={handleChange}
+              {...register("petDescription")}
             />
             <label>Pet Birth Date</label>
+            <div className="error-container">
+              {errors.petBirthday && get(errors, "petBirthday.message")}
+            </div>
             <input
-              className='form-input'
-              type='date'
-              style={{ appearance: 'textfield' }}
-              required
-              name='petDoB'
-              onChange={handleChange}
+              className="form-input"
+              type="date"
+              style={{ appearance: "textfield" }}
+              {...register("petBirthday", {
+                required: "Pet Birth Date cannot be blank.",
+              })}
             />
             <label>Pet Weight</label>
-            <div className='error-container'>{errors.petWeight}</div>
+            <div className="error-container">
+              {errors.petWeight && get(errors, "petWeight.message")}
+            </div>
             <input
-              className='form-input'
-              type='number'
-              required
-              name='petWeight'
-              min='1'
-              max='400'
-              step='1'
-              onChange={handleChange}
-              style={{ appearance: 'textfield' }}
+              className="form-input"
+              type="number"
+              step="1"
+              {...register("petWeight", {
+                required: "Pet Weight cannot be blank.",
+                min: {
+                  value: 1,
+                  message: "Enter a valid weight.",
+                },
+                max: {
+                  value: 400,
+                  message: "Enter a valid weight",
+                },
+              })}
+              style={{ appearance: "textfield" }}
             />
             <label>Pet Sex</label>
-            <div className='error-container'>{errors.petSex}</div>
-            <Select
-              isClearable
-              isSearchable
-              closeMenuOnSelect={true}
-              styles={SelectStyles}
-              options={PetSex}
-              required
-              onChange={(e) => setValue('petSex', e?.value, true)}
+            <div className="error-container">
+              {errors.petSex && get(errors, "petSex.message")}
+            </div>
+            <Controller
+              name="petSex"
+              control={control}
+              rules={{ required: "Pet Sex cannot be blank." }}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  isClearable
+                  isSearchable
+                  closeMenuOnSelect={true}
+                  styles={SelectStyles}
+                  options={PetSex}
+                />
+              )}
             />
-            <div id='form-contacts-container'>
+            <div id="form-contacts-container">
               <label>Contacts</label>
-              <FontAwesomeIcon icon={faPlus} style={{ height: '25px' }} />
+              <FontAwesomeIcon icon={faPlus} style={{ height: "25px" }} />
             </div>
             {/* {TODO: Wrap in map to dynamically add more contacts} */}
-            <div className='error-container'>{errors.contactName}</div>
+            <div className="error-container">
+              {errors.contactName && get(errors, "contactName.message")}
+            </div>
             <input
-              className='form-input'
-              type='text'
-              placeholder='Name'
-              name='contactName' // TODO: Adapt for multiple contacts
-              onChange={handleChange}
+              className="form-input"
+              type="text"
+              placeholder="Name"
+              {...register("contactName")} // TODO: Adapt for multiple contacts
             />
-            <div className='error-container'>{errors.contactPhone}</div>
+            <div className="error-container">
+              {errors.contactPhone && get(errors, "contactPhone.message")}
+            </div>
             <input
-              className='form-input'
-              type='tel'
-              placeholder='Phone Number'
-              name='contactPhone' // TODO: Adapt for multiple contacts
-              onChange={handleChange}
+              className="form-input"
+              type="tel"
+              placeholder="Phone Number"
+              {...register("contactPhone", {
+                pattern: {
+                  value: Patterns.PHONE_REGEX,
+                  message: "Enter a valid phone number.",
+                },
+              })} // TODO: Adapt for multiple contacts
             />
             {/*------------------------------------------------------------------*/}
             <label>Address</label>
-            <div className='error-container'>{errors.address}</div>
+            <div className="error-container">
+              {errors.address && get(errors, "contactPhone.message")}
+            </div>
             <input
-              className='form-input'
-              type='text'
-              name='address'
-              onChange={handleChange}
-              placeholder='1234 Park Ave, City, TX 12345'
+              className="form-input"
+              type="text"
+              name="address"
+              {...register("address")}
+              placeholder="1234 Park Ave, City, TX 12345"
             />
           </>
         )}
         <h2>
-          Health Information{' '}
+          Health Information{" "}
           <FontAwesomeIcon
             style={{
-              fontSize: '20px',
-              paddingRight: '15px',
-              cursor: 'pointer',
+              fontSize: "20px",
+              paddingRight: "15px",
+              cursor: "pointer",
             }}
-            icon={faChevronDown}
+            icon={petHealthHide ? faChevronDown : faChevronRight}
             onClick={() => {
               setPetHealthHide(!petHealthHide);
             }}
@@ -270,73 +493,108 @@ const PetEdit = () => {
         {petHealthHide && (
           <>
             <label>Vaccines</label>
-            <div className='error-container'>{errors.petVaccines}</div>
-            <CreatableSelect
-              isMulti
-              isClearable
-              isSearchable
-              closeMenuOnSelect={false}
-              placeholder='Select all that apply...'
-              styles={SelectMultiStyles}
-              options={emptyOptions}
-              onChange={(e) => setValue('petVaccines', e?.value, false)}
+            <div className="error-container">
+              {errors.petVaccines && get(errors, "petVaccines.message")}
+            </div>
+            <Controller
+              name="petVaccines"
+              control={control}
+              render={({ field }) => (
+                <CreatableSelect
+                  {...field}
+                  isMulti
+                  isClearable
+                  isSearchable
+                  closeMenuOnSelect={false}
+                  placeholder="Select all that apply..."
+                  styles={SelectMultiStyles}
+                  options={emptyOptions}
+                />
+              )}
             />
             <label>Health Conditions</label>
-            <div className='error-container'>{errors.petHealth}</div>
-            <CreatableSelect
-              isMulti
-              isClearable
-              isSearchable
-              closeMenuOnSelect={false}
-              placeholder='Select all that apply...'
-              styles={SelectMultiStyles}
-              options={emptyOptions}
-              onChange={(e) => setValue('petHealth', e?.value, false)}
+            <div className="error-container">
+              {errors.petHealth && get(errors, "petHealth.message")}
+            </div>
+            <Controller
+              name="petHealth"
+              control={control}
+              render={({ field }) => (
+                <CreatableSelect
+                  {...field}
+                  isMulti
+                  isClearable
+                  isSearchable
+                  closeMenuOnSelect={false}
+                  placeholder="Select all that apply..."
+                  styles={SelectMultiStyles}
+                  options={emptyOptions}
+                />
+              )}
             />
             <label>Medications</label>
-            <div className='error-container'>{errors.petMedications}</div>
-            <CreatableSelect
-              isMulti
-              isClearable
-              isSearchable
-              closeMenuOnSelect={false}
-              placeholder='Select all that apply...'
-              styles={SelectMultiStyles}
-              options={emptyOptions}
-              onChange={(e) => setValue('petMedications', e?.value, false)}
+            <div className="error-container">
+              {errors.petMedications && get(errors, "petMedications.message")}
+            </div>
+            <Controller
+              name="petMedications"
+              control={control}
+              render={({ field }) => (
+                <CreatableSelect
+                  {...field}
+                  isMulti
+                  isClearable
+                  isSearchable
+                  closeMenuOnSelect={false}
+                  placeholder="Select all that apply..."
+                  styles={SelectMultiStyles}
+                  options={emptyOptions}
+                />
+              )}
             />
             <label>Allergies</label>
-            <div className='error-container'>{errors.petAllergies}</div>
-            <CreatableSelect
-              isMulti
-              isClearable
-              isSearchable
-              closeMenuOnSelect={false}
-              placeholder='Select all that apply...'
-              styles={SelectMultiStyles}
-              options={emptyOptions}
-              onChange={(e) => setValue('petAllergies', e?.value, false)}
+            <div className="error-container">
+              {errors.petAllergies && get(errors, "petAllergies.message")}
+            </div>
+            <Controller
+              name="petAllergies"
+              control={control}
+              render={({ field }) => (
+                <CreatableSelect
+                  {...field}
+                  isMulti
+                  isClearable
+                  isSearchable
+                  closeMenuOnSelect={false}
+                  placeholder="Select all that apply..."
+                  styles={SelectMultiStyles}
+                  options={emptyOptions}
+                />
+              )}
             />
             <label>Additional Information</label>
-            <div className='error-container'>{errors.healthDescription}</div>
+            <div className="error-container">
+              {errors.healthDescription &&
+                get(errors, "healthDescription.message")}
+            </div>
             <textarea
-              className='form-textarea'
+              className="form-textarea"
               rows={5}
               cols={50}
-              name='healthDescription'
-              onChange={handleChange}
+              name="healthDescription"
+              {...register("healthDescription")}
             />
           </>
         )}
         <h2>
-          Behavior Information{' '}
+          Behavior Information{" "}
           <FontAwesomeIcon
             style={{
-              fontSize: '20px',
-              paddingRight: '15px',
-              cursor: 'pointer',
+              fontSize: "20px",
+              paddingRight: "15px",
+              cursor: "pointer",
             }}
-            icon={faChevronDown}
+            icon={petBehaviorHide ? faChevronDown : faChevronRight}
             onClick={() => {
               setPetBehaviorHide(!petBehaviorHide);
             }}
@@ -345,49 +603,67 @@ const PetEdit = () => {
         {petBehaviorHide && (
           <>
             <label>Aggressions</label>
-            <div className='error-container'>{errors.petAggressions}</div>
-            <CreatableSelect
-              isMulti
-              isClearable
-              isSearchable
-              closeMenuOnSelect={false}
-              placeholder='Select all that apply...'
-              styles={SelectMultiStyles}
-              options={PetAggressions}
-              onChange={(e) => setValue('petAggressions', e?.value, false)}
+            <div className="error-container">
+              {errors.petAggressions && get(errors, "petAggressions.message")}
+            </div>
+            <Controller
+              name="petAggressions"
+              control={control}
+              render={({ field }) => (
+                <CreatableSelect
+                  {...field}
+                  isMulti
+                  isClearable
+                  isSearchable
+                  closeMenuOnSelect={false}
+                  placeholder="Select all that apply..."
+                  styles={SelectMultiStyles}
+                  options={PetAggressions}
+                />
+              )}
             />
             <label>Good With</label>
-            <div className='error-container'>{errors.petGoodWith}</div>
-            <CreatableSelect
-              isMulti
-              isClearable
-              isSearchable
-              closeMenuOnSelect={false}
-              placeholder='Select all that apply...'
-              styles={SelectMultiStyles}
-              options={PetGoodWith}
-              onChange={(e) => setValue('petGoodWith', e?.value, false)}
+            <div className="error-container">
+              {errors.petGoodWith && get(errors, "petGoodWith.message")}
+            </div>
+            <Controller
+              name="petGoodWith"
+              control={control}
+              render={({ field }) => (
+                <CreatableSelect
+                  {...field}
+                  isMulti
+                  isClearable
+                  isSearchable
+                  closeMenuOnSelect={false}
+                  placeholder="Select all that apply..."
+                  styles={SelectMultiStyles}
+                  options={PetGoodWith}
+                />
+              )}
             />
             <label>Additional Information</label>
-            <div className='error-container'>{errors.behaviorDescription}</div>
+            <div className="error-container">
+              {errors.behaviorDescription &&
+                get(errors, "behaviorDescription.message")}
+            </div>
             <textarea
-              className='form-textarea'
+              className="form-textarea"
               rows={5}
               cols={50}
-              name='behaviorDescription'
-              onChange={handleChange}
+              {...register("behaviorDescription")}
             />
           </>
         )}
         <h2>
-          Vet Information{' '}
+          Vet Information{" "}
           <FontAwesomeIcon
             style={{
-              fontSize: '20px',
-              paddingRight: '15px',
-              cursor: 'pointer',
+              fontSize: "20px",
+              paddingRight: "15px",
+              cursor: "pointer",
             }}
-            icon={faChevronDown}
+            icon={petVetHide ? faChevronDown : faChevronRight}
             onClick={() => {
               setPetVetHide(!petVetHide);
             }}
@@ -395,51 +671,62 @@ const PetEdit = () => {
         </h2>
         {petVetHide && (
           <>
-            <div className='error-container'>{errors.clinicName}</div>
+            <div className="error-container">
+              {errors.clinicName && get(errors, "contactPhone.clinicName")}
+            </div>
             <input
-              className='form-input'
-              type='text'
-              placeholder='Clinic Name'
-              name='clinicName'
-              onChange={handleChange}
+              className="form-input"
+              type="text"
+              placeholder="Clinic Name"
+              {...register("clinicName")}
             />
-            <div className='error-container'>{errors.clinicAddress}</div>
+            <div className="error-container">
+              {errors.clinicAddress &&
+                get(errors, "contactPhone.clinicAddress")}
+            </div>
             <input
-              className='form-input'
-              type='text'
-              placeholder='Clinic Address'
-              name='clinicAddress'
-              onChange={handleChange}
+              className="form-input"
+              type="text"
+              placeholder="Clinic Address"
+              {...register("clinicAddress")}
             />
-            <div className='error-container'>{errors.clinicPhone}</div>
+            <div className="error-container">
+              {errors.clinicPhone && get(errors, "clinicPhone.message")}
+            </div>
             <input
-              className='form-input'
-              type='tel'
-              placeholder='Clinic Phone #'
-              name='clinicPhone'
-              onChange={handleChange}
+              className="form-input"
+              type="tel"
+              placeholder="Clinic Phone #"
+              {...register("clinicPhone", {
+                pattern: {
+                  value: Patterns.PHONE_REGEX,
+                  message: "Enter a valid phone number.",
+                },
+              })}
             />
-            <div className='error-container'>{errors.vetName}</div>
+            <div className="error-container">
+              {errors.vetName && get(errors, "vetName.message")}
+            </div>
             <input
-              className='form-input'
-              type='text'
-              placeholder='Vet Name'
-              name='vetName'
-              onChange={handleChange}
+              className="form-input"
+              type="text"
+              placeholder="Vet Name"
+              {...register("vetName")}
             />
-            <div className='error-container'>{errors.microchipID}</div>
+            <div className="error-container">
+              {errors.microchipID && get(errors, "microchipID.message")}
+            </div>
             <input
-              className='form-input'
-              type='text'
-              placeholder='Microchip ID'
-              name='microchipID'
-              onChange={handleChange}
+              className="form-input"
+              type="text"
+              placeholder="Microchip ID"
+              {...register("microchipID")}
             />
           </>
         )}
-        <div id='edit-form-btns'>
-          <input id='cancel-btn' type='submit' value='Cancel' />
-          <input id='save-btn' type='submit' value='Save' />
+        <div id="edit-form-btns">
+          <input id="cancel-btn" type="submit" value="Cancel" />
+          <input id="save-btn" type="submit" value="Save" />
         </div>
       </form>
     </div>
