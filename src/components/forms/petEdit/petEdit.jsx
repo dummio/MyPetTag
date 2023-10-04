@@ -130,14 +130,12 @@ const PetEdit = () => {
       const dogBreeds = await getDogBreeds();
       if (dogBreeds) {
         setDogBreeds(dogBreeds);
-        console.log(dogBreeds);
       }
     }
     async function fetchCatBreedInfo() {
       const catBreeds = await getCatBreeds();
       if (catBreeds) {
         setCatBreeds(catBreeds);
-        console.log(catBreeds);
       }
     }
     fetchDogBreedInfo();
@@ -146,7 +144,6 @@ const PetEdit = () => {
 
   const petSpecies = watch('petSpecies');
   useEffect(() => {
-    console.log(petSpecies);
     let selectedSpecies = get(petSpecies, 'value');
     if (selectedSpecies === 'Dog') {
       setPetBreeds(DogBreeds);
@@ -159,7 +156,9 @@ const PetEdit = () => {
 
   function formSubmit(data) {
     console.log(errors);
+    console.log(data);
   }
+  console.log(watch());
 
   // Temp Info
   const pet = 'pet-name';
