@@ -210,54 +210,6 @@ export async function addPetToDatabase(
   }
 }
 
-// export async function removePetFromDatabase(petID) {
-//   const uid = await authStateChangedWrapper();
-
-//   try {
-//     const userDocRef = doc(db, "users", uid);
-//     const userDocSnap = await getDoc(userDocRef);
-
-//     if (userDocSnap.exists()) {
-//       const petsList = userDocSnap.data().pets;
-
-//       let urlToDelete = null;
-//       let tagToRenew = null;
-
-//       // We need to search through the petList array to find the pet with
-//       // the right petID. Although petIDs are initially the pet's index in
-//       // the array, the petIDs may not match the indices after pet deletions
-//       for (let i = 0; i < petsList.length; i++) {
-//         const currPet = petsList[i];
-//         if (currPet["petID"] == petID) {
-//           urlToDelete = currPet["imageUrl"];
-//           tagToRenew = currPet["tag"];
-//         }
-//       }
-//       // This should never happen
-//       if (urlToDelete == null || tagToRenew == null) {
-//         throw new Error(
-//           "Error when removing pet: Pet with correct petID not found"
-//         );
-//       }
-
-//       const imageRef = ref(storage, urlToDelete);
-//       deleteObject(imageRef)
-//         .catch((error) => {
-//           console.log("Error when deleting image: ", error);
-//         })
-//         .then(() => {
-//           // Delete the pet: Delete petsList where pet["petID"] == petID
-//           // Then, in the tags document, modify the document that has a key of tagToRenew
-//           // defined above. Change the fields "Pet" and "UserID" of this document to be empty
-//         });
-//     } else {
-//       return null;
-//     }
-//   } catch (error) {
-//     console.log("Error occurred removing pet: ", error);
-//   }
-// }
-
 export async function removePetFromDatabase(petID) {
   const uid = await authStateChangedWrapper();
 
