@@ -25,6 +25,19 @@
   width: 300px;
 }
 
+#code-input-form-title {
+  display: flex;
+  justify-content: center;
+  margin: 0px 0px 12px 0px;
+  min-width: 300px;
+}
+
+#code-input-form-instruct {
+  display: flex;
+  justify-content: center;
+  margin: 0px 0px 12px 0px;
+}
+
 #code-input-form label {
   font-size: 20px;
   padding-bottom: 8px;

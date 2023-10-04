@@ -28,7 +28,7 @@ const VetProvider = ({ userID, petID }) => {
 
   useEffect(() => {
     async function fetchPetData() {
-      const petVet = await getPetData(petID, ["vets"]);
+      const petVet = await getPetData(userID, petID, ["vets"]);
       if (petVet) {
         setVet(petVet["vets"]);
       }
