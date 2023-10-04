@@ -21,6 +21,7 @@ const Alert = () => {
   return (
     <div id="alert-container">
       <div className="alert-menu-container" onClick={() => show(!hide)}>
+        <span className="bubble">1</span>
         <div className="alert-icon-container">
           <FontAwesomeIcon icon={faBell} />
         </div>
