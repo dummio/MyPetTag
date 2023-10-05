@@ -23,7 +23,7 @@ import defaultProfileImage from "../../../images/profile-default.png";
 import SelectStyles from "../selectStyles/selectStyles";
 import SelectMultiStyles from "../selectStyles/selectMultiStyles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
 import {
   faChevronDown,
   faChevronRight,
@@ -54,8 +54,8 @@ const PetCreate = () => {
   const [petBirthDate, setPetBirthDate] = useState(null);
   const [petWeight, setPetWeight] = useState(null);
   const [petSex, setPetSex] = useState(null);
-  const [petContactName, setPetContactName] = useState(null);
-  const [petContactPhone, setPetContactPhone] = useState(null);
+  const [contacts, setContacts] = useState([]);
+  // const [petContactPhone, setPetContactPhone] = useState(null);
   const [petAddress, setPetAddress] = useState(null);
   const [petVaccines, setPetVaccines] = useState([]);
   const [petConditions, setPetConditions] = useState([]);
@@ -84,7 +84,6 @@ const PetCreate = () => {
         setUid(uid_);
       }
     }
-
     fetchUid().then(
       (result) => {
         console.log(result);
@@ -93,13 +92,11 @@ const PetCreate = () => {
         console.log(error);
       }
     );
-
     const getAuthState = async () => {
       const data = await isUserAuthenticated();
       console.log(data);
       setIsAuthed(data);
     };
-
     getAuthState();
   }, []);
 
@@ -111,7 +108,6 @@ const PetCreate = () => {
 
   const ErrorHandle = () => {
     let errorText = document.getElementById("error-container");
-
     if (petName === "") {
       if (errorText !== null) {
         errorText.innerHTML = "Pet name cannot be empty!";
@@ -165,8 +161,9 @@ const PetCreate = () => {
     petBirthDate,
     petWeight,
     petSex,
-    petContactName,
-    petContactPhone,
+    // petContactName,
+    // petContactPhone,
+    contacts,
     petAddress,
     petVaccines,
     petConditions,
@@ -176,7 +173,7 @@ const PetCreate = () => {
     petAggressions,
     petGoodWith,
     petBehaviorInfo,
-    { Name: petContactName, Phone: petContactPhone },
+    // { Name: petContactName, Phone: petContactPhone },
     {
       clinicName: clinicName,
       addr: clinicAddr,
@@ -228,7 +225,8 @@ const PetCreate = () => {
                   petAggressions,
                   petGoodWith,
                   petBehaviorInfo,
-                  { Name: petContactName, Phone: petContactPhone },
+                  // { Name: petContactName, Phone: petContactPhone },
+                  contacts,
                   {
                     clinicName: clinicName,
                     addr: clinicAddr,
@@ -277,7 +275,8 @@ const PetCreate = () => {
           petAggressions,
           petGoodWith,
           petBehaviorInfo,
-          { Name: petContactName, Phone: petContactPhone },
+          // { Name: petContactName, Phone: petContactPhone },
+          contacts,
           {
             clinicName: clinicName,
             addr: clinicAddr,
@@ -359,6 +358,32 @@ const PetCreate = () => {
 
   const triggerFileInput = () => {
     fileInputRef.current.click();
+  };
+
+  const addContactField = () => {
+    setContacts([...contacts, { name: "", phone: "" }]);
+    console.log("Contacts: ", contacts);
+  };
+
+  const removeContactField = (index) => {
+    const updatedFields = [...contacts];
+    updatedFields.splice(index, 1);
+    setContacts(updatedFields);
+    console.log("Contacts: ", contacts);
+  };
+
+  const handleContactNameChange = (index, value) => {
+    const updatedFields = [...contacts];
+    updatedFields[index].name = value;
+    setContacts(updatedFields);
+    console.log("Contacts: ", contacts);
+  };
+
+  const handleContactPhoneChange = (index, value) => {
+    const updatedFields = [...contacts];
+    updatedFields[index].phone = value;
+    setContacts(updatedFields);
+    console.log("Contacts: ", contacts);
   };
 
   return (
@@ -533,27 +558,49 @@ const PetCreate = () => {
             />
             <div id="form-contacts-container">
               <label>Contacts</label>
-              <FontAwesomeIcon icon={faPlus} style={{ height: "25px" }} />
+              <FontAwesomeIcon
+                icon={faPlus}
+                style={{ height: "25px" }}
+                onClick={addContactField}
+              />
             </div>
             {/* {Wrap in map to dynamically add more contacts} */}
-            <input
-              className="form-input"
-              type="text"
-              placeholder="Name"
-              onChange={(e) => {
-                setPetContactName(e.target.value);
-              }}
-              value={petContactName}
-            />
-            <input
-              className="form-input"
-              type="text"
-              placeholder="Phone Number"
-              onChange={(e) => {
-                setPetContactPhone(e.target.value);
-              }}
-              value={petContactPhone}
-            />
+            {contacts.map((field, index) => (
+              <div key={index}>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <label>Contact {index + 1}</label>
+                  {
+                    <FontAwesomeIcon
+                      icon={faMinus}
+                      style={{
+                        height: "25px",
+                        marginLeft: "10px",
+                        cursor: "pointer",
+                      }}
+                      onClick={() => removeContactField(index)}
+                    />
+                  }
+                </div>
+                <input
+                  className="form-input"
+                  type="text"
+                  placeholder="Name"
+                  value={field.name}
+                  onChange={(e) =>
+                    handleContactNameChange(index, e.target.value)
+                  }
+                />
+                <input
+                  className="form-input"
+                  type="text"
+                  placeholder="Phone Number"
+                  value={field.phone}
+                  onChange={(e) =>
+                    handleContactPhoneChange(index, e.target.value)
+                  }
+                />
+              </div>
+            ))}
             {/*------------------------------------------------------------------*/}
             <label>Address</label>
             <input
