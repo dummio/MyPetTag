@@ -32,7 +32,17 @@ const Contacts = ({ userID, petID }) => {
         }
       );
       if (petContact) {
-        setContacts(petContact["contacts"]);
+        const contactsData = petContact["contacts"];
+        if (Array.isArray(contactsData)) {
+          // It's a list of contacts
+          setContacts(contactsData);
+        } else if (typeof contactsData === "object") {
+          // It's a single contact map, convert it to a list and account
+          // for old naming convention
+          setContacts([
+            { name: contactsData["Name"], phone: contactsData["Phone"] },
+          ]);
+        }
       }
     }
     fetchPetData();
