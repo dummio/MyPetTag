@@ -558,11 +558,13 @@ const PetCreate = () => {
             />
             <div id="form-contacts-container">
               <label>Contacts</label>
-              <FontAwesomeIcon
-                icon={faPlus}
-                style={{ height: "25px" }}
-                onClick={addContactField}
-              />
+              {contacts.length < 5 && (
+                <FontAwesomeIcon
+                  icon={faPlus}
+                  style={{ height: "25px" }}
+                  onClick={addContactField}
+                />
+              )}
             </div>
             {/* {Wrap in map to dynamically add more contacts} */}
             {contacts.map((field, index) => (
