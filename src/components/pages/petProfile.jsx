@@ -16,8 +16,9 @@ import BehaviorInformation from "../content/petProfileInfo/behaviorCard/behavior
 import VetProvider from "../content/petProfileInfo/vetProviderCard/vetProvider";
 import LocationService from "../content/petProfileInfo/locationServices/locationService";
 
-
 import { getUserAndPetIDFromTag } from "../../firebaseCommands";
+import { Link, useNavigate } from "react-router-dom";
+
 /**
  * Pet Profile Page
  *
@@ -36,18 +37,44 @@ const PetProfile = () => {
           );
           setUID(ids[0]);
           setPID(ids[1]);
-        }
-        else {
+        } else {
           setPID(window.location.pathname.split("/")[4]);
         }
       } catch (error) {
         console.log(error);
+      } finally {
       }
     }
     fetchData();
   }, []);
 
-  if (pID != null) {
+  console.log("PID THAT WE GOT: ", pID);
+  const navigate = useNavigate();
+
+  if (pID == "not found") {
+    return (
+      <React.Fragment>
+        <NavBar />
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "flex-start",
+            minHeight: "80vh",
+            padding: "0 20px",
+          }}
+        >
+          <p style={{ fontSize: "24px", textAlign: "center" }}>
+            Uh oh! The pet you're trying to view was not found.{" "}
+            <Link to="/" onClick={() => navigate("/")}>
+              Click here to return to the home page.
+            </Link>
+          </p>
+        </div>
+      </React.Fragment>
+    );
+  } else if (pID != null && pID != "") {
     return (
       <React.Fragment>
         <NavBar />
@@ -58,6 +85,12 @@ const PetProfile = () => {
         <BehaviorInformation userID={uID} petID={pID} />
         <VetProvider userID={uID} petID={pID} />
         <LocationService />
+      </React.Fragment>
+    );
+  } else {
+    return (
+      <React.Fragment>
+        <NavBar />
       </React.Fragment>
     );
   }
