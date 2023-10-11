@@ -393,33 +393,32 @@ export async function getPetBreeds(species) {
     const dogBreedDocRef = doc(db, "dogBreeds", "Breeds");
     const dogBreedSnap = await getDoc(dogBreedDocRef);
 
-  let dogBreeds = [];
-  const dogBreedList = dogBreedSnap.data().List;
-  for (let i = 0; i < dogBreedList.length; i++) {
-    dogBreeds.push({
-      label: dogBreedList[i],
-      value: dogBreedList[i],
-    });
+    let dogBreeds = [];
+    const dogBreedList = dogBreedSnap.data().List;
+    for (let i = 0; i < dogBreedList.length; i++) {
+      dogBreeds.push({
+        label: dogBreedList[i],
+        value: dogBreedList[i],
+      });
+    }
+    console.log(dogBreeds);
+    return dogBreeds;
   }
-  console.log(dogBreeds);
-  return dogBreeds;
-}
+  if (species == "Cat") {
+    const catBreedDocRef = doc(db, "catBreeds", "Breeds");
+    const catBreedSnap = await getDoc(catBreedDocRef);
 
-//gets all cat breeds meow
-export async function getCatBreeds() {
-  const catBreedDocRef = doc(db, "catBreeds", "Breeds");
-  const catBreedSnap = await getDoc(catBreedDocRef);
-
-  let catBreeds = [];
-  const catBreedList = catBreedSnap.data().List;
-  for (let i = 0; i < catBreedList.length; i++) {
-    catBreeds.push({
-      label: catBreedList[i],
-      value: catBreedList[i],
-    });
+    let catBreeds = [];
+    const catBreedList = catBreedSnap.data().List;
+    for (let i = 0; i < catBreedList.length; i++) {
+      catBreeds.push({
+        label: catBreedList[i],
+        value: catBreedList[i],
+      });
+    }
+    console.log(catBreeds);
+    return catBreeds;
   }
-  console.log(catBreeds);
-  return catBreeds;
 }
 
 export async function getVaccines(species) {
@@ -439,7 +438,7 @@ export async function getVaccines(species) {
     console.log(dogVaccines);
     return dogVaccines;
   }
-  if (species == "Cat") {
+  else if (species == "Cat") {
     const catVaccineDocRef = doc(db, "catBreeds", "vaccines");
     const catVaccineSnap = await getDoc(catVaccineDocRef);
 
@@ -453,6 +452,9 @@ export async function getVaccines(species) {
     }
     console.log(catVaccines);
     return catVaccines;
+  }
+  else {
+    return null;
   }
 }
 
@@ -536,7 +538,6 @@ export async function deleteAlert(msgID) {
     batch.update(userDocRef, { alerts: alertsList });
     await batch.commit();
     return await readUserAlerts();
-
   } catch (error) {
     console.log("error occurred removing alert: ", error);
   }

@@ -360,12 +360,7 @@ const PetCreate = () => {
   useEffect(() => {
     async function fetchVaccines() {
       let vaccines = [];
-      if(petSpecies == 'Dog') {
-        vaccines = await getDogVaccines();
-      }
-      else if(petSpecies == 'Cat') {
-        vaccines = await getCatVaccines();
-      }
+      vaccines = getVaccines(petSpecies);
       setVaccines(vaccines);
     }
     fetchVaccines();

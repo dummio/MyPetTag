@@ -21,12 +21,14 @@ import { readUserAlerts, deleteAlert } from "../../../firebaseCommands";
 const Alert = () => {
   const [hide, show] = useState(false);
   const [messages, setMessages] = useState([]);
+  const [msgCount, setCount] = useState(0);
 
   useEffect(() => {
     async function fetchAlerts() {
       const tempAlerts = await readUserAlerts();
       if (tempAlerts) {
         setMessages(tempAlerts);
+        setCount(tempAlerts.length);
       }
     }
     fetchAlerts();
@@ -36,16 +38,18 @@ const Alert = () => {
     let newAlerts = await deleteAlert(msgID);
     if(newAlerts) {
       setMessages(newAlerts);
+      setCount(newAlerts.length);
     }
     else {
       setMessages([]);
+      setCount(0);
     }
   }
 
   return (
     <div id="alert-container">
       <div className="alert-menu-container" onClick={() => show(!hide)}>
-        <span className="bubble">{messages.map.length + 1}</span>
+        <span className="bubble">{msgCount}</span>
         <div className="alert-icon-container">
           <FontAwesomeIcon icon={faBell} />
         </div>

@@ -10,8 +10,7 @@ import CreatableSelect from "react-select/creatable";
 import { useForm, Controller } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import {
-  getDogBreeds,
-  getCatBreeds,
+  getPetBreeds,
   getPetData,
 } from "../../../firebaseCommands";
 import { Patterns } from "../../../constants";
@@ -177,13 +176,13 @@ const PetEdit = () => {
 
   useEffect(() => {
     async function fetchDogBreedInfo() {
-      const dogBreeds = await getDogBreeds();
+      const dogBreeds = await getPetBreeds("Dog");
       if (dogBreeds) {
         setDogBreeds(dogBreeds);
       }
     }
     async function fetchCatBreedInfo() {
-      const catBreeds = await getCatBreeds();
+      const catBreeds = await getPetBreeds("Cat");
       if (catBreeds) {
         setCatBreeds(catBreeds);
       }
