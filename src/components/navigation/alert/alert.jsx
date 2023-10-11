@@ -12,7 +12,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell, faX } from "@fortawesome/free-solid-svg-icons";
 
 // Import FirebaseCommands
-import { readUserAlerts } from "../../../firebaseCommands";
+import { readUserAlerts, deleteAlert } from "../../../firebaseCommands";
 /**
  * Shows and displays alert bucket for MyPetTag App
  *
@@ -32,6 +32,16 @@ const Alert = () => {
     fetchAlerts();
   }, []);
 
+  async function deleteMessage(msgID) {
+    let newAlerts = await deleteAlert(msgID);
+    if(newAlerts) {
+      setMessages(newAlerts);
+    }
+    else {
+      setMessages([]);
+    }
+  }
+
   return (
     <div id="alert-container">
       <div className="alert-menu-container" onClick={() => show(!hide)}>
@@ -46,7 +56,13 @@ const Alert = () => {
                   <p>
                     {msg.time} {msg.pet.name} : {msg.msg}
                   </p>
-                  <FontAwesomeIcon className="alert-close" icon={faX} />
+                  <div>
+                    <FontAwesomeIcon
+                      className="alert-close"
+                      icon={faX}
+                      onClick={() => deleteMessage(msg.id)}
+                    />
+                  </div>
                 </div>
               );
             })}

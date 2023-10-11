@@ -7,12 +7,10 @@
 import React, { useState, useEffect } from "react";
 import {
   addPetToDatabase,
-  getDogBreeds,
-  getDogVaccines,
-  getCatBreeds,
+  getPetBreeds,
+  getVaccines,
   isUserAuthenticated,
   authStateChangedWrapper,
-  getCatVaccines,
   getPetHealthConditions,
 } from "../../../firebaseCommands";
 import { useNavigate } from "react-router-dom";
@@ -312,12 +310,7 @@ const PetCreate = () => {
   useEffect(() => {
     async function fetchPetBreedInfo() {
       let breeds = [];
-      if(petSpecies == 'Dog') {
-        breeds = await getDogBreeds();
-      }
-      else if(petSpecies == 'Cat') {
-        breeds = await getCatBreeds();
-      }
+      breeds = await getPetBreeds(petSpecies);
       setPetBreeds(breeds);
     }
     fetchPetBreedInfo();
@@ -326,12 +319,7 @@ const PetCreate = () => {
   useEffect(() => {
     async function fetchVaccines() {
       let vaccines = [];
-      if(petSpecies == 'Dog') {
-        vaccines = await getDogVaccines();
-      }
-      else if(petSpecies == 'Cat') {
-        vaccines = await getCatVaccines();
-      }
+      vaccines = await getVaccines(petSpecies);
       setVaccines(vaccines);
     }
     fetchVaccines();

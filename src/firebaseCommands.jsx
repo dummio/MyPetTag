@@ -6,6 +6,7 @@ import {
   collection,
   getDoc,
   arrayUnion,
+  writeBatch,
 } from "firebase/firestore";
 
 import {
@@ -230,7 +231,7 @@ export async function getUserData() {
  * @returns
  */
 export async function getPetData(uid, petID, keys) {
-  if(uid == null) {
+  if (uid == null) {
     console.log("whadaito: ", uid);
     uid = await authStateChangedWrapper();
   }
@@ -313,71 +314,71 @@ export async function checkTagIdTaken(id) {
   return tagFields;
 }
 
-//gets all dog breeds woof
-export async function getDogBreeds() {
-  const dogBreedDocRef = doc(db, "dogBreeds", "Breeds");
-  const dogBreedSnap = await getDoc(dogBreedDocRef);
+export async function getPetBreeds(species) {
+  if (species == "Dog") {
+    const dogBreedDocRef = doc(db, "dogBreeds", "Breeds");
+    const dogBreedSnap = await getDoc(dogBreedDocRef);
 
-  let dogBreeds = [];
-  const dogBreedList = dogBreedSnap.data().List;
-  for (let i = 0; i < dogBreedList.length; i++) {
-    dogBreeds.push({
-      label: dogBreedList[i],
-      value: dogBreedList[i],
-    });
+    let dogBreeds = [];
+    const dogBreedList = dogBreedSnap.data().List;
+    for (let i = 0; i < dogBreedList.length; i++) {
+      dogBreeds.push({
+        label: dogBreedList[i],
+        value: dogBreedList[i],
+      });
+    }
+    console.log(dogBreeds);
+    return dogBreeds;
   }
-  console.log(dogBreeds);
-  return dogBreeds;
+  if (species == "Cat") {
+    const catBreedDocRef = doc(db, "catBreeds", "Breeds");
+    const catBreedSnap = await getDoc(catBreedDocRef);
+
+    let catBreeds = [];
+    const catBreedList = catBreedSnap.data().List;
+    for (let i = 0; i < catBreedList.length; i++) {
+      catBreeds.push({
+        label: catBreedList[i],
+        value: catBreedList[i],
+      });
+    }
+    console.log(catBreeds);
+    return catBreeds;
+  }
 }
 
-//gets all cat breeds meow
-export async function getCatBreeds() {
-  const catBreedDocRef = doc(db, "catBreeds", "Breeds");
-  const catBreedSnap = await getDoc(catBreedDocRef);
+export async function getVaccines(species) {
+  if (species == "Dog") {
+    const dogVaccineDocRef = doc(db, "dogBreeds", "vaccines");
+    const dogVaccineSnap = await getDoc(dogVaccineDocRef);
 
-  let catBreeds = [];
-  const catBreedList = catBreedSnap.data().List;
-  for (let i = 0; i < catBreedList.length; i++) {
-    catBreeds.push({
-      label: catBreedList[i],
-      value: catBreedList[i],
-    });
+    let dogVaccines = [];
+    const dogVaccinesList = dogVaccineSnap.data().vaccine;
+    console.log(dogVaccineSnap);
+    for (let i = 0; i < dogVaccinesList.length; i++) {
+      dogVaccines.push({
+        label: dogVaccinesList[i],
+        value: dogVaccinesList[i],
+      });
+    }
+    console.log(dogVaccines);
+    return dogVaccines;
   }
-  console.log(catBreeds);
-  return catBreeds;
-}
+  if (species == "Cat") {
+    const catVaccineDocRef = doc(db, "catBreeds", "vaccines");
+    const catVaccineSnap = await getDoc(catVaccineDocRef);
 
-export async function getDogVaccines() {
-  const dogVaccineDocRef = doc(db, "dogBreeds", "vaccines");
-  const dogVaccineSnap = await getDoc(dogVaccineDocRef);
-
-  let dogVaccines = [];
-  const dogVaccinesList = dogVaccineSnap.data().vaccine;
-  console.log(dogVaccineSnap);
-  for (let i = 0; i < dogVaccinesList.length; i++) {
-    dogVaccines.push({
-      label: dogVaccinesList[i],
-      value: dogVaccinesList[i],
-    });
+    let catVaccines = [];
+    const catVaccinesList = catVaccineSnap.data().vaccine;
+    for (let i = 0; i < catVaccinesList.length; i++) {
+      catVaccines.push({
+        label: catVaccinesList[i],
+        value: catVaccinesList[i],
+      });
+    }
+    console.log(catVaccines);
+    return catVaccines;
   }
-  console.log(dogVaccines);
-  return dogVaccines;
-}
-
-export async function getCatVaccines() {
-  const catVaccineDocRef = doc(db, "catBreeds", "vaccines");
-  const catVaccineSnap = await getDoc(catVaccineDocRef);
-
-  let catVaccines = [];
-  const catVaccinesList = catVaccineSnap.data().vaccine;
-  for (let i = 0; i < catVaccinesList.length; i++) {
-    catVaccines.push({
-      label: catVaccinesList[i],
-      value: catVaccinesList[i],
-    });
-  }
-  console.log(catVaccines);
-  return catVaccines;
 }
 
 export async function getPetHealthConditions() {
@@ -402,7 +403,7 @@ export async function readUserAlerts() {
     const userDocRef = doc(db, "users", uid);
     const userDocSnap = await getDoc(userDocRef);
     return userDocSnap.data().alerts;
-  } catch(error) {
+  } catch (error) {
     console.log(error);
   }
 }
@@ -418,10 +419,17 @@ export async function writeUserAlert(uid, pid, message) {
     let day = dateObj.getUTCDate();
     let year = dateObj.getUTCFullYear();
     const timeStamp = year + "/" + month + "/" + day;
+
+    var msgID = userDocSnap.data().alerts?.length;
+    if (msgID == undefined) {
+      msgID = 0;
+    }
+
     const alert = {
       pet: petName,
-      time: timeStamp, 
+      time: timeStamp,
       msg: message,
+      id: msgID,
     };
 
     if (userDocSnap.get("alerts") == null) {
@@ -431,11 +439,33 @@ export async function writeUserAlert(uid, pid, message) {
         alerts: arrayUnion(alert),
       });
     }
-  } catch(error) {
+  } catch (error) {
     console.log(error);
   }
 }
-//delete
+
+export async function deleteAlert(msgID) {
+  try {
+    const uid = await authStateChangedWrapper();
+    const userDocRef = await doc(db, "users", uid);
+    const userDocSnap = await getDoc(userDocRef);
+    const alertsList = userDocSnap.data().alerts;
+    for (let i = 0; i < alertsList.length; i++) {
+      if (alertsList[i].id === msgID) {
+        // Remove the alert from the alerts
+        alertsList.splice(i, 1);
+        break; // Exit the loop since we found the alert
+      }
+    }
+    const batch = writeBatch(db);
+    batch.update(userDocRef, { alerts: alertsList });
+    await batch.commit();
+    return await readUserAlerts();
+
+  } catch (error) {
+    console.log("error occurred removing alert: ", error);
+  }
+}
 
 export async function getUserAndPetIDFromTag(tagID) {
   const tagCodeRef = doc(db, "tags", tagID);

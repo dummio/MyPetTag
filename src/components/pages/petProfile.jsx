@@ -38,6 +38,7 @@ const PetProfile = () => {
           setPID(ids[1]);
         }
         else {
+          setUID(window.location.pathname.split("/")[2]);
           setPID(window.location.pathname.split("/")[4]);
         }
       } catch (error) {
