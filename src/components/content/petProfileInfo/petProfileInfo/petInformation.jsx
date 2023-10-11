@@ -86,9 +86,6 @@ const PetInformation = ({ userID, petID }) => {
         navigate("/*", { replace: true });
       });
       if (petData) {
-        console.log(petData);
-        console.log("db bd: ", petData["birthDate"]);
-
         setPetName(petData["name"]);
         setPetBreed(petData["breed"]);
         setPetDescr(petData["descr"]);

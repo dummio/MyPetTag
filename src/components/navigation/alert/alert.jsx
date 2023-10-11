@@ -45,6 +45,7 @@ const Alert = () => {
   return (
     <div id="alert-container">
       <div className="alert-menu-container" onClick={() => show(!hide)}>
+        <span className="bubble">{messages.map.length + 1}</span>
         <div className="alert-icon-container">
           <FontAwesomeIcon icon={faBell} />
         </div>
@@ -53,8 +54,9 @@ const Alert = () => {
             {messages.map((msg) => {
               return (
                 <div className="alert-item">
-                  <p>
-                    {msg.time} {msg.pet.name} : {msg.msg}
+                  <p style={{ fontSize: "16px" }}>
+                    <b style={{ fontSize: "18px" }}>{msg.pet.name + ": "}</b>{" "}
+                    {msg.msg} {"(" + msg.time + ")"}
                   </p>
                   <div>
                     <FontAwesomeIcon

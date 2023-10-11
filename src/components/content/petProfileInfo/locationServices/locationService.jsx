@@ -4,7 +4,7 @@
  */
 
 // Import React Modules
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 // Import CSS
 import "./locationService.css";
@@ -12,6 +12,7 @@ import "./locationService.css";
 //import emailJSCommands
 import { sendFoundPetEmail } from "../../../../emailJSCommands";
 import { writeUserAlert } from "../../../../firebaseCommands";
+import { isUserAuthenticated } from "../../../../firebaseCommands";
 
 /**
  * Gets Users current location and directs them
@@ -20,6 +21,8 @@ import { writeUserAlert } from "../../../../firebaseCommands";
  * @returns HTML Element
  */
 const LocationService = ({ userID, petID }) => {
+  const [isAuthed, setIsAuthed] = useState(false);
+
   const GetLocation = () => {
     navigator.geolocation.getCurrentPosition((position) => {
       let lat = position.coords.latitude;
@@ -47,20 +50,47 @@ const LocationService = ({ userID, petID }) => {
     });
   };
 
+  useEffect(() => {
+    const getAuthState = async () => {
+      const data = await isUserAuthenticated();
+      setIsAuthed(data);
+    };
+    getAuthState();
+  }, []);
+
+  const LocationButtons = () => {
+    if (isAuthed) {
+      return (
+        <>
+          <input
+            id="lost-btn"
+            type="button"
+            value="Show Pet As Lost"
+            onClick={() => {}}
+          />
+        </>
+      );
+    } else {
+      <>
+        <input
+          id="notify-btn"
+          type="submit"
+          value="Share Location"
+          onClick={GetLocation}
+        />
+        <input
+          id="sos-btn"
+          type="submit"
+          value="Find Emergency Vet"
+          onClick={Emergency}
+        />
+      </>;
+    }
+  };
+
   return (
     <div id="location-container">
-      <input
-        id="notify-btn"
-        type="submit"
-        value="Share Location"
-        onClick={GetLocation}
-      />
-      <input
-        id="sos-btn"
-        type="submit"
-        value="Find Emergency Vet"
-        onClick={Emergency}
-      />
+      <LocationButtons />
     </div>
   );
 };
