@@ -11,8 +11,12 @@ import "./locationService.css";
 
 //import emailJSCommands
 import { sendFoundPetEmail } from "../../../../emailJSCommands";
-import { writeUserAlert } from "../../../../firebaseCommands";
-import { isUserAuthenticated } from "../../../../firebaseCommands";
+import {
+  writeUserAlert,
+  isUserAuthenticated,
+  getPetData,
+  setIsPetLost,
+} from "../../../../firebaseCommands";
 
 /**
  * Gets Users current location and directs them
@@ -22,6 +26,11 @@ import { isUserAuthenticated } from "../../../../firebaseCommands";
  */
 const LocationService = ({ userID, petID }) => {
   const [isAuthed, setIsAuthed] = useState(false);
+
+  const changeIsLost = () => {
+    //change to check for current status and flip -> will also need to change button text
+    setIsPetLost(petID, true);
+  }
 
   const GetLocation = () => {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -66,7 +75,7 @@ const LocationService = ({ userID, petID }) => {
             id="lost-btn"
             type="button"
             value="Show Pet As Lost"
-            onClick={() => {}}
+            onClick={changeIsLost}
           />
         </>
       );

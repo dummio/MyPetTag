@@ -77,7 +77,7 @@ const PetProfile = () => {
       </React.Fragment>
     );
   } else if (pID != null) {
-    console.log("kevXue", uID, pID);
+    //console.log(uID, pID, "swag");
     return (
       <React.Fragment>
         <NavBar />
