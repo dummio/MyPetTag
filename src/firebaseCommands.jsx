@@ -66,7 +66,8 @@ export async function addNewUserToDatabase(
       firstname: firstname_,
       lastname: lastname_,
       uid: uid,
-      phone: phone, // TODO: Verify if number is valid
+      phone: phone,
+      email: email,
     });
     return uid;
   } catch (error) {
@@ -371,8 +372,16 @@ export function sendPasswordReset(email) {
     });
 }
 
-export async function getCurrentUserEmail() {
-  return await auth.currentUser.email;
+export async function getCurrentUserEmail(uid) {
+  const userDocRef = doc(db, "users", uid);
+  const userDocSnap = await getDoc(userDocRef);
+  if (userDocSnap.exists()) {
+    console.log("USER DATA FROM getUserData:", userDocSnap.data());
+    return userDocSnap.data().email;
+  } else {
+    console.log("User not found");
+    return null;
+  }
 }
 
 export async function checkTagIdTaken(id) {
@@ -439,8 +448,7 @@ export async function getVaccines(species) {
     }
     console.log(dogVaccines);
     return dogVaccines;
-  }
-  else if (species == "Cat") {
+  } else if (species == "Cat") {
     const catVaccineDocRef = doc(db, "catBreeds", "vaccines");
     const catVaccineSnap = await getDoc(catVaccineDocRef);
 
@@ -454,8 +462,7 @@ export async function getVaccines(species) {
     }
     console.log(catVaccines);
     return catVaccines;
-  }
-  else {
+  } else {
     return [];
   }
 }

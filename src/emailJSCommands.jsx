@@ -6,8 +6,8 @@ import { getCurrentUserEmail } from "./firebaseCommands";
 
 init(process.env.REACT_APP_EMAIL_JS_PUBLIC_KEY);
 
-export async function sendFoundPetEmail(lat, lon) {
-  let currUserEmail = await getCurrentUserEmail();
+export async function sendFoundPetEmail(userID, lat, lon) {
+  let currUserEmail = await getCurrentUserEmail(userID);
   let template = {
     email: currUserEmail,
     message: `https://www.google.com/maps/search/?api=1&query=${lat}%2C${lon}`,

@@ -28,7 +28,7 @@ const LocationService = ({ userID, petID }) => {
       let lat = position.coords.latitude;
       let lon = position.coords.longitude;
 
-      sendFoundPetEmail(lat, lon);
+      sendFoundPetEmail(userID, lat, lon);
       writeUserAlert(userID, petID, "Tag location shared!");
       alert(
         "You've alerted the owner that their pet was found at: '" +
@@ -71,6 +71,7 @@ const LocationService = ({ userID, petID }) => {
         </>
       );
     } else {
+      return (
       <>
         <input
           id="notify-btn"
@@ -84,7 +85,8 @@ const LocationService = ({ userID, petID }) => {
           value="Find Emergency Vet"
           onClick={Emergency}
         />
-      </>;
+      </>
+      );
     }
   };
 
