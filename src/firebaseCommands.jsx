@@ -427,8 +427,12 @@ export async function getCatBreeds() {
 export async function getUserAndPetIDFromTag(tagID) {
   const tagCodeRef = doc(db, "tags", tagID);
   const tagCodeSnap = await getDoc(tagCodeRef);
-  console.log("HOWDYDO: ", tagCodeSnap.data().UserID);
-  return [tagCodeSnap.data().UserID, tagCodeSnap.data().Pet];
+  console.log("data: ", tagCodeSnap.data());
+  if (tagCodeSnap.data() && tagCodeSnap.data().UserID) {
+    return [tagCodeSnap.data().UserID, tagCodeSnap.data().Pet];
+  } else {
+    return ["not found", "not found"];
+  }
 }
 
 function capitalizeWords(inputString) {
