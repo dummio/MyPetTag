@@ -31,7 +31,7 @@ const TagCodeInputEditForm = () => {
 
     if (tagCode === "") {
       if (errorText !== null) {
-        errorText.innerHTML = "Please Enter Tag Code";
+        errorText.innerHTML = "Please Enter Valid Tag Code";
         errorText.style.display = "flex";
         errorText.style.visibility = "visible";
       }
@@ -56,7 +56,7 @@ const TagCodeInputEditForm = () => {
   }
 
   function route(tagContent) {
-    if (tagContent != null && tagContent[0] == "" && tagContent[1] == "") {
+    if (tagContent !== null && tagContent[0] === "" && tagContent[1] === "") {
       console.log(tagContent);
       navigate(`/tag/${tagCode}/create`, { replace: true });
     } else {
