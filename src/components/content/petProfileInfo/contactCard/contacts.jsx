@@ -21,7 +21,7 @@ import { getPetData } from "../../../../firebaseCommands";
  * @returns HTML Element
  */
 const Contacts = ({ userID, petID }) => {
-  const [contact, setContact] = useState(null);
+  const [contacts, setContacts] = useState([]);
   // const petID = window.location.pathname.split("/")[4];
 
   useEffect(() => {
@@ -32,7 +32,17 @@ const Contacts = ({ userID, petID }) => {
         }
       );
       if (petContact) {
-        setContact(petContact["contacts"]);
+        const contactsData = petContact["contacts"];
+        if (Array.isArray(contactsData)) {
+          // It's a list of contacts
+          setContacts(contactsData);
+        } else if (typeof contactsData === "object") {
+          // It's a single contact map, convert it to a list and account
+          // for old naming convention
+          setContacts([
+            { name: contactsData["Name"], phone: contactsData["Phone"] },
+          ]);
+        }
       }
     }
     fetchPetData();
@@ -43,35 +53,41 @@ const Contacts = ({ userID, petID }) => {
       <div className="contacts-label-container">
         <p>Contacts</p>
       </div>
-      <div className="contact-tile">
-        <p className="contact-title">
-          {contact ? (contact["Name"] ? contact["Name"] : "N/A") : "Loading..."}
-        </p>
-        <a
-          className="contact-phone"
-          href={`tel:${
-            contact
-              ? contact["Phone"]
-                ? contact["Phone"]
+      {contacts.map((contact, index) => (
+        <div key={index} className="contact-tile">
+          <p className="contact-title">
+            {contact
+              ? contact["name"]
+                ? contact["name"]
                 : "N/A"
-              : "Loading..."
-          }`}
-        >
-          <FontAwesomeIcon
-            style={{
-              color: "#000000",
-              fontSize: "18px",
-              paddingRight: "10px",
-            }}
-            icon={faPhone}
-          />
-          {contact
-            ? contact["Phone"]
-              ? contact["Phone"]
-              : "N/A"
-            : "Loading..."}
-        </a>
-      </div>
+              : "Loading..."}
+          </p>
+          <a
+            className="contact-phone"
+            href={`tel:${
+              contact
+                ? contact["phone"]
+                  ? contact["phone"]
+                  : "N/A"
+                : "Loading..."
+            }`}
+          >
+            <FontAwesomeIcon
+              style={{
+                color: "#000000",
+                fontSize: "18px",
+                paddingRight: "10px",
+              }}
+              icon={faPhone}
+            />
+            {contact
+              ? contact["phone"]
+                ? contact["phone"]
+                : "N/A"
+              : "Loading..."}
+          </a>
+        </div>
+      ))}
     </div>
   );
 };
