@@ -568,8 +568,16 @@ const PetCreate = () => {
             </div>
             {/* {Wrap in map to dynamically add more contacts} */}
             {contacts.map((field, index) => (
-              <div key={index}>
-                <div style={{ display: "flex", alignItems: "center" }}>
+              <div
+                key={index}
+                style={{ display: "flex", flexDirection: "column" }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                  }}
+                >
                   <label>Contact {index + 1}</label>
                   {
                     <FontAwesomeIcon
