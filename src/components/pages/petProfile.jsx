@@ -15,8 +15,7 @@ import HealthInformation from "../content/petProfileInfo/healthCard/health";
 import BehaviorInformation from "../content/petProfileInfo/behaviorCard/behavior";
 import VetProvider from "../content/petProfileInfo/vetProviderCard/vetProvider";
 import LocationService from "../content/petProfileInfo/locationServices/locationService";
-
-import { getUserAndPetIDFromTag } from "../../firebaseCommands";
+import { getUserAndPetIDFromTag, getUserData } from "../../firebaseCommands";
 import { Link, useNavigate } from "react-router-dom";
 
 /**
@@ -38,6 +37,9 @@ const PetProfile = () => {
           setUID(ids[0]);
           setPID(ids[1]);
         } else {
+          const userData = await getUserData();
+          const uid = userData[0].uid;
+          setUID(uid);
           setPID(window.location.pathname.split("/")[4]);
         }
       } catch (error) {
@@ -84,7 +86,7 @@ const PetProfile = () => {
         <HealthInformation userID={uID} petID={pID} />
         <BehaviorInformation userID={uID} petID={pID} />
         <VetProvider userID={uID} petID={pID} />
-        <LocationService />
+        <LocationService userID={uID} petID={pID} />
       </React.Fragment>
     );
   } else {

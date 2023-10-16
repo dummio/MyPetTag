@@ -21,7 +21,6 @@ import { partial } from "lodash";
  * @returns HTML Element
  */
 const PetInformation = ({ userID, petID }) => {
-  console.log(window.location.pathname);
   //const petID = window.location.pathname.split("/")[4];
   const navigate = useNavigate();
 
@@ -85,6 +84,7 @@ const PetInformation = ({ userID, petID }) => {
       ]).catch((error) => {
         navigate("/*", { replace: true });
       });
+      console.log("WHAT", petID);
       if (petData) {
         setPetName(petData["name"]);
         setPetBreed(petData["breed"]);

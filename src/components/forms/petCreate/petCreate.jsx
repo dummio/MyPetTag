@@ -7,10 +7,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
   addPetToDatabase,
-  getDogBreeds,
-  getCatBreeds,
+  getPetBreeds,
+  getVaccines,
   isUserAuthenticated,
   authStateChangedWrapper,
+  getPetHealthConditions,
 } from "../../../firebaseCommands";
 import { useNavigate } from "react-router-dom";
 import { storage } from "../../../firebase-config";
@@ -320,8 +321,8 @@ const PetCreate = () => {
     { value: "Spayed Female", label: "Spayed Female" },
   ];
   const [PetBreeds, setPetBreeds] = useState([]);
-  const Vaccines = [];
-  const HealthConditions = [];
+  const [Vaccines, setVaccines] = useState([]);
+  const [HealthConditions, setHealthConditions] = useState([]);
   const Medications = [];
   const Allergies = [];
   const PetAggressions = [
@@ -344,18 +345,13 @@ const PetCreate = () => {
   useEffect(() => {
     async function fetchPetBreedInfo() {
       let breeds = [];
-      if (petSpecies == "Dog") {
-        breeds = await getDogBreeds();
-      } else if (petSpecies == "Cat") {
-        breeds = await getCatBreeds();
-      }
+      breeds = await getPetBreeds(petSpecies);
       setPetBreeds(breeds);
     }
     fetchPetBreedInfo();
   }, [petSpecies]);
 
   const fileInputRef = useRef(null);
-
   const triggerFileInput = () => {
     fileInputRef.current.click();
   };
@@ -386,6 +382,23 @@ const PetCreate = () => {
     console.log("Contacts: ", contacts);
   };
 
+  useEffect(() => {
+    async function fetchVaccines() {
+      let vaccines = [];
+      vaccines = await getVaccines(petSpecies);
+      setVaccines(vaccines);
+    }
+    fetchVaccines();
+  }, [petSpecies]);
+
+  useEffect(() => {
+    async function fetchPetHealthConditions() {
+      const conditions = await getPetHealthConditions();
+      setHealthConditions(conditions);
+    }
+    fetchPetHealthConditions();
+  }, []);
+
   return (
     <div id="create-container">
       <img
@@ -406,7 +419,11 @@ const PetCreate = () => {
       )}
       <form id="create-form">
         <h1 id="create-form-title">Add New Pet</h1>
-        <h2>
+        <h2
+          onClick={() => {
+            setPetInfoHide(!petInfoHide);
+          }}
+        >
           Pet Information{" "}
           <FontAwesomeIcon
             style={{
@@ -415,9 +432,6 @@ const PetCreate = () => {
               cursor: "pointer",
             }}
             icon={petInfoHide ? faChevronDown : faChevronRight}
-            onClick={() => {
-              setPetInfoHide(!petInfoHide);
-            }}
           />
         </h2>
         {petInfoHide && (
@@ -530,7 +544,7 @@ const PetCreate = () => {
               }}
               value={petBirthDate}
             />
-            <label>Pet Weight</label>
+            <label>Pet Weight {"(lbs)"}</label>
             <input
               className="form-input"
               type="number"
@@ -624,7 +638,11 @@ const PetCreate = () => {
             />
           </>
         )}
-        <h2>
+        <h2
+          onClick={() => {
+            setPetHealthHide(!petHealthHide);
+          }}
+        >
           Health Information{" "}
           <FontAwesomeIcon
             style={{
@@ -633,9 +651,6 @@ const PetCreate = () => {
               cursor: "pointer",
             }}
             icon={petHealthHide ? faChevronDown : faChevronRight}
-            onClick={() => {
-              setPetHealthHide(!petHealthHide);
-            }}
           />
         </h2>
         {petHealthHide && (
@@ -717,7 +732,11 @@ const PetCreate = () => {
             />
           </>
         )}
-        <h2>
+        <h2
+          onClick={() => {
+            setPetBehaviorHide(!petBehaviorHide);
+          }}
+        >
           Behavior Information{" "}
           <FontAwesomeIcon
             style={{
@@ -726,9 +745,6 @@ const PetCreate = () => {
               cursor: "pointer",
             }}
             icon={petBehaviorHide ? faChevronDown : faChevronRight}
-            onClick={() => {
-              setPetBehaviorHide(!petBehaviorHide);
-            }}
           />
         </h2>
         {petBehaviorHide && (
@@ -778,7 +794,11 @@ const PetCreate = () => {
             />
           </>
         )}
-        <h2>
+        <h2
+          onClick={() => {
+            setPetVetHide(!petVetHide);
+          }}
+        >
           Vet Information{" "}
           <FontAwesomeIcon
             style={{
@@ -787,9 +807,6 @@ const PetCreate = () => {
               cursor: "pointer",
             }}
             icon={petVetHide ? faChevronDown : faChevronRight}
-            onClick={() => {
-              setPetVetHide(!petVetHide);
-            }}
           />
         </h2>
         {petVetHide && (

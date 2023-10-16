@@ -4,14 +4,17 @@
  */
 
 // Import React Modules
-import React, { useEffect, useState, useRef } from 'react';
-import Select from 'react-select';
-import CreatableSelect from 'react-select/creatable';
-import { useForm, Controller } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
-import { getDogBreeds, getCatBreeds, getPetData } from '../../../firebaseCommands';
-import { Patterns } from '../../../constants';
-import get from 'lodash/get';
+import React, { useEffect, useState, useRef } from "react";
+import Select from "react-select";
+import CreatableSelect from "react-select/creatable";
+import { useForm, Controller } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import {
+  getPetBreeds,
+  getPetData,
+} from "../../../firebaseCommands";
+import { Patterns } from "../../../constants";
+import get from "lodash/get";
 
 // Import CSS
 import './petEdit.css';
@@ -174,13 +177,13 @@ const PetEdit = () => {
 
   useEffect(() => {
     async function fetchDogBreedInfo() {
-      const dogBreeds = await getDogBreeds();
+      const dogBreeds = await getPetBreeds("Dog");
       if (dogBreeds) {
         setDogBreeds(dogBreeds);
       }
     }
     async function fetchCatBreedInfo() {
-      const catBreeds = await getCatBreeds();
+      const catBreeds = await getPetBreeds("Cat");
       if (catBreeds) {
         setCatBreeds(catBreeds);
       }

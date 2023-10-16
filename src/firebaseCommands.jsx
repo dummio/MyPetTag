@@ -388,40 +388,159 @@ export async function checkTagIdTaken(id) {
   return tagFields;
 }
 
-//gets all dog breeds woof
-export async function getDogBreeds() {
-  const dogBreedDocRef = doc(db, "dogBreeds", "Breeds");
-  const dogBreedSnap = await getDoc(dogBreedDocRef);
+export async function getPetBreeds(species) {
+  if (species == "Dog") {
+    const dogBreedDocRef = doc(db, "dogBreeds", "Breeds");
+    const dogBreedSnap = await getDoc(dogBreedDocRef);
 
-  let dogBreeds = [];
-  const dogBreedList = dogBreedSnap.data().List;
-  for (let i = 0; i < dogBreedList.length; i++) {
-    const dogBreed = capitalizeWords(dogBreedList[i]);
-    dogBreeds.push({
-      label: dogBreed,
-      value: dogBreed,
-    });
+    let dogBreeds = [];
+    const dogBreedList = dogBreedSnap.data().List;
+    for (let i = 0; i < dogBreedList.length; i++) {
+      dogBreeds.push({
+        label: dogBreedList[i],
+        value: dogBreedList[i],
+      });
+    }
+    console.log(dogBreeds);
+    return dogBreeds;
   }
-  // console.log(dogBreeds);
-  return dogBreeds;
+  if (species == "Cat") {
+    const catBreedDocRef = doc(db, "catBreeds", "Breeds");
+    const catBreedSnap = await getDoc(catBreedDocRef);
+
+    let catBreeds = [];
+    const catBreedList = catBreedSnap.data().List;
+    for (let i = 0; i < catBreedList.length; i++) {
+      catBreeds.push({
+        label: catBreedList[i],
+        value: catBreedList[i],
+      });
+    }
+    console.log(catBreeds);
+    return catBreeds;
+  }
 }
 
-//gets all cat breeds meow
-export async function getCatBreeds() {
-  const catBreedDocRef = doc(db, "catBreeds", "Breeds");
-  const catBreedSnap = await getDoc(catBreedDocRef);
+export async function getVaccines(species) {
+  if (species == "Dog") {
+    const dogVaccineDocRef = doc(db, "dogBreeds", "vaccines");
+    const dogVaccineSnap = await getDoc(dogVaccineDocRef);
 
-  let catBreeds = [];
-  const catBreedList = catBreedSnap.data().List;
-  for (let i = 0; i < catBreedList.length; i++) {
-    const catBreed = capitalizeWords(catBreedList[i]);
-    catBreeds.push({
-      label: catBreed,
-      value: catBreed,
+    let dogVaccines = [];
+    const dogVaccinesList = dogVaccineSnap.data().vaccine;
+    console.log(dogVaccineSnap);
+    for (let i = 0; i < dogVaccinesList.length; i++) {
+      dogVaccines.push({
+        label: dogVaccinesList[i],
+        value: dogVaccinesList[i],
+      });
+    }
+    console.log(dogVaccines);
+    return dogVaccines;
+  }
+  else if (species == "Cat") {
+    const catVaccineDocRef = doc(db, "catBreeds", "vaccines");
+    const catVaccineSnap = await getDoc(catVaccineDocRef);
+
+    let catVaccines = [];
+    const catVaccinesList = catVaccineSnap.data().vaccine;
+    for (let i = 0; i < catVaccinesList.length; i++) {
+      catVaccines.push({
+        label: catVaccinesList[i],
+        value: catVaccinesList[i],
+      });
+    }
+    console.log(catVaccines);
+    return catVaccines;
+  }
+  else {
+    return [];
+  }
+}
+
+export async function getPetHealthConditions() {
+  const petHealthDocRef = doc(db, "pet", "healthConditions");
+  const petHealthSnap = await getDoc(petHealthDocRef);
+
+  let petHealthConditions = [];
+  const petHealthConditionsList = petHealthSnap.data().conditions;
+  for (let i = 0; i < petHealthConditionsList.length; i++) {
+    petHealthConditions.push({
+      label: petHealthConditionsList[i],
+      value: petHealthConditionsList[i],
     });
   }
-  // console.log(catBreeds);
-  return catBreeds;
+  return petHealthConditions;
+}
+
+//read
+export async function readUserAlerts() {
+  try {
+    const uid = await authStateChangedWrapper();
+    const userDocRef = doc(db, "users", uid);
+    const userDocSnap = await getDoc(userDocRef);
+    return userDocSnap.data().alerts;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+//write
+export async function writeUserAlert(uid, pid, message) {
+  try {
+    const userDocRef = doc(db, "users", uid);
+    const userDocSnap = await getDoc(userDocRef);
+    const petName = await getPetData(uid, pid, ["name"]);
+    const dateObj = new Date();
+    let month = dateObj.getUTCMonth() + 1;
+    let day = dateObj.getUTCDate();
+    let year = dateObj.getUTCFullYear();
+    const timeStamp = year + "/" + month + "/" + day;
+
+    var msgID = userDocSnap.data().alerts?.length;
+    if (msgID == undefined) {
+      msgID = 0;
+    }
+
+    const alert = {
+      pet: petName,
+      time: timeStamp,
+      msg: message,
+      id: msgID,
+    };
+
+    if (userDocSnap.get("alerts") == null) {
+      setDoc(userDocRef, { alerts: [alert] }, { merge: true });
+    } else {
+      await updateDoc(userDocRef, {
+        alerts: arrayUnion(alert),
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function deleteAlert(msgID) {
+  try {
+    const uid = await authStateChangedWrapper();
+    const userDocRef = await doc(db, "users", uid);
+    const userDocSnap = await getDoc(userDocRef);
+    const alertsList = userDocSnap.data().alerts;
+    for (let i = 0; i < alertsList.length; i++) {
+      if (alertsList[i].id === msgID) {
+        // Remove the alert from the alerts
+        alertsList.splice(i, 1);
+        break; // Exit the loop since we found the alert
+      }
+    }
+    const batch = writeBatch(db);
+    batch.update(userDocRef, { alerts: alertsList });
+    await batch.commit();
+    return await readUserAlerts();
+  } catch (error) {
+    console.log("error occurred removing alert: ", error);
+  }
 }
 
 export async function getUserAndPetIDFromTag(tagID) {
@@ -433,25 +552,4 @@ export async function getUserAndPetIDFromTag(tagID) {
   } else {
     return ["not found", "not found"];
   }
-}
-
-function capitalizeWords(inputString) {
-  // Split the input string into an array of words
-  const words = inputString.split(" ");
-
-  // Capitalize the first letter of each word
-  const capitalizedWords = words.map((word) => {
-    // Check if the word is not empty
-    if (word.length > 0) {
-      return word.charAt(0).toUpperCase() + word.slice(1);
-    } else {
-      // Handle empty words (e.g., consecutive spaces)
-      return "";
-    }
-  });
-
-  // Join the capitalized words back into a string
-  const resultString = capitalizedWords.join(" ");
-
-  return resultString;
 }
