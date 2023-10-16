@@ -36,11 +36,10 @@ const Alert = () => {
 
   async function deleteMessage(msgID) {
     let newAlerts = await deleteAlert(msgID);
-    if(newAlerts) {
+    if (newAlerts) {
       setMessages(newAlerts);
       setCount(newAlerts.length);
-    }
-    else {
+    } else {
       setMessages([]);
       setCount(0);
     }
@@ -49,7 +48,7 @@ const Alert = () => {
   return (
     <div id="alert-container">
       <div className="alert-menu-container" onClick={() => show(!hide)}>
-        <span className="bubble">{msgCount}</span>
+        {msgCount !== 0 && <span className="bubble">{msgCount}</span>}
         <div className="alert-icon-container">
           <FontAwesomeIcon icon={faBell} />
         </div>
