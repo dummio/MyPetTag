@@ -454,7 +454,7 @@ export async function getVaccines(species) {
     return catVaccines;
   }
   else {
-    return null;
+    return [];
   }
 }
 
