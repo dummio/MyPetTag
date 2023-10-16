@@ -26,25 +26,27 @@ const TagCodeInputEditForm = () => {
     setCanSubmit(isValid);
   };
 
-  const ErrorHandle = () => {
+  const ErrorHandle = (isError) => {
     let errorText = document.getElementById("error-container");
 
-    if (tagCode === "") {
+    if (isError) {
       if (errorText !== null) {
         errorText.innerHTML = "Please Enter Valid Tag Code";
         errorText.style.display = "flex";
         errorText.style.visibility = "visible";
+        setCanSubmit(false);
       }
     } else {
       if (errorText !== null) {
         errorText.style.display = "none";
         errorText.style.visibility = "hidden";
+        setCanSubmit(true);
       }
     }
   };
 
   useEffect(ValidateForm, [tagCode]);
-  //useEffect(ErrorHandle, [tagCode]);
+  useEffect(ErrorHandle, [tagCode]);
 
   const navigate = useNavigate();
 
@@ -52,6 +54,10 @@ const TagCodeInputEditForm = () => {
     const content = await checkTagIdTaken(tagCode);
     if (content) {
       route(content);
+    } else {
+      console.log("Invalid tag haha");
+      // alert("Invalid tag");
+      ErrorHandle(true);
     }
   }
 
@@ -61,6 +67,8 @@ const TagCodeInputEditForm = () => {
       navigate(`/tag/${tagCode}/create`, { replace: true });
     } else {
       console.log("Tag was taken or tag code input error");
+      // alert("Invalid tag");
+      ErrorHandle(true);
     }
   }
 
@@ -89,8 +97,7 @@ const TagCodeInputEditForm = () => {
       <form id="code-input-form">
         <h1 id="code-input-form-title">Create New Pet</h1>
         <p id="code-input-form-instruct">
-          Please input your MyPetTag code found on the back of the tag, or scan
-          the QR code if it's a new tag.
+          Please input your MyPetTag code found on the back of the tag.
         </p>
         <label>MyPetTag Code</label>
         <input

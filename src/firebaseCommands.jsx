@@ -380,8 +380,10 @@ export async function checkTagIdTaken(id) {
   try {
     const tagDocRef = doc(db, "tags", id);
     const tagDocSnap = await getDoc(tagDocRef);
-    tagFields = [tagDocSnap.data().UserID, tagDocSnap.data().Pet];
-    console.log(tagFields);
+    if (tagDocSnap) {
+      tagFields = [tagDocSnap.data().UserID, tagDocSnap.data().Pet];
+      console.log(tagFields);
+    }
   } catch (error) {
     console.log(error);
   }
