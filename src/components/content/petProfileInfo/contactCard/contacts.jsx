@@ -28,7 +28,7 @@ const Contacts = ({ userID, petID }) => {
     async function fetchPetData() {
       const petContact = await getPetData(userID, petID, ["contacts"]).catch(
         (error) => {
-          console.debug(error);
+          console.log(error);
         }
       );
       if (petContact) {
