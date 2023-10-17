@@ -129,6 +129,9 @@ const AccountInformation = () => {
               }}
               icon={faPen}
               //needs an onclick to edit users information
+              onClick={() => {
+                navigate("../settings", { replace: false });
+              }}
             />
           </h1>
         </div>
@@ -185,7 +188,13 @@ const AccountInformation = () => {
         {showConfirmation && (
           <div className="confirmation-overlay">
             <div className="confirmation-box">
-              <p>Are you sure you want to delete {selectedPet?.name}?</p>
+              <p>
+                Are you sure you want to delete <b>{selectedPet?.name}</b>?
+              </p>
+              <p style={{ fontSize: "14px", color: "rgb(235,35,35)" }}>
+                Warning: This will unassign the tag associated with your
+                account.
+              </p>
               <button onClick={handlePetDeletion}>Yes</button>
               <button onClick={() => setShowConfirmation(false)}>No</button>
             </div>

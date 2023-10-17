@@ -5,7 +5,10 @@
 
 // Import React Modules
 import React, { useEffect, useState } from "react";
-import { addNewUserToDatabase, isUserAuthenticated } from "../../../firebaseCommands";
+import {
+  addNewUserToDatabase,
+  isUserAuthenticated,
+} from "../../../firebaseCommands";
 import { useNavigate } from "react-router-dom";
 import useForm from "../../../Hooks/useForm";
 
@@ -44,7 +47,7 @@ const RegisterForm = () => {
         .then((response) => {
           var uid = response;
           if (uid) {
-            var path = `/user/${uid}/account`;
+            var path = `/user/account`;
             navigate(path, { replace: true });
           }
         })
@@ -60,7 +63,7 @@ const RegisterForm = () => {
     async function fetchAuth() {
       const isAuthed = await isUserAuthenticated();
       if (isAuthed) {
-        navigate("/user/REMOVEME/account", { replace: true });
+        navigate("/user/account", { replace: true });
       }
     }
     fetchAuth();
