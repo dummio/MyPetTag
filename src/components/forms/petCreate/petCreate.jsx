@@ -238,7 +238,7 @@ const PetCreate = () => {
                   url
                 )
                   .then((response) => {
-                    const path = `/user/${uid}/account`;
+                    const path = `/user/account`;
                     setTimeout(navigate(path, { replace: true }), 1000);
                   })
                   .catch((err) => {
@@ -288,7 +288,7 @@ const PetCreate = () => {
           ""
         )
           .then((response) => {
-            const path = `/user/${uid}/account`;
+            const path = `/user/account`;
             setTimeout(navigate(path, { replace: true }), 1000);
           })
           .catch((err) => {

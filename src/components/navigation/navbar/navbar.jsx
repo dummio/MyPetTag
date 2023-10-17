@@ -55,8 +55,8 @@ const NavBar = () => {
    * @returns HTML Element
    */
   const AuthLinks = () => {
-    const account = `/user/${uid}/account`;
-    const settings = `/user/${uid}/settings`;
+    const account = `/user/account`;
+    const settings = `/user/settings`;
     if (isAuthed == true) {
       return (
         <div className="nav-menu">
