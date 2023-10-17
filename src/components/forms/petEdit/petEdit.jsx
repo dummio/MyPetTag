@@ -205,8 +205,8 @@ const PetEdit = () => {
   }, [petSpecies, CatBreeds, DogBreeds]);
 
   function formSubmit(data) {
-    console.log(errors);
-    console.log(data);
+    console.debug(errors);
+    console.debug(data);
   }
 
   const UploadImage = (e) => {

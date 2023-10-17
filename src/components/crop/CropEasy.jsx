@@ -50,7 +50,7 @@ const CropEasy = ({
       //     timeout: 5000,
       //     location: "modal",
       //   });
-      console.log(error);
+      console.debug(error);
     }
 
     // setLoading(false);

@@ -33,16 +33,16 @@ const NavBar = () => {
 
     fetchUid().then(
       (result) => {
-        console.log(result);
+        console.debug(result);
       },
       (error) => {
-        console.log(error);
+        console.debug(error);
       }
     );
 
     const getAuthState = async () => {
       const data = await isUserAuthenticated();
-      console.log(data);
+      console.debug(data);
       setIsAuthed(data);
     };
 
@@ -57,7 +57,7 @@ const NavBar = () => {
   const AuthLinks = () => {
     const account = `/user/account`;
     const settings = `/user/settings`;
-    if (isAuthed == true) {
+    if (isAuthed === true) {
       return (
         <div className="nav-menu">
           <a href="/shop">

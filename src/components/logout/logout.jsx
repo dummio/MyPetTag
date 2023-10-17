@@ -12,7 +12,6 @@ import { logout } from "../../firebaseCommands";
  * Logs user out and resets authentication.
  */
 const LogOut = () => {
-
   let navigate = useNavigate();
 
   useEffect(() => {
@@ -21,7 +20,7 @@ const LogOut = () => {
         navigate("/", { replace: true });
       })
       .catch((error) => {
-        console.log("Error occurred:: ", error);
+        console.debug("Error occurred:: ", error);
       });
   }, []);
 };
