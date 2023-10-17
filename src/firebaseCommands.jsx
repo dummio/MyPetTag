@@ -322,17 +322,14 @@ export async function getPetData(uid, petID, keys) {
       // the pet in the petsList, but this is actually a necessary step
       // since deleting pets can make the petIDs not match the indices.
       //TODO:: dont need the outside loop, pid = placement in array
-      console.log(petsList);
       for (let i = 0; i < petsList.length; i++) {
         const currPet = petsList[i];
         if (currPet["petID"] == petID) {
           for (let j = 0; j < keys.length; j++) {
             const currKey = keys[j];
-            console.log(currKey);
             //KEVXUE what happens when key is not found
             petData[currKey] = currPet[currKey];
           }
-          console.log("sm3g", petData);
           return petData;
         }
       }
@@ -574,7 +571,7 @@ export async function setIsPetLost(pid, lost) {
       userDocData.pets[i].isLost = lost;
     }
   }
-  console.log(userDocData.pets);
   await updateDoc(userDocRef, {pets : userDocData.pets });
+  window.location.reload();
 }
 

@@ -54,3 +54,14 @@
   margin-bottom: 75px;
   transition: transform 0.1s;
 }
+
+#lost-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 2px 2px 18px 0px rgba(0, 0, 0, 0.75);
+}
+
+#lost-btn:focus {
+  outline: none;
+  border: solid 2px #0f5738;
+  transition: border 0.15s ease-in;
+}

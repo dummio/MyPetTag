@@ -26,10 +26,33 @@ import {
  */
 const LocationService = ({ userID, petID }) => {
   const [isAuthed, setIsAuthed] = useState(false);
+  const [isLost, setIsLost] = useState(false);
+  const [buttonText, setButtonText] = useState("Show As Lost")
+
+  useEffect(() => {
+    async function getLostStatus() {
+      const status = await getPetData(userID, petID, ["isLost"]);
+      if (status["isLost"] != null) {
+        setIsLost(status["isLost"]);
+        if (status["isLost"]) {
+          setButtonText("Pet Found");
+        } else {
+          setButtonText("Show As Lost");
+        }
+      }
+    }
+    getLostStatus();
+  }, []);
 
   const changeIsLost = () => {
     //change to check for current status and flip -> will also need to change button text
-    setIsPetLost(petID, true);
+    console.log(isLost);
+    if(isLost == true) {
+      setIsPetLost(petID, false);
+    }
+    else {
+      setIsPetLost(petID, true);
+    }
   }
 
   const GetLocation = () => {
@@ -74,7 +97,7 @@ const LocationService = ({ userID, petID }) => {
           <input
             id="lost-btn"
             type="button"
-            value="Show Pet As Lost"
+            value={buttonText}
             onClick={changeIsLost}
           />
         </>
