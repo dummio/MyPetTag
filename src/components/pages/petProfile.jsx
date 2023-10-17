@@ -37,9 +37,6 @@ const PetProfile = () => {
           setUID(ids[0]);
           setPID(ids[1]);
         } else {
-          // const userData = await getUserData();
-          // const uid = userData[0].uid;
-          // setUID(uid);
           setPID(window.location.pathname.split("/")[4]);
         }
       } catch (error) {
@@ -49,11 +46,9 @@ const PetProfile = () => {
     fetchData();
   }, []);
 
-  console.log("PID THAT WE GOT: ", pID);
   const navigate = useNavigate();
 
   if (pID == "not found") {
-    console.log("where am I");
     return (
       <React.Fragment>
         <NavBar />
@@ -77,7 +72,6 @@ const PetProfile = () => {
       </React.Fragment>
     );
   } else if (pID != null) {
-    //console.log(uID, pID, "swag");
     return (
       <React.Fragment>
         <NavBar />

@@ -91,7 +91,8 @@ const LocationService = ({ userID, petID }) => {
   }, []);
 
   const LocationButtons = () => {
-    if (isAuthed) {
+    //TODO:: make better
+    if (isAuthed && window.location.pathname.split("/")[1] != "tag") {
       return (
         <>
           <input
