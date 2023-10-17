@@ -21,10 +21,10 @@ export async function sendFoundPetEmail(userID, lat, lon) {
     )
     .then(
       (result) => {
-        console.log(result.text);
+        console.debug(result.text);
       },
       (error) => {
-        console.log(error.text);
+        console.debug(error.text);
       }
     );
 }

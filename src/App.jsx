@@ -17,7 +17,6 @@ import ForgotPassword from "./components/pages/forgotPassword";
 import ResetForm from "./components/forms/forgotPassword/resetForm";
 import Shop from "./components/pages/shop";
 import User from "./components/user/user";
-import UserId from "./components/user/userId";
 import Tag from "./components/tag/tag";
 import TagId from "./components/tag/tagId";
 import Account from "./components/pages/account";

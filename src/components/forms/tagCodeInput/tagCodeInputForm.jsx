@@ -55,7 +55,7 @@ const TagCodeInputEditForm = () => {
     if (content) {
       route(content);
     } else {
-      console.log("Invalid tag haha");
+      console.debug("Invalid tag haha");
       // alert("Invalid tag");
       ErrorHandle(true);
     }
@@ -63,10 +63,10 @@ const TagCodeInputEditForm = () => {
 
   function route(tagContent) {
     if (tagContent !== null && tagContent[0] === "" && tagContent[1] === "") {
-      console.log(tagContent);
+      console.debug(tagContent);
       navigate(`/tag/${tagCode}/create`, { replace: true });
     } else {
-      console.log("Tag was taken or tag code input error");
+      console.debug("Tag was taken or tag code input error");
       // alert("Invalid tag");
       ErrorHandle(true);
     }
@@ -75,10 +75,10 @@ const TagCodeInputEditForm = () => {
   const isTagTaken = async (e) => {
     e.preventDefault();
     if (canSubmit) {
-      console.log("TAG CODE ENTERED: ", tagCode);
+      console.debug("TAG CODE ENTERED: ", tagCode);
       await fetchTagContent();
     } else {
-      console.log("NO TAG CODE ENTERED!");
+      console.debug("NO TAG CODE ENTERED!");
     }
   };
 

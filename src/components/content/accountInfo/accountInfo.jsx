@@ -63,7 +63,7 @@ const AccountInformation = () => {
   }, []);
 
   const renderPetButtons = () => {
-    console.log("RENDERING BUTTONS");
+    console.debug("RENDERING BUTTONS");
     if (realUser) {
       if (realPet) {
         return realPet.map((userPet) => (
@@ -89,7 +89,7 @@ const AccountInformation = () => {
   }, [deleting]);
 
   const handlePetDeletion = async () => {
-    console.log("selected pet being deleted: ", selectedPet);
+    console.debug("selected pet being deleted: ", selectedPet);
     await removePetFromDatabase(selectedPet["id"]);
 
     const updatedRealPet = realPet.filter(
@@ -179,7 +179,7 @@ const AccountInformation = () => {
               style={{ height: "31px", cursor: "pointer" }}
               onClick={() => {
                 setDeleting(!deleting);
-                console.log("deleting: ", deleting);
+                console.debug("deleting: ", deleting);
               }}
             />
           </div>

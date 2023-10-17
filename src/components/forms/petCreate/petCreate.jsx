@@ -87,15 +87,15 @@ const PetCreate = () => {
     }
     fetchUid().then(
       (result) => {
-        console.log(result);
+        console.debug(result);
       },
       (error) => {
-        console.log(error);
+        console.debug(error);
       }
     );
     const getAuthState = async () => {
       const data = await isUserAuthenticated();
-      console.log(data);
+      console.debug(data);
       setIsAuthed(data);
     };
     getAuthState();
@@ -189,9 +189,9 @@ const PetCreate = () => {
   const navigate = useNavigate();
 
   const UpdateProfile = (e) => {
-    console.log("Vaccines in update profile: ", petVaccines);
+    console.debug("Vaccines in update profile: ", petVaccines);
     e.preventDefault();
-    console.log("Vaccines in update profile2: ", petVaccines);
+    console.debug("Vaccines in update profile2: ", petVaccines);
     if (canSubmit) {
       if (image) {
         // TODO: Come up with better naming scheme
@@ -202,7 +202,7 @@ const PetCreate = () => {
             getDownloadURL(imageRef)
               .then((url) => {
                 setUrl(url);
-                console.log("url: ", url);
+                console.debug("url: ", url);
                 let tag = "";
                 const regex = /^\/tag\/[a-zA-Z0-9]{6}\/create$/;
                 if (regex.test(window.location.pathname)) {
@@ -246,11 +246,11 @@ const PetCreate = () => {
                   });
               })
               .catch((error) => {
-                console.log("Error when uploading image: ", error);
+                console.debug("Error when uploading image: ", error);
               });
           })
           .catch((error) => {
-            console.log("Error when uploading image: ", error);
+            console.debug("Error when uploading image: ", error);
           });
       } else {
         let tag = "";
@@ -358,28 +358,28 @@ const PetCreate = () => {
 
   const addContactField = () => {
     setContacts([...contacts, { name: "", phone: "" }]);
-    console.log("Contacts: ", contacts);
+    console.debug("Contacts: ", contacts);
   };
 
   const removeContactField = (index) => {
     const updatedFields = [...contacts];
     updatedFields.splice(index, 1);
     setContacts(updatedFields);
-    console.log("Contacts: ", contacts);
+    console.debug("Contacts: ", contacts);
   };
 
   const handleContactNameChange = (index, value) => {
     const updatedFields = [...contacts];
     updatedFields[index].name = value;
     setContacts(updatedFields);
-    console.log("Contacts: ", contacts);
+    console.debug("Contacts: ", contacts);
   };
 
   const handleContactPhoneChange = (index, value) => {
     const updatedFields = [...contacts];
     updatedFields[index].phone = value;
     setContacts(updatedFields);
-    console.log("Contacts: ", contacts);
+    console.debug("Contacts: ", contacts);
   };
 
   useEffect(() => {
@@ -496,9 +496,9 @@ const PetCreate = () => {
               onChange={(e) => {
                 if (e) {
                   setPetSpecies(e.value);
-                  console.log(e, "value: ", e.value);
+                  console.debug(e, "value: ", e.value);
                 } else {
-                  console.log("setting species to null");
+                  console.debug("setting species to null");
                   setPetSpecies(null);
                 }
               }}
