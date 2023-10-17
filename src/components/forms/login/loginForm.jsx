@@ -31,7 +31,7 @@ const LoginForm = () => {
     async function fetchAuth() {
       const isAuthed = await isUserAuthenticated();
       if (isAuthed) {
-        navigate("/user/REMOVEME/account", { replace: true });
+        navigate("/user/account", { replace: true });
       }
     }
     fetchAuth();
@@ -48,7 +48,7 @@ const LoginForm = () => {
       let userId = response;
       if (userId) {
         setAuthState(true);
-        navigate(`/user/${userId}/account`, { replace: true });
+        navigate(`/user/account`, { replace: true });
       } else {
         setAuthState(false);
         ErrorHandle();

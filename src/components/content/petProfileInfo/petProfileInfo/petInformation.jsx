@@ -13,7 +13,7 @@ import "./petInformation.css";
 import { getPetData } from "../../../../firebaseCommands";
 
 import { useNavigate } from "react-router-dom";
-import { partial } from "lodash";
+import { partial, set } from "lodash";
 
 /**
  * Gets all current Pet Information For the Pet Profile.
@@ -31,6 +31,7 @@ const PetInformation = ({ userID, petID }) => {
   const [petWeight, setPetWeight] = useState(null);
   const [petSex, setPetSex] = useState(null);
   const [petImage, setPetImage] = useState(null);
+  const [petIsLost, setIsLost] = useState(false);
 
   const calculateAge = (date) => {
     let dateObj = new Date(date);
@@ -81,6 +82,7 @@ const PetInformation = ({ userID, petID }) => {
         "weight",
         "sex",
         "imageUrl",
+        "isLost",
       ]).catch((error) => {
         navigate("/*", { replace: true });
       });
@@ -99,10 +101,11 @@ const PetInformation = ({ userID, petID }) => {
         setPetWeight(petData["weight"]);
         setPetSex(petData["sex"]);
         setPetImage(petData["imageUrl"]);
+        setIsLost(petData["isLost"]);
       }
     }
     fetchPetData();
-  }, []);
+  }, [userID, petID]);
 
   return (
     <div id="pet-information-container">
@@ -113,6 +116,7 @@ const PetInformation = ({ userID, petID }) => {
         width={157}
         height={157}
       />
+      {petIsLost != null && petIsLost != false && <p>"This pet is lost!"</p>}
       <p className="pet-name">{petName ? petName : "Loading..."}</p>
       {/*Show as lost button if uid == null then user is logged in */}
       <p className="pet-breed">

@@ -336,7 +336,6 @@ export async function getPetData(uid, petID, keys) {
   try {
     const userDocRef = doc(db, 'users', uid);
     const userDocSnap = await getDoc(userDocRef);
-
     let petData = {};
     if (userDocSnap.exists()) {
       // for-each loops are misbehaving. Use regular for-loops for now:
@@ -345,18 +344,20 @@ export async function getPetData(uid, petID, keys) {
       // too much work since petIDs are initially assigned as the index of
       // the pet in the petsList, but this is actually a necessary step
       // since deleting pets can make the petIDs not match the indices.
+      //TODO:: dont need the outside loop, pid = placement in array
       for (let i = 0; i < petsList.length; i++) {
         const currPet = petsList[i];
         if (currPet['petID'] == petID) {
           for (let j = 0; j < keys.length; j++) {
             const currKey = keys[j];
+            //KEVXUE what happens when key is not found
             petData[currKey] = currPet[currKey];
           }
           return petData;
         }
       }
     } else {
-      // throw new Error("User does not have any pets!");
+      console.log("whack");
       return null;
     }
   } catch (error) {
@@ -411,7 +412,10 @@ export async function checkTagIdTaken(id) {
   try {
     const tagDocRef = doc(db, 'tags', id);
     const tagDocSnap = await getDoc(tagDocRef);
-    tagFields = [tagDocSnap.data().UserID, tagDocSnap.data().Pet];
+    if (tagDocSnap) {
+      tagFields = [tagDocSnap.data().UserID, tagDocSnap.data().Pet];
+      console.log(tagFields);
+    }
   } catch (error) {
     console.log(error);
   }
@@ -580,4 +584,19 @@ export async function getUserAndPetIDFromTag(tagID) {
   } else {
     return ['not found', 'not found'];
   }
+}
+
+//for now there is no way to change pet lost status
+export async function setIsPetLost(pid, lost) {
+  const uid = await authStateChangedWrapper();
+  const userDocRef = await doc(db, "users", uid);
+  const userDocSnap = await getDoc(userDocRef);
+  const userDocData = userDocSnap.data();
+  for (let i = 0; i < userDocData.pets.length; i++) {
+    if (userDocData.pets[i]["petID"] == pid) {
+      userDocData.pets[i].isLost = lost;
+    }
+  }
+  await updateDoc(userDocRef, { pets: userDocData.pets });
+  window.location.reload();
 }
