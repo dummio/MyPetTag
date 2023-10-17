@@ -27,7 +27,7 @@ import {
 const LocationService = ({ userID, petID }) => {
   const [isAuthed, setIsAuthed] = useState(false);
   const [isLost, setIsLost] = useState(false);
-  const [buttonText, setButtonText] = useState("Show As Lost")
+  const [buttonText, setButtonText] = useState("Show As Lost");
 
   useEffect(() => {
     async function getLostStatus() {
@@ -47,13 +47,12 @@ const LocationService = ({ userID, petID }) => {
   const changeIsLost = () => {
     //change to check for current status and flip -> will also need to change button text
     console.log(isLost);
-    if(isLost == true) {
+    if (isLost === true) {
       setIsPetLost(petID, false);
-    }
-    else {
+    } else {
       setIsPetLost(petID, true);
     }
-  }
+  };
 
   const GetLocation = () => {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -105,20 +104,20 @@ const LocationService = ({ userID, petID }) => {
       );
     } else {
       return (
-      <>
-        <input
-          id="notify-btn"
-          type="submit"
-          value="Share Location"
-          onClick={GetLocation}
-        />
-        <input
-          id="sos-btn"
-          type="submit"
-          value="Find Emergency Vet"
-          onClick={Emergency}
-        />
-      </>
+        <>
+          <input
+            id="notify-btn"
+            type="submit"
+            value="Share Location"
+            onClick={GetLocation}
+          />
+          <input
+            id="sos-btn"
+            type="submit"
+            value="Find Emergency Vet"
+            onClick={Emergency}
+          />
+        </>
       );
     }
   };
