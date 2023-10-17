@@ -129,6 +129,9 @@ const AccountInformation = () => {
               }}
               icon={faPen}
               //needs an onclick to edit users information
+              onClick={() => {
+                navigate("../settings", { replace: false });
+              }}
             />
           </h1>
         </div>
