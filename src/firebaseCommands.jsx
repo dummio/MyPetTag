@@ -30,7 +30,7 @@ export async function authStateChangedWrapper() {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         resolve(user.uid);
-        console.log(user.uid);
+        console.debug(user.uid);
       } else {
         reject(new Error("No User Found"));
       }
@@ -71,7 +71,7 @@ export async function addNewUserToDatabase(
     });
     return uid;
   } catch (error) {
-    console.log("Error occurred writing new user to firebase : ", error);
+    console.debug("Error occurred writing new user to firebase : ", error);
   }
 }
 
@@ -89,7 +89,7 @@ export async function login(_email, _password) {
       _password
     );
     const uid = await authStateChangedWrapper();
-    console.log(uid);
+    console.debug(uid);
     return uid;
   } catch (error) {
     console.debug("Error logging in: " + error);
@@ -102,11 +102,11 @@ export async function login(_email, _password) {
 export async function logout() {
   signOut(auth)
     .then(() => {
-      console.log("logout successful");
+      console.debug("logout successful");
       return true;
     })
     .catch((error) => {
-      console.log("Error occurred logging out : ", error);
+      console.debug("Error occurred logging out : ", error);
       return false;
     });
 }
@@ -152,7 +152,7 @@ export async function addPetToDatabase(
     const userDocRef = doc(db, "users", uid);
     const userDocSnap = await getDoc(userDocRef);
 
-    //console.log(userDocSnap.data());
+    //console.debug(userDocSnap.data());
     const numPets = userDocSnap.data().pets?.length;
     // if (petID_ == undefined) {
     //   petID_ = 0;
@@ -163,7 +163,7 @@ export async function addPetToDatabase(
         ? 0
         : userDocSnap.data().pets[numPets - 1].petID + 1;
 
-    console.log("adding pet with vaccines: ", vaccines_);
+    console.debug("adding pet with vaccines: ", vaccines_);
     const pet = {
       tag: tag_,
       petID: petID_,
@@ -188,9 +188,9 @@ export async function addPetToDatabase(
       imageUrl: imageUrl_,
     };
 
-    console.log(pet);
+    console.debug(pet);
 
-    if (userDocSnap.get("pets") == null) {
+    if (userDocSnap.get("pets") === null) {
       setDoc(userDocRef, { pets: [pet] }, { merge: true });
     } else {
       await updateDoc(userDocRef, {
@@ -206,8 +206,8 @@ export async function addPetToDatabase(
       });
     }
   } catch (error) {
-    console.log("Error occured during pet registration: ", error);
-    console.log(uid);
+    console.debug("Error occured during pet registration: ", error);
+    console.debug(uid);
   }
 }
 
@@ -242,7 +242,7 @@ export async function removePetFromDatabase(petID) {
         const imageRef = ref(storage, urlToDelete);
         deleteObject(imageRef)
           .catch((error) => {
-            console.log("Error when deleting image: ", error);
+            console.debug("Error when deleting image: ", error);
           })
           .then(async () => {
             // Delete the pet: Delete petsList where pet["petID"] == petID
@@ -274,7 +274,7 @@ export async function removePetFromDatabase(petID) {
       return null;
     }
   } catch (error) {
-    console.log("Error occurred removing pet: ", error);
+    console.debug("Error occurred removing pet: ", error);
   }
 }
 
@@ -285,18 +285,18 @@ export async function removePetFromDatabase(petID) {
 export async function getUserData() {
   const uid_t = await authStateChangedWrapper();
   try {
-    console.log(uid_t);
+    console.debug(uid_t);
     const userDocRef = doc(db, "users", uid_t);
     const userDocSnap = await getDoc(userDocRef);
     if (userDocSnap.exists()) {
-      console.log("USER DATA FROM getUserData:", userDocSnap.data());
+      console.debug("USER DATA FROM getUserData:", userDocSnap.data());
       return [userDocSnap.data(), auth.currentUser.email];
     } else {
-      console.log("User not found");
+      console.debug("User not found");
       return null;
     }
   } catch (error) {
-    console.log("Error getting user data: ", error);
+    console.debug("Error getting user data: ", error);
   }
 }
 
@@ -307,7 +307,8 @@ export async function getUserData() {
  * @returns
  */
 export async function getPetData(uid, petID, keys) {
-  if (uid == null) {
+  if (uid === null) {
+    console.debug("whadaito: ", uid);
     uid = await authStateChangedWrapper();
   }
   try {
@@ -324,7 +325,7 @@ export async function getPetData(uid, petID, keys) {
       //TODO:: dont need the outside loop, pid = placement in array
       for (let i = 0; i < petsList.length; i++) {
         const currPet = petsList[i];
-        if (currPet["petID"] == petID) {
+        if (currPet["petID"] === petID) {
           for (let j = 0; j < keys.length; j++) {
             const currKey = keys[j];
             //KEVXUE what happens when key is not found
@@ -338,7 +339,7 @@ export async function getPetData(uid, petID, keys) {
       return null;
     }
   } catch (error) {
-    console.log("Error occurred getting pet data: ", error);
+    console.debug("Error occurred getting pet data: ", error);
   }
 }
 
@@ -349,10 +350,10 @@ export async function getPetData(uid, petID, keys) {
 export async function isUserAuthenticated() {
   try {
     const uid_t = await authStateChangedWrapper();
-    console.log("curr user id: ", uid_t);
+    console.debug("curr user id: ", uid_t);
     return uid_t != null;
   } catch (error) {
-    console.log(error);
+    console.debug(error);
     return false;
   }
 }
@@ -364,7 +365,7 @@ export async function isUserAuthenticated() {
 export function sendPasswordReset(email) {
   sendPasswordResetEmail(auth, email)
     .then(() => {
-      console.log("Sent password reset");
+      console.debug("Sent password reset");
       return null;
     })
     .catch((error) => {
@@ -376,10 +377,10 @@ export async function getCurrentUserEmail(uid) {
   const userDocRef = doc(db, "users", uid);
   const userDocSnap = await getDoc(userDocRef);
   if (userDocSnap.exists()) {
-    console.log("USER DATA FROM getUserData:", userDocSnap.data());
+    console.debug("USER DATA FROM getUserData:", userDocSnap.data());
     return userDocSnap.data().email;
   } else {
-    console.log("User not found");
+    console.debug("User not found");
     return null;
   }
 }
@@ -391,16 +392,16 @@ export async function checkTagIdTaken(id) {
     const tagDocSnap = await getDoc(tagDocRef);
     if (tagDocSnap) {
       tagFields = [tagDocSnap.data().UserID, tagDocSnap.data().Pet];
-      console.log(tagFields);
+      console.debug(tagFields);
     }
   } catch (error) {
-    console.log(error);
+    console.debug(error);
   }
   return tagFields;
 }
 
 export async function getPetBreeds(species) {
-  if (species == "Dog") {
+  if (species === "Dog") {
     const dogBreedDocRef = doc(db, "dogBreeds", "Breeds");
     const dogBreedSnap = await getDoc(dogBreedDocRef);
 
@@ -412,10 +413,10 @@ export async function getPetBreeds(species) {
         value: dogBreedList[i],
       });
     }
-    console.log(dogBreeds);
+    console.debug(dogBreeds);
     return dogBreeds;
   }
-  if (species == "Cat") {
+  if (species === "Cat") {
     const catBreedDocRef = doc(db, "catBreeds", "Breeds");
     const catBreedSnap = await getDoc(catBreedDocRef);
 
@@ -427,28 +428,28 @@ export async function getPetBreeds(species) {
         value: catBreedList[i],
       });
     }
-    console.log(catBreeds);
+    console.debug(catBreeds);
     return catBreeds;
   }
 }
 
 export async function getVaccines(species) {
-  if (species == "Dog") {
+  if (species === "Dog") {
     const dogVaccineDocRef = doc(db, "dogBreeds", "vaccines");
     const dogVaccineSnap = await getDoc(dogVaccineDocRef);
 
     let dogVaccines = [];
     const dogVaccinesList = dogVaccineSnap.data().vaccine;
-    console.log(dogVaccineSnap);
+    console.debug(dogVaccineSnap);
     for (let i = 0; i < dogVaccinesList.length; i++) {
       dogVaccines.push({
         label: dogVaccinesList[i],
         value: dogVaccinesList[i],
       });
     }
-    console.log(dogVaccines);
+    console.debug(dogVaccines);
     return dogVaccines;
-  } else if (species == "Cat") {
+  } else if (species === "Cat") {
     const catVaccineDocRef = doc(db, "catBreeds", "vaccines");
     const catVaccineSnap = await getDoc(catVaccineDocRef);
 
@@ -460,7 +461,7 @@ export async function getVaccines(species) {
         value: catVaccinesList[i],
       });
     }
-    console.log(catVaccines);
+    console.debug(catVaccines);
     return catVaccines;
   } else {
     return [];
@@ -490,7 +491,7 @@ export async function readUserAlerts() {
     const userDocSnap = await getDoc(userDocRef);
     return userDocSnap.data().alerts;
   } catch (error) {
-    console.log(error);
+    console.debug(error);
   }
 }
 
@@ -507,7 +508,7 @@ export async function writeUserAlert(uid, pid, message) {
     const timeStamp = year + "/" + month + "/" + day;
 
     var msgID = userDocSnap.data().alerts?.length;
-    if (msgID == undefined) {
+    if (msgID === undefined) {
       msgID = 0;
     }
 
@@ -518,7 +519,7 @@ export async function writeUserAlert(uid, pid, message) {
       id: msgID,
     };
 
-    if (userDocSnap.get("alerts") == null) {
+    if (userDocSnap.get("alerts") === null) {
       setDoc(userDocRef, { alerts: [alert] }, { merge: true });
     } else {
       await updateDoc(userDocRef, {
@@ -526,7 +527,7 @@ export async function writeUserAlert(uid, pid, message) {
       });
     }
   } catch (error) {
-    console.log(error);
+    console.debug(error);
   }
 }
 
@@ -548,14 +549,14 @@ export async function deleteAlert(msgID) {
     await batch.commit();
     return await readUserAlerts();
   } catch (error) {
-    console.log("error occurred removing alert: ", error);
+    console.debug("error occurred removing alert: ", error);
   }
 }
 
 export async function getUserAndPetIDFromTag(tagID) {
   const tagCodeRef = doc(db, "tags", tagID);
   const tagCodeSnap = await getDoc(tagCodeRef);
-  console.log("data: ", tagCodeSnap.data());
+  console.debug("data: ", tagCodeSnap.data());
   if (tagCodeSnap.data() && tagCodeSnap.data().UserID) {
     return [tagCodeSnap.data().UserID, tagCodeSnap.data().Pet];
   } else {
@@ -569,12 +570,11 @@ export async function setIsPetLost(pid, lost) {
   const userDocRef = await doc(db, "users", uid);
   const userDocSnap = await getDoc(userDocRef);
   const userDocData = userDocSnap.data();
-  for(let i = 0; i < userDocData.pets.length; i++) {
-    if(userDocData.pets[i]["petID"] == pid) {
+  for (let i = 0; i < userDocData.pets.length; i++) {
+    if (userDocData.pets[i]["petID"] == pid) {
       userDocData.pets[i].isLost = lost;
     }
   }
-  await updateDoc(userDocRef, {pets : userDocData.pets });
+  await updateDoc(userDocRef, { pets: userDocData.pets });
   window.location.reload();
 }
-

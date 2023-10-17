@@ -30,7 +30,7 @@ const PetProfile = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        if (window.location.pathname.split("/")[1] == "tag") {
+        if (window.location.pathname.split("/")[1] === "tag") {
           const ids = await getUserAndPetIDFromTag(
             window.location.pathname.split("/")[2]
           );
@@ -43,15 +43,17 @@ const PetProfile = () => {
           setPID(window.location.pathname.split("/")[3]);
         }
       } catch (error) {
-        console.log(error);
+        console.debug(error);
       }
     }
     fetchData();
   }, []);
 
+  console.debug("PID THAT WE GOT: ", pID);
   const navigate = useNavigate();
 
   if (pID == "not found") {
+    console.debug("where am I");
     return (
       <React.Fragment>
         <NavBar />
@@ -75,6 +77,7 @@ const PetProfile = () => {
       </React.Fragment>
     );
   } else if (pID != null) {
+    console.debug("kevXue", uID, pID);
     return (
       <React.Fragment>
         <NavBar />

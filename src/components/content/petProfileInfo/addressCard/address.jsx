@@ -30,7 +30,7 @@ const Address = ({ userID, petID }) => {
       }
     }
     fetchPetData();
-    console.log(petAddr);
+    console.debug(petAddr);
   }, []);
 
   return (
