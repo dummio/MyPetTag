@@ -12,6 +12,9 @@ import logo from "../../../images/paw.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 
+import { getUserData } from "../../../firebaseCommands";
+import { useNavigate } from "react-router-dom";
+
 /**
  * Handles edit of all information about a users account filling in and updating data
  * pertaining to the user. Such as (Phone, Email, Name, and Pet Profiles)
@@ -19,12 +22,34 @@ import { faPen } from "@fortawesome/free-solid-svg-icons";
  * @returns Account Settings HTML element.
  */
 const AccountSettings = () => {
+  const [user] = useState({
+    Name: "Loading...",
+    Email: "Loading...",
+    Phone: "Loading...",
+  });
+  const [realUser, setUser] = useState(null);
+  const [realEmail, setEmail] = useState(null);
+
   const testUser = {
     name: "test",
     email: "test@test.com",
     phone: "801-899-8999",
     password: "test123!",
   };
+  const navigate = useNavigate();
+  useEffect(() => {
+    // Fetch user data when the component mounts
+    async function fetchUserData() {
+      const userData = await getUserData().catch((error) => {
+        navigate("/*", { replace: true });
+      });
+      if (userData) {
+        setUser(userData[0]);
+        setEmail(userData[1]);
+      }
+    }
+    fetchUserData();
+  }, []);
 
   const hidePassword = (item) => {
     return Array(item.length + 1).join("*");
@@ -52,7 +77,9 @@ const AccountSettings = () => {
         <div className="user-setting-container">
           <h3>Name:</h3>
           <p>
-            {testUser.name}{" "}
+            {realUser
+              ? `${realUser.firstname} ${realUser.lastname}`
+              : user.Name}{" "}
             <FontAwesomeIcon
               style={{ marginLeft: "8px", cursor: "pointer", fontSize: "16px" }}
               icon={faPen}
@@ -63,7 +90,7 @@ const AccountSettings = () => {
         <div className="user-setting-container">
           <h3>Email:</h3>
           <p>
-            {testUser.email}
+            {realEmail ? realEmail : user.Email}
             <FontAwesomeIcon
               style={{ marginLeft: "8px", cursor: "pointer", fontSize: "16px" }}
               icon={faPen}
@@ -74,7 +101,7 @@ const AccountSettings = () => {
         <div className="user-setting-container">
           <h3>Phone Number:</h3>
           <p>
-            {testUser.phone}
+            {realUser ? realUser.phone : user.Phone}
             <FontAwesomeIcon
               style={{ marginLeft: "8px", cursor: "pointer", fontSize: "16px" }}
               icon={faPen}

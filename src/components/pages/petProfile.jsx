@@ -37,14 +37,10 @@ const PetProfile = () => {
           setUID(ids[0]);
           setPID(ids[1]);
         } else {
-<<<<<<< HEAD
-          setPID(window.location.pathname.split("/")[4]);
-=======
           // const userData = await getUserData();
           // const uid = userData[0].uid;
           // setUID(uid);
           setPID(window.location.pathname.split("/")[3]);
->>>>>>> 8bd9d02cbf7c4651bf4ebf96ebc3282e1b09cc6b
         }
       } catch (error) {
         console.log(error);
