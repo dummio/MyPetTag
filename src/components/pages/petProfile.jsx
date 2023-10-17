@@ -40,7 +40,7 @@ const PetProfile = () => {
           // const userData = await getUserData();
           // const uid = userData[0].uid;
           // setUID(uid);
-          setPID(window.location.pathname.split("/")[4]);
+          setPID(window.location.pathname.split("/")[3]);
         }
       } catch (error) {
         console.log(error);

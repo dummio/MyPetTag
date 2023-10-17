@@ -49,15 +49,13 @@ const App = () => {
           </Route>
         </Route>
         <Route path="/user" element={<User />}>
-          <Route path=":userId" element={<UserId />}>
-            <Route path="pet/:petId" element={<PetId />}>
-              <Route path="profile" element={<PetProfile />} />
-              <Route path="edit" element={<PetProfileEdit />} />
-            </Route>
-            <Route path="account" element={<Account />} />
-            <Route path="settings" element={<AccountEdit />} />
-            {/* <Route path="create" element={<PetRegister />} /> */}
+          <Route path="pet/:petId" element={<PetId />}>
+            <Route path="profile" element={<PetProfile />} />
+            <Route path="edit" element={<PetProfileEdit />} />
           </Route>
+          <Route path="account" element={<Account />} />
+          <Route path="settings" element={<AccountEdit />} />
+          {/* <Route path="create" element={<PetRegister />} /> */}
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
