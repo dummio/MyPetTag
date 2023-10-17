@@ -4,17 +4,21 @@
  */
 
 // Import React Modules
-import React, { useEffect, useState, useRef } from "react";
-import Select from "react-select";
-import CreatableSelect from "react-select/creatable";
-import { useForm, Controller } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState, useRef } from 'react';
+import Select from 'react-select';
+import CreatableSelect from 'react-select/creatable';
+import { useForm, Controller } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import {
   getPetBreeds,
   getPetData,
-} from "../../../firebaseCommands";
-import { Patterns } from "../../../constants";
-import get from "lodash/get";
+  isUserAuthenticated,
+  updatePetInDatabase,
+} from '../../../firebaseCommands';
+import { storage } from '../../../firebase-config';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { Patterns } from '../../../constants';
+import get from 'lodash/get';
 
 // Import CSS
 import './petEdit.css';
@@ -45,15 +49,33 @@ const PetEdit = () => {
   const [openCrop, setOpenCrop] = useState(false);
 
   // Component States
+  const [isAuthed, setIsAuthed] = useState(null);
+  const [userID, setUserID] = useState(undefined);
+  const [petID, setPetID] = useState(undefined);
   const [petName, setPetName] = useState(null);
   const [photoURL, setPhotoURL] = useState(null);
   const [originalImage, setOriginalImage] = useState(null);
   const [image, setImage] = useState(null);
 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    async function getAuthState() {
+      const authenticated = await isUserAuthenticated();
+      console.log(authenticated);
+      setIsAuthed(authenticated);
+      if (!authenticated) navigate('/*');
+    }
+    getAuthState();
+  }, [navigate]);
+
   async function getInitialValues() {
-    const petID = window.location.pathname.split('/')[4];
+    const uID = window.location.pathname.split('/')[2];
+    const pID = Number(window.location.pathname.split('/')[4]);
+    setPetID(pID);
+    setUserID(uID);
     try {
-      const petData = await getPetData(null, petID, [
+      const petData = await getPetData(uID, pID, [
         'name',
         'species',
         'breed',
@@ -79,6 +101,7 @@ const PetEdit = () => {
 
       if (petData['imageUrl']) {
         setOriginalImage(petData['imageUrl']);
+        setPhotoURL(petData['imageUrl']);
       }
 
       setPageReady(true);
@@ -126,7 +149,7 @@ const PetEdit = () => {
         microchipID: petData['vets']['microchipId'],
       };
     } catch (error) {
-      console.error('Error retrieving pet data: ', error);
+      console.error('Error retrieving pet data:\n', error);
       return {};
     }
   }
@@ -177,17 +200,18 @@ const PetEdit = () => {
 
   useEffect(() => {
     async function fetchDogBreedInfo() {
-      const dogBreeds = await getPetBreeds("Dog");
+      const dogBreeds = await getPetBreeds('Dog');
       if (dogBreeds) {
         setDogBreeds(dogBreeds);
       }
     }
     async function fetchCatBreedInfo() {
-      const catBreeds = await getPetBreeds("Cat");
+      const catBreeds = await getPetBreeds('Cat');
       if (catBreeds) {
         setCatBreeds(catBreeds);
       }
     }
+
     fetchDogBreedInfo();
     fetchCatBreedInfo();
   }, []);
@@ -205,8 +229,73 @@ const PetEdit = () => {
   }, [petSpecies, CatBreeds, DogBreeds]);
 
   function formSubmit(data) {
-    console.log(errors);
-    console.log(data);
+    const pet = {
+      petID: petID,
+      name: data.petName,
+      species: data.petSpecies.value,
+      breed: data.petBreed.value,
+      descr: data.petDescription,
+      birthDate: data.petBirthday,
+      weight: data.petWeight,
+      sex: data.petSex.value,
+      addr: data.address,
+      vaccines: data.petVaccines?.map((item) => item.value) ?? null,
+      conds: data.petHealth?.map((item) => item.value) ?? null,
+      meds: data.petMedications?.map((item) => item.value) ?? null,
+      allergies: data.petAllergies?.map((item) => item.value) ?? null,
+      healthInfo: data.healthDescription,
+      aggressions: data.petAggressions?.map((item) => item.value) ?? null,
+      goodWith: data.petGoodWith?.map((item) => item.value) ?? null,
+      behavior: data.behaviorDescription ?? null,
+      contacts: { Name: data.contactName, Phone: data.contactPhone },
+      vets: {
+        addr: data.clinicAddress,
+        clinicName: data.clinicName,
+        microchipId: data.microchipID,
+        phone: data.clinicPhone,
+        vetName: data.vetName,
+      },
+      imageUrl: photoURL,
+    };
+
+    if (image) {
+      // TODO: Come up with better naming scheme
+      const imgName = petName + (Math.random() + 1).toString(36).substring(2);
+      const imageRef = ref(storage, imgName);
+      uploadBytes(imageRef, image)
+        .then(() => {
+          getDownloadURL(imageRef)
+            .then((url) => {
+              setPhotoURL(url);
+              pet.imageUrl = url;
+              updatePetInDatabase(pet)
+                .then((success) => {
+                  const path = `/user/${userID}/account`;
+                  setTimeout(navigate(path, { replace: true }), 1000);
+                })
+                .catch((err) => {
+                  console.error(err);
+                });
+            })
+            .catch((error) => {
+              console.log('Error when uploading image: ', error);
+            });
+        })
+        .catch((error) => {
+          console.log('Error when uploading image: ', error);
+        });
+    } else {
+      updatePetInDatabase(pet)
+        .then((success) => {
+          if (success) {
+            const path = `/user/${userID}/account`;
+            setTimeout(navigate(path, { replace: true }), 1000);
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
   }
 
   const UploadImage = (e) => {
@@ -214,7 +303,7 @@ const PetEdit = () => {
     let file = e.target.files[0];
 
     if (file && file.type.startsWith('image/')) {
-      let image = URL.createObjectURL(file);
+      let img = URL.createObjectURL(file);
       /* The cropper only displays if the selected file has changed.
        * If the user selects the same file, the cropper wouldn't open,
        * but we want it to open, so we set the file name value to null. */
@@ -248,7 +337,7 @@ const PetEdit = () => {
   };
 
   // Render nothing until we have a response for the pet's information
-  if (!pageReady) return null;
+  if (!pageReady || !isAuthed) return null;
   else
     return (
       <div id='edit-container'>
@@ -718,7 +807,9 @@ const PetEdit = () => {
             </>
           )}
           <div id='edit-form-btns'>
-            <input id='cancel-btn' type='submit' value='Cancel' />
+            <button id='cancel-btn' type='button' onClick={() => navigate('../../account/')}>
+              Cancel
+            </button>
             <input id='save-btn' type='submit' value='Save' />
           </div>
         </form>

@@ -1,4 +1,4 @@
-import { db, auth, storage } from "./firebase-config";
+import { db, auth, storage } from './firebase-config';
 import {
   doc,
   updateDoc,
@@ -8,9 +8,9 @@ import {
   arrayUnion,
   runTransaction,
   writeBatch,
-} from "firebase/firestore";
+} from 'firebase/firestore';
 
-import { ref, deleteObject } from "firebase/storage";
+import { ref, deleteObject } from 'firebase/storage';
 
 import {
   getAuth,
@@ -19,7 +19,9 @@ import {
   sendPasswordResetEmail,
   signOut,
   onAuthStateChanged,
-} from "firebase/auth";
+} from 'firebase/auth';
+
+import _ from 'lodash';
 
 /**
  * A wrapper for Firebase's authentication
@@ -32,7 +34,7 @@ export async function authStateChangedWrapper() {
         resolve(user.uid);
         console.log(user.uid);
       } else {
-        reject(new Error("No User Found"));
+        reject(new Error('No User Found'));
       }
     });
   });
@@ -45,24 +47,14 @@ export async function authStateChangedWrapper() {
  * @param {*} email
  * @param {*} password
  */
-export async function addNewUserToDatabase(
-  firstname_,
-  lastname_,
-  email,
-  password,
-  phone
-) {
+export async function addNewUserToDatabase(firstname_, lastname_, email, password, phone) {
   //const auth = getAuth();
   //change to point to database
   try {
-    const userCredential = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const uid = userCredential.user.uid;
 
-    await setDoc(doc(db, "users", uid), {
+    await setDoc(doc(db, 'users', uid), {
       firstname: firstname_,
       lastname: lastname_,
       uid: uid,
@@ -71,7 +63,7 @@ export async function addNewUserToDatabase(
     });
     return uid;
   } catch (error) {
-    console.log("Error occurred writing new user to firebase : ", error);
+    console.log('Error occurred writing new user to firebase : ', error);
   }
 }
 
@@ -83,16 +75,12 @@ export async function addNewUserToDatabase(
  */
 export async function login(_email, _password) {
   try {
-    const userCredential = await signInWithEmailAndPassword(
-      auth,
-      _email,
-      _password
-    );
+    const userCredential = await signInWithEmailAndPassword(auth, _email, _password);
     const uid = await authStateChangedWrapper();
     console.log(uid);
     return uid;
   } catch (error) {
-    console.debug("Error logging in: " + error);
+    console.debug('Error logging in: ' + error);
   }
 }
 
@@ -102,11 +90,11 @@ export async function login(_email, _password) {
 export async function logout() {
   signOut(auth)
     .then(() => {
-      console.log("logout successful");
+      console.log('logout successful');
       return true;
     })
     .catch((error) => {
-      console.log("Error occurred logging out : ", error);
+      console.log('Error occurred logging out : ', error);
       return false;
     });
 }
@@ -149,7 +137,7 @@ export async function addPetToDatabase(
 ) {
   const uid = await authStateChangedWrapper();
   try {
-    const userDocRef = doc(db, "users", uid);
+    const userDocRef = doc(db, 'users', uid);
     const userDocSnap = await getDoc(userDocRef);
 
     //console.log(userDocSnap.data());
@@ -158,12 +146,9 @@ export async function addPetToDatabase(
     //   petID_ = 0;
     // }
 
-    const petID_ =
-      numPets === undefined
-        ? 0
-        : userDocSnap.data().pets[numPets - 1].petID + 1;
+    const petID_ = numPets === undefined ? 0 : userDocSnap.data().pets[numPets - 1].petID + 1;
 
-    console.log("adding pet with vaccines: ", vaccines_);
+    console.log('adding pet with vaccines: ', vaccines_);
     const pet = {
       tag: tag_,
       petID: petID_,
@@ -190,7 +175,7 @@ export async function addPetToDatabase(
 
     console.log(pet);
 
-    if (userDocSnap.get("pets") == null) {
+    if (userDocSnap.get('pets') == null) {
       setDoc(userDocRef, { pets: [pet] }, { merge: true });
     } else {
       await updateDoc(userDocRef, {
@@ -200,14 +185,51 @@ export async function addPetToDatabase(
 
     // Associate tag with this pet in tags collection
     if (tag_) {
-      await setDoc(doc(db, "tags", tag_), {
+      await setDoc(doc(db, 'tags', tag_), {
         Pet: petID_,
         UserID: uid,
       });
     }
   } catch (error) {
-    console.log("Error occured during pet registration: ", error);
+    console.log('Error occured during pet registration: ', error);
     console.log(uid);
+  }
+}
+
+export async function updatePetInDatabase(petInfo) {
+  try {
+    const uid = await authStateChangedWrapper();
+    const userDocRef = doc(db, 'users', uid);
+    const userDocSnap = await getDoc(userDocRef);
+
+    const userPets = userDocSnap.get('pets');
+    if (!userPets) {
+      console.error('Unable to update pet. User has no pets to update.');
+      return false;
+    } else {
+      let petIndex = _.findIndex(userPets, { petID: petInfo.petID });
+      if (!userPets[petIndex]) {
+        console.error('Unable to update pet. Pet not found with petID: ' + petInfo.petID);
+        return false;
+      } else {
+        userPets[petIndex] = petInfo;
+        // const updatedFields = _.differenceWith(
+        //   _.toPairs(petInfo),
+        //   _.toPairs(petToUpdate),
+        //   _.isEqual
+        // );
+        console.log(userPets[petIndex]);
+        console.log(userPets);
+        // console.log(_.fromPairs(updatedFields));
+        await updateDoc(userDocRef, {
+          pets: userPets,
+        });
+        return true;
+      }
+    }
+  } catch (error) {
+    console.error('Failed to update pet info: ', error);
+    return false;
   }
 }
 
@@ -215,7 +237,7 @@ export async function removePetFromDatabase(petID) {
   const uid = await authStateChangedWrapper();
 
   try {
-    const userDocRef = doc(db, "users", uid);
+    const userDocRef = doc(db, 'users', uid);
     const userDocSnap = await getDoc(userDocRef);
 
     if (userDocSnap.exists()) {
@@ -242,7 +264,7 @@ export async function removePetFromDatabase(petID) {
         const imageRef = ref(storage, urlToDelete);
         deleteObject(imageRef)
           .catch((error) => {
-            console.log("Error when deleting image: ", error);
+            console.log('Error when deleting image: ', error);
           })
           .then(async () => {
             // Delete the pet: Delete petsList where pet["petID"] == petID
@@ -251,8 +273,8 @@ export async function removePetFromDatabase(petID) {
             // Then, in the tags document, modify the document that has a key of tagToRenew
             // defined above. Change the fields "Pet" and "UserID" of this document to be empty
             if (tagToRenew) {
-              const tagDocRef = doc(db, "tags", tagToRenew);
-              batch.update(tagDocRef, { Pet: "", UserID: "" });
+              const tagDocRef = doc(db, 'tags', tagToRenew);
+              batch.update(tagDocRef, { Pet: '', UserID: '' });
             }
 
             await batch.commit();
@@ -264,8 +286,8 @@ export async function removePetFromDatabase(petID) {
         // Then, in the tags document, modify the document that has a key of tagToRenew
         // defined above. Change the fields "Pet" and "UserID" of this document to be empty
         if (tagToRenew) {
-          const tagDocRef = doc(db, "tags", tagToRenew);
-          batch.update(tagDocRef, { Pet: "", UserID: "" });
+          const tagDocRef = doc(db, 'tags', tagToRenew);
+          batch.update(tagDocRef, { Pet: '', UserID: '' });
         }
 
         await batch.commit();
@@ -274,7 +296,7 @@ export async function removePetFromDatabase(petID) {
       return null;
     }
   } catch (error) {
-    console.log("Error occurred removing pet: ", error);
+    console.log('Error occurred removing pet: ', error);
   }
 }
 
@@ -286,17 +308,17 @@ export async function getUserData() {
   const uid_t = await authStateChangedWrapper();
   try {
     console.log(uid_t);
-    const userDocRef = doc(db, "users", uid_t);
+    const userDocRef = doc(db, 'users', uid_t);
     const userDocSnap = await getDoc(userDocRef);
     if (userDocSnap.exists()) {
-      console.log("USER DATA FROM getUserData:", userDocSnap.data());
+      console.log('USER DATA FROM getUserData:', userDocSnap.data());
       return [userDocSnap.data(), auth.currentUser.email];
     } else {
-      console.log("User not found");
+      console.log('User not found');
       return null;
     }
   } catch (error) {
-    console.log("Error getting user data: ", error);
+    console.log('Error getting user data: ', error);
   }
 }
 
@@ -308,11 +330,11 @@ export async function getUserData() {
  */
 export async function getPetData(uid, petID, keys) {
   if (uid == null) {
-    console.log("whadaito: ", uid);
+    console.log('whadaito: ', uid);
     uid = await authStateChangedWrapper();
   }
   try {
-    const userDocRef = doc(db, "users", uid);
+    const userDocRef = doc(db, 'users', uid);
     const userDocSnap = await getDoc(userDocRef);
 
     let petData = {};
@@ -325,7 +347,7 @@ export async function getPetData(uid, petID, keys) {
       // since deleting pets can make the petIDs not match the indices.
       for (let i = 0; i < petsList.length; i++) {
         const currPet = petsList[i];
-        if (currPet["petID"] == petID) {
+        if (currPet['petID'] == petID) {
           for (let j = 0; j < keys.length; j++) {
             const currKey = keys[j];
             petData[currKey] = currPet[currKey];
@@ -338,7 +360,7 @@ export async function getPetData(uid, petID, keys) {
       return null;
     }
   } catch (error) {
-    console.log("Error occurred getting pet data: ", error);
+    console.log('Error occurred getting pet data: ', error);
   }
 }
 
@@ -349,7 +371,7 @@ export async function getPetData(uid, petID, keys) {
 export async function isUserAuthenticated() {
   try {
     const uid_t = await authStateChangedWrapper();
-    console.log("curr user id: ", uid_t);
+    console.log('curr user id: ', uid_t);
     return uid_t != null;
   } catch (error) {
     console.log(error);
@@ -364,7 +386,7 @@ export async function isUserAuthenticated() {
 export function sendPasswordReset(email) {
   sendPasswordResetEmail(auth, email)
     .then(() => {
-      console.log("Sent password reset");
+      console.log('Sent password reset');
       return null;
     })
     .catch((error) => {
@@ -373,13 +395,13 @@ export function sendPasswordReset(email) {
 }
 
 export async function getCurrentUserEmail(uid) {
-  const userDocRef = doc(db, "users", uid);
+  const userDocRef = doc(db, 'users', uid);
   const userDocSnap = await getDoc(userDocRef);
   if (userDocSnap.exists()) {
-    console.log("USER DATA FROM getUserData:", userDocSnap.data());
+    console.log('USER DATA FROM getUserData:', userDocSnap.data());
     return userDocSnap.data().email;
   } else {
-    console.log("User not found");
+    console.log('User not found');
     return null;
   }
 }
@@ -387,7 +409,7 @@ export async function getCurrentUserEmail(uid) {
 export async function checkTagIdTaken(id) {
   let tagFields = null;
   try {
-    const tagDocRef = doc(db, "tags", id);
+    const tagDocRef = doc(db, 'tags', id);
     const tagDocSnap = await getDoc(tagDocRef);
     tagFields = [tagDocSnap.data().UserID, tagDocSnap.data().Pet];
   } catch (error) {
@@ -397,8 +419,8 @@ export async function checkTagIdTaken(id) {
 }
 
 export async function getPetBreeds(species) {
-  if (species == "Dog") {
-    const dogBreedDocRef = doc(db, "dogBreeds", "Breeds");
+  if (species == 'Dog') {
+    const dogBreedDocRef = doc(db, 'dogBreeds', 'Breeds');
     const dogBreedSnap = await getDoc(dogBreedDocRef);
 
     let dogBreeds = [];
@@ -412,8 +434,8 @@ export async function getPetBreeds(species) {
     console.log(dogBreeds);
     return dogBreeds;
   }
-  if (species == "Cat") {
-    const catBreedDocRef = doc(db, "catBreeds", "Breeds");
+  if (species == 'Cat') {
+    const catBreedDocRef = doc(db, 'catBreeds', 'Breeds');
     const catBreedSnap = await getDoc(catBreedDocRef);
 
     let catBreeds = [];
@@ -430,8 +452,8 @@ export async function getPetBreeds(species) {
 }
 
 export async function getVaccines(species) {
-  if (species == "Dog") {
-    const dogVaccineDocRef = doc(db, "dogBreeds", "vaccines");
+  if (species == 'Dog') {
+    const dogVaccineDocRef = doc(db, 'dogBreeds', 'vaccines');
     const dogVaccineSnap = await getDoc(dogVaccineDocRef);
 
     let dogVaccines = [];
@@ -445,8 +467,8 @@ export async function getVaccines(species) {
     }
     console.log(dogVaccines);
     return dogVaccines;
-  } else if (species == "Cat") {
-    const catVaccineDocRef = doc(db, "catBreeds", "vaccines");
+  } else if (species == 'Cat') {
+    const catVaccineDocRef = doc(db, 'catBreeds', 'vaccines');
     const catVaccineSnap = await getDoc(catVaccineDocRef);
 
     let catVaccines = [];
@@ -465,7 +487,7 @@ export async function getVaccines(species) {
 }
 
 export async function getPetHealthConditions() {
-  const petHealthDocRef = doc(db, "pet", "healthConditions");
+  const petHealthDocRef = doc(db, 'pet', 'healthConditions');
   const petHealthSnap = await getDoc(petHealthDocRef);
 
   let petHealthConditions = [];
@@ -483,7 +505,7 @@ export async function getPetHealthConditions() {
 export async function readUserAlerts() {
   try {
     const uid = await authStateChangedWrapper();
-    const userDocRef = doc(db, "users", uid);
+    const userDocRef = doc(db, 'users', uid);
     const userDocSnap = await getDoc(userDocRef);
     return userDocSnap.data().alerts;
   } catch (error) {
@@ -494,14 +516,14 @@ export async function readUserAlerts() {
 //write
 export async function writeUserAlert(uid, pid, message) {
   try {
-    const userDocRef = doc(db, "users", uid);
+    const userDocRef = doc(db, 'users', uid);
     const userDocSnap = await getDoc(userDocRef);
-    const petName = await getPetData(uid, pid, ["name"]);
+    const petName = await getPetData(uid, pid, ['name']);
     const dateObj = new Date();
     let month = dateObj.getUTCMonth() + 1;
     let day = dateObj.getUTCDate();
     let year = dateObj.getUTCFullYear();
-    const timeStamp = year + "/" + month + "/" + day;
+    const timeStamp = year + '/' + month + '/' + day;
 
     var msgID = userDocSnap.data().alerts?.length;
     if (msgID == undefined) {
@@ -515,7 +537,7 @@ export async function writeUserAlert(uid, pid, message) {
       id: msgID,
     };
 
-    if (userDocSnap.get("alerts") == null) {
+    if (userDocSnap.get('alerts') == null) {
       setDoc(userDocRef, { alerts: [alert] }, { merge: true });
     } else {
       await updateDoc(userDocRef, {
@@ -530,7 +552,7 @@ export async function writeUserAlert(uid, pid, message) {
 export async function deleteAlert(msgID) {
   try {
     const uid = await authStateChangedWrapper();
-    const userDocRef = await doc(db, "users", uid);
+    const userDocRef = await doc(db, 'users', uid);
     const userDocSnap = await getDoc(userDocRef);
     const alertsList = userDocSnap.data().alerts;
     for (let i = 0; i < alertsList.length; i++) {
@@ -545,17 +567,17 @@ export async function deleteAlert(msgID) {
     await batch.commit();
     return await readUserAlerts();
   } catch (error) {
-    console.log("error occurred removing alert: ", error);
+    console.log('error occurred removing alert: ', error);
   }
 }
 
 export async function getUserAndPetIDFromTag(tagID) {
-  const tagCodeRef = doc(db, "tags", tagID);
+  const tagCodeRef = doc(db, 'tags', tagID);
   const tagCodeSnap = await getDoc(tagCodeRef);
-  console.log("data: ", tagCodeSnap.data());
+  console.log('data: ', tagCodeSnap.data());
   if (tagCodeSnap.data() && tagCodeSnap.data().UserID) {
     return [tagCodeSnap.data().UserID, tagCodeSnap.data().Pet];
   } else {
-    return ["not found", "not found"];
+    return ['not found', 'not found'];
   }
 }
