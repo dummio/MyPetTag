@@ -271,7 +271,7 @@ const PetEdit = () => {
               pet.imageUrl = url;
               updatePetInDatabase(pet)
                 .then((success) => {
-                  const path = `/user/${userID}/account`;
+                  const path = `/user/account`;
                   setTimeout(navigate(path, { replace: true }), 1000);
                 })
                 .catch((err) => {
@@ -289,7 +289,7 @@ const PetEdit = () => {
       updatePetInDatabase(pet)
         .then((success) => {
           if (success) {
-            const path = `/user/${userID}/account`;
+            const path = `/user/account`;
             setTimeout(navigate(path, { replace: true }), 1000);
           }
         })
