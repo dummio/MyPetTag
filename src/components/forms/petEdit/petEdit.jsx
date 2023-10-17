@@ -13,6 +13,7 @@ import {
   getPetBreeds,
   getPetData,
   isUserAuthenticated,
+  authStateChangedWrapper,
   updatePetInDatabase,
 } from '../../../firebaseCommands';
 import { storage } from '../../../firebase-config';
@@ -70,8 +71,8 @@ const PetEdit = () => {
   }, [navigate]);
 
   async function getInitialValues() {
-    const uID = window.location.pathname.split('/')[2];
-    const pID = Number(window.location.pathname.split('/')[4]);
+    const uID = await authStateChangedWrapper();
+    const pID = Number(window.location.pathname.split('/')[3]);
     setPetID(pID);
     setUserID(uID);
     try {
