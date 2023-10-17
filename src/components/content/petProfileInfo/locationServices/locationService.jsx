@@ -11,8 +11,12 @@ import "./locationService.css";
 
 //import emailJSCommands
 import { sendFoundPetEmail } from "../../../../emailJSCommands";
-import { writeUserAlert } from "../../../../firebaseCommands";
-import { isUserAuthenticated } from "../../../../firebaseCommands";
+import {
+  writeUserAlert,
+  isUserAuthenticated,
+  getPetData,
+  setIsPetLost,
+} from "../../../../firebaseCommands";
 
 /**
  * Gets Users current location and directs them
@@ -22,6 +26,34 @@ import { isUserAuthenticated } from "../../../../firebaseCommands";
  */
 const LocationService = ({ userID, petID }) => {
   const [isAuthed, setIsAuthed] = useState(false);
+  const [isLost, setIsLost] = useState(false);
+  const [buttonText, setButtonText] = useState("Show As Lost")
+
+  useEffect(() => {
+    async function getLostStatus() {
+      const status = await getPetData(userID, petID, ["isLost"]);
+      if (status["isLost"] != null) {
+        setIsLost(status["isLost"]);
+        if (status["isLost"]) {
+          setButtonText("Pet Found");
+        } else {
+          setButtonText("Show As Lost");
+        }
+      }
+    }
+    getLostStatus();
+  }, []);
+
+  const changeIsLost = () => {
+    //change to check for current status and flip -> will also need to change button text
+    console.log(isLost);
+    if(isLost == true) {
+      setIsPetLost(petID, false);
+    }
+    else {
+      setIsPetLost(petID, true);
+    }
+  }
 
   const GetLocation = () => {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -59,14 +91,15 @@ const LocationService = ({ userID, petID }) => {
   }, []);
 
   const LocationButtons = () => {
-    if (isAuthed) {
+    //TODO:: make better
+    if (isAuthed && window.location.pathname.split("/")[1] != "tag") {
       return (
         <>
           <input
             id="lost-btn"
             type="button"
-            value="Show Pet As Lost"
-            onClick={() => {}}
+            value={buttonText}
+            onClick={changeIsLost}
           />
         </>
       );
