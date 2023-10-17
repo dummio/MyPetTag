@@ -31,15 +31,15 @@ const LocationService = ({ userID, petID }) => {
 
   useEffect(() => {
     async function getLostStatus() {
-      // const status = await getPetData(userID, petID, ["isLost"]);
-      // if (status && status["isLost"] != null) {
-      //   setIsLost(status["isLost"]);
-      //   if (status["isLost"]) {
-      //     setButtonText("Pet Found");
-      //   } else {
-      //     setButtonText("Show As Lost");
-      //   }
-      // }
+      const status = await getPetData(userID, petID, ["isLost"]);
+      if (status["isLost"] != null) {
+        setIsLost(status["isLost"]);
+        if (status["isLost"]) {
+          setButtonText("Pet Found");
+        } else {
+          setButtonText("Show As Lost");
+        }
+      }
     }
     getLostStatus();
   }, []);
