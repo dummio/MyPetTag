@@ -86,7 +86,7 @@ const PetInformation = ({ userID, petID }) => {
       ]).catch((error) => {
         navigate("/*", { replace: true });
       });
-      console.debug("WHAT", petID);
+      console.log("WHAT", petID);
       if (petData) {
         setPetName(petData["name"]);
         setPetBreed(petData["breed"]);
