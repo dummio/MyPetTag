@@ -212,15 +212,8 @@ export async function updatePetInDatabase(petInfo) {
         console.error('Unable to update pet. Pet not found with petID: ' + petInfo.petID);
         return false;
       } else {
+        petInfo.isLost = userPets[petIndex].isLost; // Keep lost status
         userPets[petIndex] = petInfo;
-        // const updatedFields = _.differenceWith(
-        //   _.toPairs(petInfo),
-        //   _.toPairs(petToUpdate),
-        //   _.isEqual
-        // );
-        console.log(userPets[petIndex]);
-        console.log(userPets);
-        // console.log(_.fromPairs(updatedFields));
         await updateDoc(userDocRef, {
           pets: userPets,
         });
