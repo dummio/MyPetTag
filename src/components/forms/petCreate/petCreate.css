@@ -108,7 +108,7 @@
 
 .form-input:focus {
   outline: none;
-  background-color: transparent;
+  background-color: #f0f0f0;
   border: solid 2px #0f5738;
   transition: border 0.15s ease-in;
 }
