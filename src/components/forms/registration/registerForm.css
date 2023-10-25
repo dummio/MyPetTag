@@ -9,6 +9,7 @@
   align-items: center;
   justify-content: center;
   width: 100%;
+  flex: 1 1 auto;
 }
 
 .logo {
@@ -149,13 +150,9 @@
 
 /* 48em = 768px */
 @media (max-width: 48em) {
-  #register-container {
-    padding-top: 93px;
-  }
-
   .register-links a {
-    text-decoration: underline;
-    text-decoration-color: #0f5738;
-    text-decoration-thickness: 2px;
+    text-decoration: none;
+    border-bottom: 2px solid #0f5738;
+    margin-bottom: 12px;
   }
 }

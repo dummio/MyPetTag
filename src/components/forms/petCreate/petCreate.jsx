@@ -193,6 +193,8 @@ const PetCreate = () => {
     e.preventDefault();
     console.log("Vaccines in update profile2: ", petVaccines);
     if (canSubmit) {
+      let submitBtn = document.getElementById("create-btn");
+      submitBtn.disabled = true;
       if (image) {
         // TODO: Come up with better naming scheme
         const imgName = petName + (Math.random() + 1).toString(36).substring(2);
