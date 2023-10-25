@@ -9,6 +9,9 @@ import React from "react";
 // Import Components
 import NavBar from "../navigation/navbar/navbar";
 
+// Import CSS
+import logo from "../../images/paw.png";
+
 /**
  * Returns 404 page if route does not exists.
  *
@@ -26,13 +29,25 @@ const NotFound = () => {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
+          width: "100%",
         }}
       >
+        <img
+          className="logo"
+          src={logo}
+          alt="MyPetTag"
+          width={250}
+          height={250}
+        />
+        <div className="company-title">
+          My<span style={{ color: "#75af96" }}>PetTag</span>
+        </div>
         <h1
           style={{
             fontSize: "128px",
             fontWeight: "bold",
-            margin: "48px 0px 48px 0px",
+            margin: "0px 0px 0px 0px",
+            paddingRight: "6px",
           }}
         >
           404
@@ -42,6 +57,7 @@ const NotFound = () => {
             fontSize: "36px",
             fontWeight: "bold",
             margin: "0px",
+            paddingRight: "6px",
           }}
         >
           Route Not Found

@@ -17,6 +17,7 @@ import VetProvider from "../content/petProfileInfo/vetProviderCard/vetProvider";
 import LocationService from "../content/petProfileInfo/locationServices/locationService";
 import { getUserAndPetIDFromTag, getUserData } from "../../firebaseCommands";
 import { Link, useNavigate } from "react-router-dom";
+import logo from "../../images/paw.png";
 
 /**
  * Pet Profile Page
@@ -62,14 +63,34 @@ const PetProfile = () => {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            justifyContent: "flex-start",
-            minHeight: "80vh",
-            padding: "0 20px",
+            justifyContent: "center",
+            width: "100%",
+            flex: "1 1 auto",
           }}
         >
-          <p style={{ fontSize: "24px", textAlign: "center" }}>
+          <img
+            className="logo"
+            src={logo}
+            alt="MyPetTag"
+            width={250}
+            height={250}
+          />
+          <div className="company-title">
+            My<span style={{ color: "#75af96" }}>PetTag</span>
+          </div>
+          <p
+            style={{ fontSize: "24px", textAlign: "center", maxWidth: "500px" }}
+          >
             Uh oh! The pet you're trying to view was not found.{" "}
-            <Link to="/" onClick={() => navigate("/")}>
+            <Link
+              to="/"
+              onClick={() => navigate("/")}
+              style={{
+                textDecoration: "none",
+                borderBottom: "2px solid #0f5738",
+                color: "black",
+              }}
+            >
               Click here to return to the home page.
             </Link>
           </p>

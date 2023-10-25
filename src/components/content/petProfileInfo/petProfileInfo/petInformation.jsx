@@ -7,13 +7,12 @@
 import React, { useEffect, useState } from "react";
 
 // Import CSS
-import PetImg from "../../../../images/pitbull.png";
 import DefaultImg from "../../../../images/profile-default.png";
 import "./petInformation.css";
 import { getPetData } from "../../../../firebaseCommands";
 
 import { useNavigate } from "react-router-dom";
-import { partial, set } from "lodash";
+import LostModal from "../../../modals/lostModal";
 
 /**
  * Gets all current Pet Information For the Pet Profile.
@@ -21,7 +20,6 @@ import { partial, set } from "lodash";
  * @returns HTML Element
  */
 const PetInformation = ({ userID, petID }) => {
-  //const petID = window.location.pathname.split("/")[4];
   const navigate = useNavigate();
 
   const [petName, setPetName] = useState(null);
@@ -32,6 +30,8 @@ const PetInformation = ({ userID, petID }) => {
   const [petSex, setPetSex] = useState(null);
   const [petImage, setPetImage] = useState(null);
   const [petIsLost, setIsLost] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [healthConditions, sethealthConditions] = useState([]);
 
   const calculateAge = (date) => {
     let dateObj = new Date(date);
@@ -83,10 +83,10 @@ const PetInformation = ({ userID, petID }) => {
         "sex",
         "imageUrl",
         "isLost",
+        "conds",
       ]).catch((error) => {
         navigate("/*", { replace: true });
       });
-      console.log("WHAT", petID);
       if (petData) {
         setPetName(petData["name"]);
         setPetBreed(petData["breed"]);
@@ -101,7 +101,9 @@ const PetInformation = ({ userID, petID }) => {
         setPetWeight(petData["weight"]);
         setPetSex(petData["sex"]);
         setPetImage(petData["imageUrl"]);
+        sethealthConditions(petData["conds"]);
         setIsLost(petData["isLost"]);
+        setShowModal(petData["isLost"]);
       }
     }
     fetchPetData();
@@ -116,9 +118,19 @@ const PetInformation = ({ userID, petID }) => {
         width={157}
         height={157}
       />
-      {petIsLost != null && petIsLost != false && <p>"This pet is lost!"</p>}
+      {petIsLost != null &&
+        petIsLost != false &&
+        window.location.pathname.split("/")[1] === "tag" && (
+          <LostModal
+            userID={userID}
+            petID={petID}
+            showModal={showModal}
+            setShowModal={setShowModal}
+            petName={petName}
+            healthConditions={healthConditions}
+          />
+        )}
       <p className="pet-name">{petName ? petName : "Loading..."}</p>
-      {/*Show as lost button if uid == null then user is logged in */}
       <p className="pet-breed">
         {petName ? (petBreed ? petBreed : "Breed not provided") : "Loading..."}
       </p>
