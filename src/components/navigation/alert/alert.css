@@ -60,6 +60,27 @@
   min-width: 300px;
 }
 
+#clear-alert-btn {
+  background-color: #75af96;
+  width: 300px;
+  margin: 5px;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 18px;
+}
+
+#clear-alert-btn p {
+  margin: 8px 0px 8px 0px;
+}
+
+.alert-close:focus {
+  color: rgb(235, 100, 100);
+}
+
 .alert-item {
   background-color: #d4d4d4;
   width: 300px;
