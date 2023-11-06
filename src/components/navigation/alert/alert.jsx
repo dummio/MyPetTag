@@ -12,7 +12,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell, faX } from "@fortawesome/free-solid-svg-icons";
 
 // Import FirebaseCommands
-import { readUserAlerts, deleteAlert } from "../../../firebaseCommands";
+import {
+  readUserAlerts,
+  deleteAlert,
+  deleteAllAlerts,
+} from "../../../firebaseCommands";
 /**
  * Shows and displays alert bucket for MyPetTag App
  *
@@ -43,6 +47,8 @@ const Alert = () => {
       setMessages([]);
       setCount(0);
     }
+
+    async function deleteAllAlerts() {}
   }
 
   return (
@@ -53,7 +59,10 @@ const Alert = () => {
           <FontAwesomeIcon icon={faBell} />
         </div>
         {hide && (
-          <div className="alert-menu">
+          <div className="alert-menu" onClick={() => deleteAllAlerts()}>
+            <div id="clear-alert-btn">
+              <p>Clear All Alerts</p>
+            </div>
             {messages.map((msg) => {
               return (
                 <div className="alert-item">
