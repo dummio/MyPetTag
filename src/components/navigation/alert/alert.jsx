@@ -10,13 +10,16 @@ import React, { useEffect, useState } from "react";
 import "./alert.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell, faX } from "@fortawesome/free-solid-svg-icons";
+import { onSnapshot } from "firebase/firestore";
 
 // Import FirebaseCommands
 import {
   readUserAlerts,
   deleteAlert,
   deleteAllAlerts,
+  getUserDocRef,
 } from "../../../firebaseCommands";
+import { set } from "lodash";
 /**
  * Shows and displays alert bucket for MyPetTag App
  *
@@ -26,6 +29,7 @@ const Alert = () => {
   const [hide, show] = useState(false);
   const [messages, setMessages] = useState([]);
   const [msgCount, setCount] = useState(0);
+  const [myDoc, setDoc] = useState(null);
 
   useEffect(() => {
     async function fetchAlerts() {
@@ -36,7 +40,36 @@ const Alert = () => {
       }
     }
     fetchAlerts();
+
+    async function getDoc() {
+      const tempDoc = await getUserDocRef();
+      if (tempDoc) {
+        setDoc(tempDoc);
+      }
+    }
+    getDoc();
   }, []);
+
+  useEffect(() => {
+    if (myDoc != null) {
+      const unsub = onSnapshot(
+        myDoc,
+        (docSnapshot) => {
+          const tempAlerts = docSnapshot.data().alerts;
+          setMessages(tempAlerts);
+          setCount(tempAlerts.length);
+        },
+        (err) => {
+          console.log(`Encountered error: ${err}`);
+        }
+      );
+
+      return () => {
+        // Clean up the Firebase listener when the component unmounts
+        unsub();
+      };
+    }
+  }, [myDoc]); // Listen for changes in the 'doc' state
 
   async function deleteMessage(msgID) {
     let newAlerts = await deleteAlert(msgID);
