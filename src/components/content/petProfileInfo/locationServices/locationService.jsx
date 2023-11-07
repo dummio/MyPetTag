@@ -17,6 +17,7 @@ import {
   getPetData,
   setIsPetLost,
 } from "../../../../firebaseCommands";
+import ShareLocationModal from "../../../modals/shareLocationModal";
 
 /**
  * Gets Users current location and directs them
@@ -28,6 +29,9 @@ const LocationService = ({ userID, petID }) => {
   const [isAuthed, setIsAuthed] = useState(false);
   const [isLost, setIsLost] = useState(false);
   const [buttonText, setButtonText] = useState("Show As Lost");
+  const [showModal, setShowModal] = useState(false);
+  const [lat, setLat] = useState(0);
+  const [long, setLong] = useState(0);
 
   useEffect(() => {
     async function getLostStatus() {
@@ -58,15 +62,11 @@ const LocationService = ({ userID, petID }) => {
     navigator.geolocation.getCurrentPosition((position) => {
       let lat = position.coords.latitude;
       let lon = position.coords.longitude;
-
+      setLat(lat);
+      setLong(lon);
+      setShowModal((prev) => !prev);
       sendFoundPetEmail(userID, lat, lon);
       writeUserAlert(userID, petID, "Tag location shared!");
-      alert(
-        "You've alerted the owner that their pet was found at: '" +
-          lat +
-          ", " +
-          lon
-      );
     });
   };
 
@@ -109,7 +109,9 @@ const LocationService = ({ userID, petID }) => {
             id="notify-btn"
             type="submit"
             value="Share Location"
-            onClick={GetLocation}
+            onClick={() => {
+              GetLocation();
+            }}
           />
           <input
             id="sos-btn"
@@ -125,6 +127,12 @@ const LocationService = ({ userID, petID }) => {
   return (
     <div id="location-container">
       <LocationButtons />
+      <ShareLocationModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        lat={lat}
+        long={long}
+      />
     </div>
   );
 };

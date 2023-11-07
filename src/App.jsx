@@ -15,9 +15,8 @@ import Login from "./components/pages/login";
 import Register from "./components/pages/register";
 import ForgotPassword from "./components/pages/forgotPassword";
 import ResetForm from "./components/forms/forgotPassword/resetForm";
-import Shop from "./components/pages/shop";
+import About from "./components/pages/about";
 import User from "./components/user/user";
-import UserId from "./components/user/userId";
 import Tag from "./components/tag/tag";
 import TagId from "./components/tag/tagId";
 import Account from "./components/pages/account";
@@ -41,7 +40,7 @@ const App = () => {
         <Route path="/forgot" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetForm />} />
         <Route path="/input-code" element={<InputCode />} />
-        <Route path="/shop" element={<Shop />} />
+        <Route path="/about" element={<About />} />
         <Route path="/tag" element={<Tag />}>
           <Route path=":tagId" element={<TagId />}>
             <Route path="profile" element={<PetProfile />} />
@@ -55,7 +54,6 @@ const App = () => {
           </Route>
           <Route path="account" element={<Account />} />
           <Route path="settings" element={<AccountEdit />} />
-          {/* <Route path="create" element={<PetRegister />} /> */}
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
