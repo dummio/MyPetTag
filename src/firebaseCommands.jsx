@@ -589,6 +589,22 @@ export async function deleteAlert(msgID) {
   }
 }
 
+export async function deleteAllAlerts() {
+  try {
+    const uid = await authStateChangedWrapper();
+    const userDocRef = await doc(db, "users", uid);
+    const userDocSnap = await getDoc(userDocRef);
+    let alertsList = userDocSnap.data().alerts;
+    alertsList = [];
+    const batch = writeBatch(db);
+    batch.update(userDocRef, { alerts: alertsList });
+    await batch.commit();
+    return await readUserAlerts();
+  } catch (error) {
+    console.debug("error occurred removing all alerts: ", error);
+  }
+}
+
 export async function getUserAndPetIDFromTag(tagID) {
   const tagCodeRef = doc(db, "tags", tagID);
   const tagCodeSnap = await getDoc(tagCodeRef);
