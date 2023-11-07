@@ -13,10 +13,11 @@ import {
 import { ref, deleteObject } from "firebase/storage";
 
 import {
-  getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
+  updatePassword,
+  updateEmail,
   signOut,
   onAuthStateChanged,
 } from "firebase/auth";
@@ -54,7 +55,6 @@ export async function addNewUserToDatabase(
   password,
   phone
 ) {
-  //const auth = getAuth();
   //change to point to database
   try {
     const userCredential = await createUserWithEmailAndPassword(
@@ -74,6 +74,75 @@ export async function addNewUserToDatabase(
     return uid;
   } catch (error) {
     console.log("Error occurred writing new user to firebase : ", error);
+  }
+}
+
+export async function updateAccountInfo(data) {
+  if (_.isEmpty(data)) {
+    throw new Error("Cannot update account info with non-existent data.");
+  }
+
+  let accountInfo = {
+    firstname: data.firstname,
+    lastname: data.lastname,
+    phone: data.phone
+  };
+
+  let updatedFields = _.omitBy(accountInfo, _.isNil);
+
+  if (_.isEmpty(updatedFields)) {
+    throw new Error("No data given to update user account with.");
+  }
+
+  try {
+    const uid = await authStateChangedWrapper();
+    const userDocRef = doc(db, "users", uid);
+
+    console.log(updatedFields);
+    updateDoc(userDocRef, updatedFields);
+    return true;
+
+  } catch (error) {
+    console.error("Failed to update user account info: ", error);
+    return false;
+  }
+}
+
+export async function changeAccountEmail(newEmail) {
+  console.log("Email: ", newEmail);
+  try {
+    const user = auth.currentUser;
+
+    if (newEmail === user.email) {
+      console.debug("Email has not changed. Skipping...");
+      return true;
+    }
+
+    return updateEmail(user, newEmail).then(() => {
+      return true;
+    }).catch((error) => {
+      console.error("Failed to update user email: ", error);
+      return false;
+    });
+  } catch (error) {
+    console.error("Failed to update user email: ", error);
+    return false;
+  }
+}
+
+export async function changeAccountPassword(newPassword) {
+  console.log("Password: ", newPassword);
+  try {
+    const user = auth.currentUser;
+
+    updatePassword(user, newPassword).then(() => {
+      return true;
+    }).catch((error) => {
+      console.error("Failed to update user password: ", error);
+      return false;
+    });
+  } catch (error) {
+    console.error("Failed to update user password: ", error);
   }
 }
 
@@ -323,7 +392,6 @@ export async function getUserData() {
     const userDocRef = doc(db, "users", uid_t);
     const userDocSnap = await getDoc(userDocRef);
     if (userDocSnap.exists()) {
-      console.log("USER DATA FROM getUserData:", userDocSnap.data());
       return [userDocSnap.data(), auth.currentUser.email];
     } else {
       console.log("User not found");
