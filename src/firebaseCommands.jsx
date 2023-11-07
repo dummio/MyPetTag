@@ -20,6 +20,9 @@ import {
   updateEmail,
   signOut,
   onAuthStateChanged,
+  AuthCredential,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
 } from "firebase/auth";
 
 import _ from "lodash";
@@ -98,7 +101,6 @@ export async function updateAccountInfo(data) {
     const uid = await authStateChangedWrapper();
     const userDocRef = doc(db, "users", uid);
 
-    console.log(updatedFields);
     updateDoc(userDocRef, updatedFields);
     return true;
 
@@ -135,7 +137,7 @@ export async function changeAccountPassword(newPassword) {
   try {
     const user = auth.currentUser;
 
-    updatePassword(user, newPassword).then(() => {
+    return updatePassword(user, newPassword).then(() => {
       return true;
     }).catch((error) => {
       console.error("Failed to update user password: ", error);
@@ -180,6 +182,16 @@ export async function logout() {
       console.log("Error occurred logging out : ", error);
       return false;
     });
+}
+
+export async function reauthenticateCurrentUser(password) {
+  try {
+    const cred = EmailAuthProvider.credential(auth.currentUser.email, password);
+    return await reauthenticateWithCredential(auth.currentUser, cred);
+  } catch(error) {
+    console.error("Failed to reauthenticate user: ", error);
+    return null;
+  }
 }
 
 /**

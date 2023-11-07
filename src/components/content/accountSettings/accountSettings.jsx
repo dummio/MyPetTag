@@ -5,7 +5,14 @@
 
 // Import React Modules
 import React, { useState, useEffect } from 'react';
-import { getUserData, isUserAuthenticated, updateAccountInfo, changeAccountEmail, changeAccountPassword } from '../../../firebaseCommands';
+import {
+  getUserData,
+  isUserAuthenticated,
+  updateAccountInfo,
+  changeAccountEmail,
+  changeAccountPassword,
+  reauthenticateCurrentUser,
+} from '../../../firebaseCommands';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import _ from 'lodash';
@@ -69,25 +76,37 @@ const AccountSettings = () => {
   }
 
   async function formSubmit(data) {
-
     const userInfo = {
       firstname: data.firstName,
       lastname: data.lastName,
-      phone: data.userPhone
+      phone: data.userPhone,
     };
 
     let infoSuccess = await updateAccountInfo(userInfo);
-    let emailSuccess = await changeAccountEmail(data.userEmail);
-    let passwordSuccess = true;
-    if (!_.isEmpty(data.newPassword))
-      passwordSuccess = await changeAccountPassword(data.newPassword);
 
-    console.log("Info success: ", infoSuccess);
-    console.log("Email success: ", emailSuccess);
+    let emailSuccess = true;
+    let passwordSuccess = true;
+    if (data.userEmail !== currentEmail || !_.isEmpty(data.newPassword)) {
+      let reauthenticatedUser = await reauthenticateCurrentUser(data.password);
+      if (reauthenticatedUser) {
+        if (data.userEmail !== currentEmail)
+          emailSuccess = await changeAccountEmail(data.userEmail);
+        if (!_.isEmpty(data.newPassword))
+          passwordSuccess = await changeAccountPassword(data.newPassword);
+      } else {
+        alert(
+          'Failed to save some account settings.\nPlease check that you are inputting your current password correctly.'
+        );
+        passwordSuccess = false;
+        emailSuccess = false;
+      }
+    }
+
+    console.log('Info success: ', infoSuccess);
+    console.log('Email success: ', emailSuccess);
     if (infoSuccess && emailSuccess && passwordSuccess)
       setTimeout(() => navigate('/user/account'), 500);
-    else
-      console.error("Updating account failed.");
+    else console.error('Updating account failed.');
   }
 
   useEffect(() => {
@@ -147,7 +166,7 @@ const AccountSettings = () => {
               value: Patterns.PHONE_REGEX,
               message: 'Enter a valid phone number.',
             },
-            required: 'Phone cannot be blank.'
+            required: 'Phone cannot be blank.',
           })}
         />
         <label>Email</label>
@@ -171,7 +190,7 @@ const AccountSettings = () => {
         <input
           className="form-input"
           type="password"
-          placeholder="Password"
+          placeholder="New Password"
           {...register('newPassword', {
             pattern: {
               value: Patterns.PASSWORD_REGEX,
@@ -193,6 +212,29 @@ const AccountSettings = () => {
             },
           })}
         />
+        {(watch('userEmail') !== currentEmail || !_.isEmpty(watch('newPassword'))) && (
+          <>
+            <label>Current Password</label>
+            <div className="error-container">{_.get(errors, 'password.message')}</div>
+            <input
+              className="form-input"
+              type="password"
+              placeholder="Current Password"
+              {...register('password', {
+                validate: (currentPassword) => {
+                  let email = watch('userEmail');
+                  let newPassword = watch('newPassword');
+
+                  if (
+                    (email !== currentEmail || !_.isEmpty(newPassword)) &&
+                    _.isEmpty(currentPassword)
+                  )
+                    return 'Current password is required.';
+                },
+              })}
+            />
+          </>
+        )}
         <div id="account-edit-btns">
           <button id="cancel-btn" type="button" onClick={() => navigate('/user/account')}>
             Cancel
