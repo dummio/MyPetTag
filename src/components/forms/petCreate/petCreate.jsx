@@ -47,7 +47,6 @@ const PetCreate = () => {
 
   // Pet Data States
   const [image, setImage] = useState(null);
-  const [imageStoreURL, setImageStoreURL] = useState(null);
   const [petName, setPetName] = useState(null);
   const [petSpecies, setPetSpecies] = useState(null);
   const [petBreed, setPetBreed] = useState(null);
@@ -56,7 +55,6 @@ const PetCreate = () => {
   const [petWeight, setPetWeight] = useState(null);
   const [petSex, setPetSex] = useState(null);
   const [contacts, setContacts] = useState([]);
-  // const [petContactPhone, setPetContactPhone] = useState(null);
   const [petAddress, setPetAddress] = useState(null);
   const [petVaccines, setPetVaccines] = useState([]);
   const [petConditions, setPetConditions] = useState([]);
@@ -64,7 +62,6 @@ const PetCreate = () => {
   const [petAllergies, setPetAllergies] = useState([]);
   const [petHealthInfo, setPetHealthInfo] = useState(null);
   const [medicalPDF, setMedicalPDF] = useState(null);
-  const [medicalStoreURL, setMedicalStoreURL] = useState(null);
   const [petAggressions, setPetAggressions] = useState([]);
   const [petGoodWith, setPetGoodWith] = useState([]);
   const [petBehaviorInfo, setPetBehaviorInfo] = useState(null);
@@ -79,6 +76,18 @@ const PetCreate = () => {
 
   const [openCrop, setOpenCrop] = useState(false);
   const [photoURL, setPhotoURL] = useState(null);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    async function fetchAuth() {
+      const isAuthed = await isUserAuthenticated();
+      if (!isAuthed) {
+        navigate("/", { replace: true });
+      }
+    }
+    fetchAuth();
+  }, []);
 
   useEffect(() => {
     async function fetchUid() {
@@ -186,8 +195,6 @@ const PetCreate = () => {
     petBirthDate,
     petWeight,
     petSex,
-    // petContactName,
-    // petContactPhone,
     contacts,
     petAddress,
     petVaccines,
@@ -198,7 +205,6 @@ const PetCreate = () => {
     petAggressions,
     petGoodWith,
     petBehaviorInfo,
-    // { Name: petContactName, Phone: petContactPhone },
     {
       clinicName: clinicName,
       addr: clinicAddr,
@@ -209,32 +215,6 @@ const PetCreate = () => {
   ]);
 
   useEffect(ErrorHandle, [petName]);
-
-  const navigate = useNavigate();
-
-  // const UploadFile = (file, fileName) => {
-  //   const fileType = fileName.split("_")[0];
-  //   if (file) {
-  //     const fileRef = ref(storage, fileName);
-  //     uploadBytes(fileRef, file)
-  //       .then(() => {
-  //         getDownloadURL(fileRef)
-  //           .then((downloadURL) => {
-  //             return downloadURL, fileType;
-  //           })
-  //           .catch((error) => {
-  //             console.log("Error uploading file: ", error);
-  //             return "", fileType;
-  //           });
-  //       })
-  //       .catch((error) => {
-  //         console.log("Error uploading file: ", error);
-  //         return "", fileType;
-  //       });
-  //   }
-
-  //   return "", fileType;
-  // };
 
   const UploadFile = async (file, fileName) => {
     if (file) {
@@ -267,46 +247,12 @@ const PetCreate = () => {
         "medical_" + petName + (Math.random() + 1).toString(36).substring(2);
       let pdfURL = await UploadFile(medicalPDF, pdfName); // Promise();
 
-      console.log(
-        "WHY DONT WE HAVE THESE WHAT THE HECK MAN: ",
-        imageURL,
-        pdfURL
-      );
-
-      setImageStoreURL(imageURL);
-      setMedicalStoreURL(pdfURL);
-
-      // Promise.all([imageURL, pdfURL])
-      //   .then((fileUrls) => {
-      //     for (const urlData of fileUrls) {
-      //       console.log(
-      //         "LOOKING AT FULLFILLED PROMISES, WHAT'S IN HERE?",
-      //         urlData
-      //       );
-      //       if (urlData[1] === "image") {
-      //         setImageStoreURL(urlData[0]);
-      //       } else if (urlData[1] === "medical") {
-      //         setMedicalStoreURL(urlData[0]);
-      //       }
-      //     }
-      //   })
-      //   .catch((error) => {
-      //     console.error(`Failed to fetch: ${error}`);
-      //   });
-
       // Step 3: Get the tag and add the pet to the database
       let tag = "";
       const regex = /^\/tag\/[a-zA-Z0-9]{6}\/create$/;
       if (regex.test(window.location.pathname)) {
         tag = window.location.pathname.split("/")[2];
       }
-      if (image) {
-        console.log("Image is not null");
-      }
-      if (medicalPDF) {
-        console.log("PDF is not null");
-      }
-      console.log("Adding pet with URLS", imageStoreURL, medicalStoreURL);
       addPetToDatabase(
         tag,
         petName,
@@ -325,7 +271,6 @@ const PetCreate = () => {
         petAggressions,
         petGoodWith,
         petBehaviorInfo,
-        // { Name: petContactName, Phone: petContactPhone },
         contacts,
         {
           clinicName: clinicName,
@@ -347,128 +292,6 @@ const PetCreate = () => {
         });
     }
   };
-
-  // const UpdateProfile = (e) => {
-  //   console.log("Vaccines in update profile: ", petVaccines);
-  //   e.preventDefault();
-  //   console.log("Vaccines in update profile2: ", petVaccines);
-  //   if (canSubmit) {
-  //     let submitBtn = document.getElementById("create-btn");
-  //     submitBtn.disabled = true;
-  //     if (image) {
-  //       // TODO: Come up with better naming scheme
-  //       const imgName = petName + (Math.random() + 1).toString(36).substring(2);
-  //       const imageRef = ref(storage, imgName);
-  //       uploadBytes(imageRef, image)
-  //         .then(() => {
-  //           getDownloadURL(imageRef)
-  //             .then((url) => {
-  //               // setUrl(url);
-  //               console.log("url: ", url);
-  //               let tag = "";
-  //               const regex = /^\/tag\/[a-zA-Z0-9]{6}\/create$/;
-  //               if (regex.test(window.location.pathname)) {
-  //                 tag = window.location.pathname.split("/")[2];
-  //               }
-  //               addPetToDatabase(
-  //                 tag,
-  //                 petName,
-  //                 petSpecies,
-  //                 petBreed,
-  //                 petDescr,
-  //                 petBirthDate,
-  //                 petWeight,
-  //                 petSex,
-  //                 petAddress,
-  //                 petVaccines,
-  //                 petConditions,
-  //                 petMeds,
-  //                 petAllergies,
-  //                 petHealthInfo,
-  //                 petAggressions,
-  //                 petGoodWith,
-  //                 petBehaviorInfo,
-  //                 // { Name: petContactName, Phone: petContactPhone },
-  //                 contacts,
-  //                 {
-  //                   clinicName: clinicName,
-  //                   addr: clinicAddr,
-  //                   phone: clinicPhone,
-  //                   vetName: vetName,
-  //                   microchipId: microchipId,
-  //                 },
-  //                 url
-  //               )
-  //                 .then((response) => {
-  //                   const path = `/user/account`;
-  //                   setTimeout(navigate(path, { replace: true }), 1000);
-  //                 })
-  //                 .catch((err) => {
-  //                   console.debug(err);
-  //                 });
-  //             })
-  //             .catch((error) => {
-  //               console.log("Error when uploading image: ", error);
-  //             });
-  //         })
-  //         .catch((error) => {
-  //           console.log("Error when uploading image: ", error);
-  //         });
-  //     } else {
-  //       let tag = "";
-  //       const regex = /^\/tag\/[a-zA-Z0-9]{6}\/create$/;
-  //       if (regex.test(window.location.pathname)) {
-  //         tag = window.location.pathname.split("/")[2];
-  //       }
-  //       addPetToDatabase(
-  //         tag,
-  //         petName,
-  //         petSpecies,
-  //         petBreed,
-  //         petDescr,
-  //         petBirthDate,
-  //         petWeight,
-  //         petSex,
-  //         petAddress,
-  //         petVaccines,
-  //         petConditions,
-  //         petMeds,
-  //         petAllergies,
-  //         petHealthInfo,
-  //         petAggressions,
-  //         petGoodWith,
-  //         petBehaviorInfo,
-  //         // { Name: petContactName, Phone: petContactPhone },
-  //         contacts,
-  //         {
-  //           clinicName: clinicName,
-  //           addr: clinicAddr,
-  //           phone: clinicPhone,
-  //           vetName: vetName,
-  //           microchipId: microchipId,
-  //         },
-  //         ""
-  //       )
-  //         .then((response) => {
-  //           const path = `/user/account`;
-  //           setTimeout(navigate(path, { replace: true }), 1000);
-  //         })
-  //         .catch((err) => {
-  //           console.debug(err);
-  //         });
-  //     }
-  //   }
-  // };
-
-  // const UpdatePreviewImg = () => {
-  //   if (image) {
-  //     let profileImage = document.getElementById("pet-img");
-  //     let imagePrev = URL.createObjectURL(image);
-  //     profileImage.src = imagePrev;
-  //   }
-  // };
-
-  // useEffect(UpdatePreviewImg, [image, openCrop]);
 
   // Select Arrays
   const PetTypes = [

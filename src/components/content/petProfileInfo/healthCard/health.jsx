@@ -27,6 +27,7 @@ const HealthInformation = ({ userID, petID }) => {
   const [medications, setMedications] = useState([]);
   const [allergies, setAllergies] = useState([]);
   const [healthInfo, setHealthInfo] = useState("");
+  const [pdfURL, setPdfURL] = useState("");
   //const petID = window.location.pathname.split("/")[4];
 
   const ExpandTile = () => {
@@ -50,6 +51,7 @@ const HealthInformation = ({ userID, petID }) => {
         "meds",
         "allergies",
         "healthInfo",
+        "medicalUrl",
       ]);
 
       if (petHealth) {
@@ -58,6 +60,7 @@ const HealthInformation = ({ userID, petID }) => {
         setMedications(petHealth["meds"]);
         setAllergies(petHealth["allergies"]);
         setHealthInfo(petHealth["healthInfo"]);
+        setPdfURL(petHealth["medicalUrl"]);
       }
     }
     fetchPetData();
@@ -107,6 +110,14 @@ const HealthInformation = ({ userID, petID }) => {
             <div className="health-info-text">
               <p>{healthInfo}</p>
             </div>
+            {/* Add the Medical History File link */}
+            {pdfURL && (
+              <p className="health-info-label">
+                <a href={pdfURL} target="_blank" rel="noopener noreferrer">
+                  Medical History File
+                </a>
+              </p>
+            )}
           </div>
         )}
       </div>
