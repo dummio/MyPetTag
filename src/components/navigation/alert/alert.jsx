@@ -65,11 +65,10 @@ const Alert = () => {
       );
 
       return () => {
-        // Clean up the Firebase listener when the component unmounts
         unsub();
       };
     }
-  }, [myDoc]); // Listen for changes in the 'doc' state
+  }, [myDoc]);
 
   async function deleteMessage(msgID) {
     let newAlerts = await deleteAlert(msgID);
@@ -80,8 +79,6 @@ const Alert = () => {
       setMessages([]);
       setCount(0);
     }
-
-    async function deleteAllAlerts() {}
   }
 
   return (
@@ -92,8 +89,8 @@ const Alert = () => {
           <FontAwesomeIcon icon={faBell} />
         </div>
         {hide && (
-          <div className="alert-menu" onClick={() => deleteAllAlerts()}>
-            <div id="clear-alert-btn">
+          <div className="alert-menu">
+            <div id="clear-alert-btn" onClick={() => deleteAllAlerts()}>
               <p>Clear All Alerts</p>
             </div>
             {messages.map((msg) => {
