@@ -628,3 +628,10 @@ export async function setIsPetLost(pid, lost) {
   await updateDoc(userDocRef, { pets: userDocData.pets });
   window.location.reload();
 }
+
+export async function getUserDocRef() {
+  const uid = await authStateChangedWrapper();
+  //console.log(uid);
+  const userDocRef = doc(db, "users", uid);
+  return userDocRef;
+}
