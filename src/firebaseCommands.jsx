@@ -233,7 +233,9 @@ export async function updatePetInDatabase(petInfo) {
         );
         return false;
       } else {
-        petInfo.isLost = userPets[petIndex].isLost; // Keep lost status
+        petInfo.isLost = userPets[petIndex].isLost ?? false; // Keep lost status
+
+        console.log(petInfo);
         userPets[petIndex] = petInfo;
         await updateDoc(userDocRef, {
           pets: userPets,
