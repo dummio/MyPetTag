@@ -33,6 +33,7 @@ import {
 // Import Modules
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
+import LoadingModal from "../../modals/loadingModal";
 
 // For cropping
 import CropEasy from "../../crop/CropEasy";
@@ -77,6 +78,8 @@ const PetCreate = () => {
 
   const [openCrop, setOpenCrop] = useState(false);
   const [photoURL, setPhotoURL] = useState(null);
+
+  const [showLoad, setShowLoad] = useState(false);
 
   useEffect(() => {
     async function fetchUid() {
@@ -195,6 +198,7 @@ const PetCreate = () => {
     if (canSubmit) {
       let submitBtn = document.getElementById("create-btn");
       submitBtn.disabled = true;
+      setShowLoad(true);
       if (image) {
         // TODO: Come up with better naming scheme
         const imgName = petName + (Math.random() + 1).toString(36).substring(2);
@@ -241,6 +245,7 @@ const PetCreate = () => {
                 )
                   .then((response) => {
                     const path = `/user/account`;
+                    setShowLoad(false);
                     setTimeout(navigate(path, { replace: true }), 1000);
                   })
                   .catch((err) => {
@@ -860,6 +865,7 @@ const PetCreate = () => {
             />
           </>
         )}
+        <LoadingModal showModal={showLoad} setShowModal={setShowLoad} />
         <input
           id="create-btn"
           type="submit"

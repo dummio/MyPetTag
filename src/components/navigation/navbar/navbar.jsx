@@ -82,8 +82,8 @@ const NavBar = () => {
     } else {
       return (
         <div className="nav-menu">
-          <a href="/shop">
-            <h1 className="nav-menu-item">Shop</h1>
+          <a href="/about">
+            <h1 className="nav-menu-item">About / FAQ</h1>
           </a>
           <a href="/login">
             <h1 className="nav-menu-item">Login</h1>
