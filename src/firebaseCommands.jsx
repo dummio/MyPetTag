@@ -160,9 +160,10 @@ export async function addPetToDatabase(
     // if (petID_ == undefined) {
     //   petID_ = 0;
     // }
+    console.log("WHAT IS NUMPETS?", numPets);
 
     const petID_ =
-      numPets === undefined
+      numPets === undefined || numPets === 0
         ? 0
         : userDocSnap.data().pets[numPets - 1].petID + 1;
 
@@ -233,6 +234,7 @@ export async function updatePetInDatabase(petInfo) {
         );
         return false;
       } else {
+        petInfo.tag = userPets[petIndex].tag;
         petInfo.isLost = userPets[petIndex].isLost ?? false; // Keep lost status
 
         console.log(petInfo);

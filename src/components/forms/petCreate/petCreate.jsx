@@ -222,7 +222,6 @@ const PetCreate = () => {
       try {
         await uploadBytes(fileRef, file);
         const downloadURL = await getDownloadURL(fileRef);
-        console.log("**********RETURNING ", downloadURL);
         return downloadURL;
       } catch (error) {
         console.log("Error uploading file: ", error);

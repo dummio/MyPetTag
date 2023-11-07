@@ -108,6 +108,10 @@ const PetEdit = () => {
         setPhotoURL(petData["imageUrl"]);
       }
 
+      if (petData["medicalUrl"]) {
+        setPdfURL(petData["medicalUrl"]);
+      }
+
       setPageReady(true);
       return {
         petName: petData["name"] ?? "",
@@ -238,7 +242,22 @@ const PetEdit = () => {
     }
   }, [petSpecies, CatBreeds, DogBreeds]);
 
-  function formSubmit(data) {
+  const UploadFile = async (file, fileName) => {
+    if (file) {
+      const fileRef = ref(storage, fileName);
+      try {
+        await uploadBytes(fileRef, file);
+        const downloadURL = await getDownloadURL(fileRef);
+        return downloadURL;
+      } catch (error) {
+        console.log("Error uploading file: ", error);
+        return "";
+      }
+    }
+    return "";
+  };
+
+  async function formSubmit(data) {
     const pet = {
       petID: petID,
       name: data.petName,
@@ -269,45 +288,70 @@ const PetEdit = () => {
       medicalUrl: pdfURL,
     };
 
-    if (image) {
-      // TODO: Come up with better naming scheme
-      const imgName = petName + (Math.random() + 1).toString(36).substring(2);
-      const imageRef = ref(storage, imgName);
-      uploadBytes(imageRef, image)
-        .then(() => {
-          getDownloadURL(imageRef)
-            .then((url) => {
-              setPhotoURL(url);
-              pet.imageUrl = url;
-              pet.medicalUrl = "";
-              updatePetInDatabase(pet)
-                .then((success) => {
-                  const path = `/user/account`;
-                  setTimeout(navigate(path, { replace: true }), 1000);
-                })
-                .catch((err) => {
-                  console.error(err);
-                });
-            })
-            .catch((error) => {
-              console.error("Error when uploading image: ", error);
-            });
-        })
-        .catch((error) => {
-          console.error("Error when uploading image: ", error);
-        });
-    } else {
-      updatePetInDatabase(pet)
-        .then((success) => {
-          if (success) {
-            const path = `/user/account`;
-            setTimeout(navigate(path, { replace: true }), 1000);
-          }
-        })
-        .catch((err) => {
-          console.error(err);
-        });
+    const imgName =
+      "image_" + petName + (Math.random() + 1).toString(36).substring(2);
+    let petImageURL = await UploadFile(image, imgName); // Promise();
+
+    const pdfName =
+      "medical_" + petName + (Math.random() + 1).toString(36).substring(2);
+    let medPdfURL = await UploadFile(medicalPDF, pdfName); // Promise();
+
+    if (petImageURL) {
+      pet.imageUrl = petImageURL;
     }
+
+    if (medPdfURL) {
+      pet.medicalUrl = medPdfURL;
+    }
+
+    updatePetInDatabase(pet)
+      .then((success) => {
+        const path = `/user/account`;
+        setTimeout(navigate(path, { replace: true }), 1000);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+
+    // if (image) {
+    //   // TODO: Come up with better naming scheme
+    //   const imgName = petName + (Math.random() + 1).toString(36).substring(2);
+    //   const imageRef = ref(storage, imgName);
+    //   uploadBytes(imageRef, image)
+    //     .then(() => {
+    //       getDownloadURL(imageRef)
+    //         .then((url) => {
+    //           setPhotoURL(url);
+    //           pet.imageUrl = url;
+    //           pet.medicalUrl = "";
+    //           updatePetInDatabase(pet)
+    //             .then((success) => {
+    //               const path = `/user/account`;
+    //               setTimeout(navigate(path, { replace: true }), 1000);
+    //             })
+    //             .catch((err) => {
+    //               console.error(err);
+    //             });
+    //         })
+    //         .catch((error) => {
+    //           console.error("Error when uploading image: ", error);
+    //         });
+    //     })
+    //     .catch((error) => {
+    //       console.error("Error when uploading image: ", error);
+    //     });
+    // } else {
+    //   updatePetInDatabase(pet)
+    //     .then((success) => {
+    //       if (success) {
+    //         const path = `/user/account`;
+    //         setTimeout(navigate(path, { replace: true }), 1000);
+    //       }
+    //     })
+    //     .catch((err) => {
+    //       console.error(err);
+    //     });
+    // }
   }
 
   const UploadImage = (e) => {
