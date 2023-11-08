@@ -36,6 +36,9 @@ const LocationService = ({ userID, petID }) => {
   useEffect(() => {
     async function getLostStatus() {
       const status = await getPetData(userID, petID, ["isLost"]);
+      if (!status) {
+        return null;
+      }
       if (status["isLost"] != null) {
         setIsLost(status["isLost"]);
         if (status["isLost"]) {
