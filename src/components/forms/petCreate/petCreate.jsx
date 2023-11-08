@@ -239,6 +239,7 @@ const PetCreate = () => {
       // Step 1: Disable submit button to prevent duplicate pet creation
       let submitBtn = document.getElementById("create-btn");
       submitBtn.disabled = true;
+      setShowLoad(true);
 
       // Step 2: Handle file uploads: Upload files to firestore and get URLs
       const imgName =
@@ -287,6 +288,7 @@ const PetCreate = () => {
         // Step 4: Navigate to user account page
         .then((response) => {
           const path = `/user/account`;
+          setShowLoad(false);
           setTimeout(navigate(path, { replace: true }), 1000);
         })
         .catch((err) => {
