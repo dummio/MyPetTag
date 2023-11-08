@@ -57,7 +57,7 @@ const Alert = () => {
         (docSnapshot) => {
           const tempAlerts = docSnapshot.data().alerts;
           setMessages(tempAlerts);
-          setCount(tempAlerts.length);
+          setCount(tempAlerts?.length);
         },
         (err) => {
           console.log(`Encountered error: ${err}`);

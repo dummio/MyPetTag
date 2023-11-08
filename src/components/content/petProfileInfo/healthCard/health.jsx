@@ -10,7 +10,7 @@ import React, { useEffect, useState } from "react";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./health.css";
-import { getPetData } from "../../../../firebaseCommands";
+import { getPetData, isUserAuthenticated } from "../../../../firebaseCommands";
 
 /**
  * Has Not been Implemented Yet
@@ -27,7 +27,9 @@ const HealthInformation = ({ userID, petID }) => {
   const [medications, setMedications] = useState([]);
   const [allergies, setAllergies] = useState([]);
   const [healthInfo, setHealthInfo] = useState("");
+  const [pdfURL, setPdfURL] = useState("");
   //const petID = window.location.pathname.split("/")[4];
+  const [isAuthed, setIsAuthed] = useState(false);
 
   const ExpandTile = () => {
     show(!hide);
@@ -50,6 +52,7 @@ const HealthInformation = ({ userID, petID }) => {
         "meds",
         "allergies",
         "healthInfo",
+        "medicalUrl",
       ]);
 
       if (petHealth) {
@@ -58,9 +61,18 @@ const HealthInformation = ({ userID, petID }) => {
         setMedications(petHealth["meds"]);
         setAllergies(petHealth["allergies"]);
         setHealthInfo(petHealth["healthInfo"]);
+        setPdfURL(petHealth["medicalUrl"]);
       }
     }
     fetchPetData();
+  }, []);
+
+  useEffect(() => {
+    const getAuthState = async () => {
+      const data = await isUserAuthenticated();
+      setIsAuthed(data);
+    };
+    getAuthState();
   }, []);
 
   return (
@@ -107,6 +119,16 @@ const HealthInformation = ({ userID, petID }) => {
             <div className="health-info-text">
               <p>{healthInfo}</p>
             </div>
+            {/* Add the Medical History File link */}
+            {pdfURL &&
+              isAuthed &&
+              window.location.pathname.split("/")[1] != "tag" && (
+                <p className="health-info-label">
+                  <a href={pdfURL} target="_blank" rel="noopener noreferrer">
+                    Medical History File
+                  </a>
+                </p>
+              )}
           </div>
         )}
       </div>
