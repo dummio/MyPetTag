@@ -20,7 +20,6 @@ import {
   updateEmail,
   signOut,
   onAuthStateChanged,
-  AuthCredential,
   EmailAuthProvider,
   reauthenticateWithCredential,
 } from "firebase/auth";
@@ -111,7 +110,6 @@ export async function updateAccountInfo(data) {
 }
 
 export async function changeAccountEmail(newEmail) {
-  console.log("Email: ", newEmail);
   try {
     const user = auth.currentUser;
 
@@ -133,7 +131,6 @@ export async function changeAccountEmail(newEmail) {
 }
 
 export async function changeAccountPassword(newPassword) {
-  console.log("Password: ", newPassword);
   try {
     const user = auth.currentUser;
 

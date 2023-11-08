@@ -76,14 +76,6 @@ const AccountSettings = () => {
   }
 
   async function formSubmit(data) {
-    const userInfo = {
-      firstname: data.firstName,
-      lastname: data.lastName,
-      phone: data.userPhone,
-    };
-
-    let infoSuccess = await updateAccountInfo(userInfo);
-
     let emailSuccess = true;
     let passwordSuccess = true;
     if (data.userEmail !== currentEmail || !_.isEmpty(data.newPassword)) {
@@ -95,12 +87,20 @@ const AccountSettings = () => {
           passwordSuccess = await changeAccountPassword(data.newPassword);
       } else {
         alert(
-          'Failed to save some account settings.\nPlease check that you are inputting your current password correctly.'
+          'Failed to save account settings.\n\n' +
+            "Please check that you're inputting your current password correctly."
         );
-        passwordSuccess = false;
-        emailSuccess = false;
+        return;
       }
     }
+
+    const userInfo = {
+      firstname: data.firstName,
+      lastname: data.lastName,
+      phone: data.userPhone,
+    };
+
+    let infoSuccess = await updateAccountInfo(userInfo);
 
     console.log('Info success: ', infoSuccess);
     console.log('Email success: ', emailSuccess);
@@ -130,9 +130,13 @@ const AccountSettings = () => {
       </div>
       <div id="settings-title-container">
         <h1 id="settings-title">Account Settings</h1>
-        <p id="settings-title-sub">Edit account and security settings.</p>
+        <p id="settings-title-sub">
+          Edit account and security settings.
+        </p>
       </div>
       <form id="settings-form" onSubmit={handleSubmit(formSubmit)}>
+        <span style={{ color: '#ff0000' }}>* indicates a required field</span>
+        <br/>
         <label>First Name</label>
         <div className="error-container">
           {errors.firstName && _.get(errors, 'firstName.message')}
@@ -214,7 +218,7 @@ const AccountSettings = () => {
         />
         {(watch('userEmail') !== currentEmail || !_.isEmpty(watch('newPassword'))) && (
           <>
-            <label>Current Password</label>
+            <label>Current Password <span style={{ color: '#ff0000' }}>*</span></label>
             <div className="error-container">{_.get(errors, 'password.message')}</div>
             <input
               className="form-input"
