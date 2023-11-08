@@ -38,14 +38,22 @@ const AboutInfo = () => {
       <div id="company-about">
         <h2>Mission:</h2>
         <p>
-          MyPetTag provides pet owners with an smart pet tag solution, its goal
-          being to reunite owners with their lost pets while providing the best
-          care possible. MyPetTag users create a detailed pet profile that
-          displays current and relevant information to anyone who finds their
-          furry friend. By sharing information such as basic information, health
-          information, behavior information, and preferred Veterinarian.
-          MyPetTag is able to give owners and finders ease of mind knowing that
-          their pet will receive the best care possible.
+          MyPetTag offers a smart pet tag solution to pet owners, with the goal
+          of reuniting them with their lost pets while ensuring the best
+          possible care for their furry companions. Through our dynamic web
+          application, users can create a detailed pet profile for one of our
+          smart pet tags. Owners can input various details about their pets,
+          including basic information, health status, behavior traits, and
+          preferred veterinary care. MyPetTag provides owners with the peace of
+          mind that their lost pet will receive the best care from those who
+          find them. When a pet goes missing, anyone who finds the lost pet can
+          access valuable information about the pet by simply scanning the pet’s
+          tag using a QR code scanner or NFC chip reader. This equips them to
+          offer a high-quality level of care and ensures the well-being of the
+          animals they treat. MyPetTag not only benefits pet owners and those
+          who find lost pets but also streamlines the process for veterinary
+          professionals, granting them access to crucial information for
+          providing optimal care.
         </p>
         <h2>Technology:</h2>
         <p>
