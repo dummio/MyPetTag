@@ -15,7 +15,7 @@ import HealthInformation from "../content/petProfileInfo/healthCard/health";
 import BehaviorInformation from "../content/petProfileInfo/behaviorCard/behavior";
 import VetProvider from "../content/petProfileInfo/vetProviderCard/vetProvider";
 import LocationService from "../content/petProfileInfo/locationServices/locationService";
-import { getUserAndPetIDFromTag, getUserData } from "../../firebaseCommands";
+import { getUserAndPetIDFromTag, writeUserAlert, getPetData } from "../../firebaseCommands";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../../images/paw.png";
 
@@ -32,15 +32,16 @@ const PetProfile = () => {
     async function fetchData() {
       try {
         if (window.location.pathname.split("/")[1] == "tag") {
+          //send user an alert
           const ids = await getUserAndPetIDFromTag(
             window.location.pathname.split("/")[2]
           );
           setUID(ids[0]);
           setPID(ids[1]);
+          const petName = await getPetData(ids[0], ids[1], ["name"]);
+          const message = `${petName["name"]}'s tag was scanned`;
+          await writeUserAlert(ids[0], ids[1], message);
         } else {
-          // const userData = await getUserData();
-          // const uid = userData[0].uid;
-          // setUID(uid);
           setPID(window.location.pathname.split("/")[3]);
         }
       } catch (error) {

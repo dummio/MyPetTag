@@ -225,7 +225,8 @@ export async function addPetToDatabase(
   behavior_,
   contacts_,
   vets_,
-  imageUrl_
+  imageUrl_,
+  medicalUrl_
 ) {
   const uid = await authStateChangedWrapper();
   try {
@@ -237,9 +238,10 @@ export async function addPetToDatabase(
     // if (petID_ == undefined) {
     //   petID_ = 0;
     // }
+    console.log("WHAT IS NUMPETS?", numPets);
 
     const petID_ =
-      numPets === undefined
+      numPets === undefined || numPets === 0
         ? 0
         : userDocSnap.data().pets[numPets - 1].petID + 1;
 
@@ -266,6 +268,7 @@ export async function addPetToDatabase(
       contacts: contacts_,
       vets: vets_,
       imageUrl: imageUrl_,
+      medicalUrl: medicalUrl_,
     };
 
     console.log(pet);
@@ -309,7 +312,10 @@ export async function updatePetInDatabase(petInfo) {
         );
         return false;
       } else {
-        petInfo.isLost = userPets[petIndex].isLost; // Keep lost status
+        petInfo.tag = userPets[petIndex].tag;
+        petInfo.isLost = userPets[petIndex].isLost ?? false; // Keep lost status
+
+        console.log(petInfo);
         userPets[petIndex] = petInfo;
         await updateDoc(userDocRef, {
           pets: userPets,
@@ -704,4 +710,11 @@ export async function setIsPetLost(pid, lost) {
   }
   await updateDoc(userDocRef, { pets: userDocData.pets });
   window.location.reload();
+}
+
+export async function getUserDocRef() {
+  const uid = await authStateChangedWrapper();
+  //console.log(uid);
+  const userDocRef = doc(db, "users", uid);
+  return userDocRef;
 }

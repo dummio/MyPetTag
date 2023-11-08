@@ -1,0 +1,115 @@
+/**
+ * MyPetTag - All rights reserved (c) 2023
+ * Maintainers: Ashton Foulger, Kevin Xue, Sameer Khan
+ */
+
+#about-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.logo {
+  background-color: #75af96;
+  border-radius: 50%;
+}
+
+.company-title {
+  font-size: 48px;
+  font-weight: bold;
+  max-width: 500px;
+}
+
+#company-about {
+  min-width: 300px;
+  max-width: 700px;
+}
+#company-about h2 {
+  margin: 10px;
+}
+
+#company-about p {
+  text-align: justify;
+  margin: 10px;
+}
+
+#company-about a {
+  cursor: pointer;
+  font-size: 20px;
+}
+
+#profile-cards-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  margin-bottom: 25px;
+  max-width: 700px;
+}
+
+.profile-card {
+  height: 400px;
+  width: 300px;
+  border-radius: 16px;
+  background-color: #75af96;
+  margin-bottom: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0px 8px 10px 0px rgba(0, 0, 0, 0.25);
+}
+
+.profile-pic {
+  border-radius: 50%;
+  object-fit: cover;
+  margin-top: 16px;
+  border: solid 5px white;
+}
+
+/* #003a21 */
+
+.profile-card h2 {
+  margin: 6px;
+}
+
+.profile-card h4 {
+  margin: 0px;
+}
+
+.profile-interests {
+  height: 100px;
+  width: 250px;
+}
+
+.profile-interests p {
+  margin: 10px 0px 10px 0px;
+  text-align: center;
+}
+
+.profile-contact {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  font-size: 24px;
+  width: inherit;
+}
+
+.contact-icon {
+  background-color: #003a21;
+  width: 60px;
+  height: 40px;
+  border-radius: 6px;
+  color: white;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.contact-icon a {
+  text-decoration: none;
+  color: white;
+  cursor: pointer;
+}

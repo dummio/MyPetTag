@@ -4,7 +4,7 @@
  */
 
 // Import React
-import React from "react";
+import React, { useState } from "react";
 
 // Import CSS
 import "./lostModal.css";
@@ -14,9 +14,10 @@ import { faCircleExclamation, faX } from "@fortawesome/free-solid-svg-icons";
 // Import Firebase Commands
 import { sendFoundPetEmail } from "../../emailJSCommands";
 import { writeUserAlert } from "../../firebaseCommands";
+import ShareLocationModal from "./shareLocationModal";
 
 /**
- * Show modal for password requirements.
+ * Show modal for lost pets.
  *
  * @param boolean Show Modal
  * @returns HTML element
@@ -29,19 +30,18 @@ const LostModal = ({
   petName,
   healthConditions,
 }) => {
+  const [showShared, setShowShared] = useState(false);
+  const [lat, setLat] = useState(0);
+  const [long, setLong] = useState(0);
   const GetLocation = () => {
     navigator.geolocation.getCurrentPosition((position) => {
       let lat = position.coords.latitude;
       let lon = position.coords.longitude;
-
+      setLat(lat);
+      setLong(lon);
+      setShowShared((prev) => !prev);
       sendFoundPetEmail(userID, lat, lon);
       writeUserAlert(userID, petID, "Tag location shared!");
-      alert(
-        "You've alerted the owner that their pet was found at: '" +
-          lat +
-          ", " +
-          lon
-      );
     });
   };
 
@@ -110,6 +110,12 @@ const LostModal = ({
           </div>
         </div>
       ) : null}
+      <ShareLocationModal
+        showModal={showShared}
+        setShowModal={setShowShared}
+        lat={lat}
+        long={long}
+      />
     </>
   );
 };
