@@ -4,7 +4,7 @@
  */
 
 // Import React Modules
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 // Import Components
 import NavBar from "../navigation/navbar/navbar";
@@ -23,6 +23,7 @@ import {
 } from "../../firebaseCommands";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../../images/paw.png";
+import { RememberTagContext } from "../providers/rememberTagProvider";
 
 /**
  * Pet Profile Page
@@ -33,6 +34,8 @@ const PetProfile = () => {
   const [uID, setUID] = useState(null);
   const [pID, setPID] = useState(null);
   const [authed, setAuthed] = useState(null);
+
+  const { rememberedTag, setRemeberedTag } = useContext(RememberTagContext);
 
   useEffect(() => {
     async function fetchData() {
@@ -122,17 +125,72 @@ const PetProfile = () => {
     }
     // Otherwise, navigate to the home page with the tagID as a query param
     else {
+      console.log("NON AUTHED THINGYMABOBERUNK");
       // Extract the desired query parameter value
-      const queryParameterValue = window.location.pathname.split("/")[2];
+      const scannedTagID = window.location.pathname.split("/")[2];
 
-      // Create a URL object from the current URL
-      const url = new URL(window.location.href);
+      console.log("The remmebered tag in petProfile.jsx: ", rememberedTag);
+      setRemeberedTag(scannedTagID);
+      console.log(
+        "The remmebered tag in petProfile.jsx (after setting): ",
+        rememberedTag
+      );
 
-      // Set the query parameter with the extracted value
-      url.search = `parameterName=${queryParameterValue}`;
+      // // Create a URL object from the current URL
+      // const url = new URL(window.location.href);
 
-      // Navigate to the new URL with the added query parameter
-      navigate(`/?scannedTag=${queryParameterValue}`, { replace: true });
+      // // Set the query parameter with the extracted value
+      // url.search = `parameterName=${scannedTagID}`;
+
+      // // Navigate to the new URL with the added query parameter
+      // navigate(`/?scannedTag=${scannedTagID}`, { replace: true });
+      return (
+        <React.Fragment>
+          <NavBar />
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "100%",
+              flex: "1 1 auto",
+            }}
+          >
+            <img
+              className="logo"
+              src={logo}
+              alt="MyPetTag"
+              width={250}
+              height={250}
+            />
+            <div className="company-title">
+              My<span style={{ color: "#75af96" }}>PetTag</span>
+            </div>
+            <p
+              style={{
+                fontSize: "24px",
+                textAlign: "center",
+                maxWidth: "500px",
+              }}
+            >
+              You scanned a new tag!{" "}
+              <Link
+                to="/"
+                // onClick={() => navigate("../create", { replace: true })}
+                style={{
+                  textDecoration: "none",
+                  borderBottom: "2px solid #0f5738",
+                  color: "black",
+                }}
+              >
+                Click here to login to create a pet profile associated with this
+                tag.
+              </Link>
+            </p>
+          </div>
+        </React.Fragment>
+      );
     }
   }
 
