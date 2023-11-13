@@ -613,9 +613,19 @@ export async function getUserAndPetIDFromTag(tagID) {
   const tagCodeRef = doc(db, "tags", tagID);
   const tagCodeSnap = await getDoc(tagCodeRef);
   console.log("data: ", tagCodeSnap.data());
+  // Option 1: The tag is valid (exists in db) and points to a pet
   if (tagCodeSnap.data() && tagCodeSnap.data().UserID) {
+    console.log("TAG IN USE");
     return [tagCodeSnap.data().UserID, tagCodeSnap.data().Pet];
-  } else {
+  }
+  // Option 2: The tag is valid (exists in db) and is not in use
+  else if (tagCodeSnap.data()) {
+    console.log("TAG EMPTY");
+    return ["empty", "empty"];
+  }
+  // Option 3: The tag is invalid (not in db)
+  else {
+    console.log("INVALID TAG");
     return ["not found", "not found"];
   }
 }
