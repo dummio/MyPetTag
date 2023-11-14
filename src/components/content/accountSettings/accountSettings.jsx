@@ -139,7 +139,7 @@ const AccountSettings = () => {
       <form id="settings-form" onSubmit={handleSubmit(formSubmit)}>
         <span style={{ color: '#ff0000' }}>* indicates a required field</span>
         <br/>
-        <label>First Name</label>
+        <label>First Name<span style={{ color: '#ff0000' }}>*</span></label>
         <div className="error-container">
           {errors.firstName && _.get(errors, 'firstName.message')}
         </div>
@@ -150,7 +150,7 @@ const AccountSettings = () => {
             required: 'First Name cannot be blank.',
           })}
         />
-        <label>Last Name</label>
+        <label>Last Name<span style={{ color: '#ff0000' }}>*</span></label>
         <div className="error-container">
           {errors.firstName && _.get(errors, 'firstName.message')}
         </div>
@@ -161,7 +161,7 @@ const AccountSettings = () => {
             required: 'Last Name cannot be blank.',
           })}
         />
-        <label>Phone</label>
+        <label>Phone<span style={{ color: '#ff0000' }}>*</span></label>
         <div className="error-container">{_.get(errors, 'userPhone.message')}</div>
         <input
           className="form-input"
@@ -175,7 +175,7 @@ const AccountSettings = () => {
             required: 'Phone cannot be blank.',
           })}
         />
-        <label>Email</label>
+        <label>Email<span style={{ color: '#ff0000' }}>*</span></label>
         <div className="error-container">{_.get(errors, 'userEmail.message')}</div>
         <input
           className="form-input"
@@ -188,8 +188,8 @@ const AccountSettings = () => {
             },
           })}
         />
-        <label>Zip Code (optional)</label>
-        <p className="label-subtext">Will be used for notifying about nearby lost pets if set.</p>
+        <label>Zip Code</label>
+        <p className="label-subtext">For MyPetTag lost pet alert network.</p>
         <div className="error-container">
           {errors.address && _.get(errors, "zipcode.message")}
         </div>

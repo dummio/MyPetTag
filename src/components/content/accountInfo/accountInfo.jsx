@@ -8,8 +8,6 @@ import React, { useState, useEffect } from "react";
 import PetProfileButton from "./petProfileButton";
 import { useForm } from 'react-hook-form';
 import { useNavigate } from "react-router-dom";
-import _ from "lodash";
-
 
 // Import CSS
 import "./accountInfo.css";
