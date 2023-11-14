@@ -60,4 +60,36 @@ test("Login Look at Pet Profile", async ({ page }) => {
   await page.getByText("Name: Maria Belafonte").click();
   await page.getByText("Email: mbelafonte@gmail.com").click();
   await page.getByText("Phone: 801-855-9595").click();
+  await page.close();
+});
+
+test("Login goto Account Settings", async ({ page }) => {
+  await page.goto("https://mypettag-5970e.web.app/");
+  await page.goto("https://mypettag-5970e.web.app/login");
+  await page.locator('input[type="text"]').click();
+  await page.locator('input[type="text"]').fill("mbelafonte@gmail.com");
+  await page.locator('input[type="password"]').click();
+  await page.locator('input[type="password"]').fill("Abcd123!");
+  await page.getByRole("button", { name: "Login" }).click();
+  await page.getByRole("heading", { name: "Maria" }).locator("path").click();
+  await page.getByRole("heading", { name: "Account Settings" }).click();
+  await page.close();
+});
+
+test("Login goto Account Settings From Navbar", async ({ page }) => {
+  await page.goto("https://mypettag-5970e.web.app/");
+  await page.goto("https://mypettag-5970e.web.app/login");
+  await page.locator('input[type="text"]').click();
+  await page.locator('input[type="text"]').fill("mbelafonte@gmail.com");
+  await page.locator('input[type="password"]').click();
+  await page.locator('input[type="password"]').fill("Abcd123!");
+  await page.getByRole("button", { name: "Login" }).click();
+  await page.locator("#navbar-container div").first().click();
+  await page.waitForTimeout(2000);
+  await page.goto("https://mypettag-5970e.web.app/user/settings");
+  await page.getByRole("heading", { name: "Account Settings" }).click();
+  await page.getByText("Edit account and security settings.").click();
+  await page.locator("#navbar-container div").first().click();
+  await page.getByRole("link", { name: "Account" }).click();
+  await page.close();
 });
