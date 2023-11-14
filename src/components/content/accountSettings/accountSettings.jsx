@@ -44,7 +44,7 @@ const AccountSettings = () => {
     register,
     watch,
     handleSubmit,
-    formState: { errors, isDirty, isSubmitting, isLoading },
+    formState: { errors, isSubmitting, isLoading },
   } = useForm({
     mode: 'onTouched',
     defaultValues: getInitialValues,
@@ -85,8 +85,6 @@ const AccountSettings = () => {
       const updateChanges = async (data) => {
         let emailSuccess = true;
         let passwordSuccess = true;
-        console.log(currentEmail);
-        console.log(data.newPassword);
         if (data.userEmail !== currentEmail || !_.isEmpty(data.newPassword)) {
           let reauthenticatedUser = await reauthenticateCurrentUser(data.password);
           if (reauthenticatedUser) {

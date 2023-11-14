@@ -89,7 +89,6 @@ const AccountInformation = () => {
   }
 
   const handlePetDeletion = async () => {
-    console.log('selected pet being deleted: ', selectedPet);
     await removePetFromDatabase(selectedPet['id']);
 
     const updatedRealPet = realPet.filter((userPet) => userPet.Key !== selectedPet['id']);
@@ -212,7 +211,6 @@ const AccountInformation = () => {
               style={{ height: '31px', cursor: 'pointer' }}
               onClick={() => {
                 setDeleting(!deleting);
-                console.log('deleting: ', deleting);
               }}
             />
           </div>
