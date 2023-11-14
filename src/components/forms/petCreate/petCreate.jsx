@@ -4,7 +4,7 @@
  */
 
 // Import React
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import {
   addPetToDatabase,
   getPetBreeds,
@@ -29,6 +29,8 @@ import {
   faChevronDown,
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
+
+import { RememberTagContext } from "../../providers/rememberTagProvider";
 
 // Import Modules
 import Select from "react-select";
@@ -81,6 +83,8 @@ const PetCreate = () => {
   const [showLoad, setShowLoad] = useState(false);
 
   const [currentTag, setCurrentTag] = useState("");
+
+  const { rememberedTag, setRemeberedTag } = useContext(RememberTagContext);
 
   const navigate = useNavigate();
 
@@ -288,8 +292,11 @@ const PetCreate = () => {
         imageURL,
         pdfURL
       )
-        // Step 4: Navigate to user account page
+        // Step 4: Navigate to user account page. Make sure to clear the remembered tag
+        // if the user got here by scanning a new tag
         .then((response) => {
+          localStorage.setItem("rememberedTag", "");
+          setRemeberedTag("");
           const path = `/user/account`;
           setShowLoad(false);
           setTimeout(navigate(path, { replace: true }), 1000);
@@ -424,7 +431,6 @@ const PetCreate = () => {
             <Link
               to="/input-code"
               onClick={() => {
-                console.log("NAV NAV NAV NAVIGATIONG KM;ASDFLKJ");
                 navigate("/input-code", { replace: true });
               }}
               // onClick={() => navigate("../create", { replace: true })}

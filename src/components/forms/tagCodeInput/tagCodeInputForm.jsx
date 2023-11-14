@@ -4,7 +4,7 @@
  */
 
 // Import React Modules
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 // Import CSS
@@ -14,9 +14,20 @@ import "./tagCodeInputForm.css";
 //import firebase command
 import { checkTagIdTaken } from "../../../firebaseCommands";
 
+import { RememberTagContext } from "../../providers/rememberTagProvider";
+
 const TagCodeInputEditForm = () => {
   const [tagCode, setTagCodeReg] = useState("");
   const [canSubmit, setCanSubmit] = useState(false);
+
+  const { rememberedTag, setRemeberedTag } = useContext(RememberTagContext);
+
+  // If a user has navigated to the tag code input form, we can assume they
+  // no longer want to use the new tag ID they scanned, so clear it
+  useEffect(() => {
+    localStorage.setItem("rememberedTag", "");
+    setRemeberedTag("");
+  });
 
   const ValidateForm = () => {
     let isValid = false;
