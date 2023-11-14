@@ -17,6 +17,9 @@
 # firebase
 /.firebase
 
+#iOS
+/ios/MyPetTag/MyPetTag.xcodeproj/xcuserdata
+
 # misc
 .DS_Store
 .env.local
