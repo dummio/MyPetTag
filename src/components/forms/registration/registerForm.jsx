@@ -18,6 +18,7 @@ import "./registerForm.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleQuestion } from "@fortawesome/free-solid-svg-icons";
 import PasswordModal from "../../modals/passwordModal";
+import ZipcodeModal from "../../modals/zipcodeModal";
 
 import { RememberTagContext } from "../../providers/rememberTagProvider";
 
@@ -33,6 +34,7 @@ const RegisterForm = () => {
 
   const [canSubmit, setCanSubmit] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [showZipCodeModal, setShowZipCodeModal] = useState(false);
 
   const navigate = useNavigate();
 
@@ -45,6 +47,7 @@ const RegisterForm = () => {
       addNewUserToDatabase(
         values.firstname,
         values.lastname,
+        values.zipcode,
         values.email,
         values.password,
         values.phone
@@ -96,6 +99,10 @@ const RegisterForm = () => {
     setShowModal((prev) => !prev);
   };
 
+  const OpenZipCodeModal = () => {
+    setShowZipCodeModal((prev) => !prev);
+  };
+
   return (
     <div id="register-container">
       <img
@@ -125,6 +132,21 @@ const RegisterForm = () => {
           type="text"
           name="lastname"
           required
+          onChange={handleChange}
+        />
+        <label>
+          Zip Code{" "}
+          <FontAwesomeIcon
+            icon={faCircleQuestion}
+            onClick={OpenZipCodeModal}
+          />
+        </label>
+        <div className="error-container">{errors.zipcode}</div>
+        <input
+          className="form-input"
+          type="text"
+          name="zipcode"
+          // required
           onChange={handleChange}
         />
         <label>Phone Number</label>
@@ -201,6 +223,7 @@ const RegisterForm = () => {
         </div>
       </form>
       <PasswordModal showModal={showModal} setShowModal={setShowModal} />
+      <ZipcodeModal showModal={showZipCodeModal} setShowModal={setShowZipCodeModal} />
     </div>
   );
 };

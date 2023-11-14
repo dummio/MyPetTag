@@ -16,6 +16,7 @@ import {
   isUserAuthenticated,
   getPetData,
   setIsPetLost,
+  notifyNearbyUsers,
 } from "../../../../firebaseCommands";
 import ShareLocationModal from "../../../modals/shareLocationModal";
 
@@ -30,6 +31,7 @@ const LocationService = ({ userID, petID }) => {
   const [isLost, setIsLost] = useState(false);
   const [buttonText, setButtonText] = useState("Show As Lost");
   const [showModal, setShowModal] = useState(false);
+  const [showOverlay, setShowOverlay] = useState(true);
   const [lat, setLat] = useState(0);
   const [long, setLong] = useState(0);
 
@@ -51,14 +53,30 @@ const LocationService = ({ userID, petID }) => {
     getLostStatus();
   }, []);
 
+  useEffect(() => {
+    const getAuthState = async () => {
+      const data = await isUserAuthenticated();
+      setIsAuthed(data);
+    };
+    getAuthState();
+  }, []);
+
+  useEffect(() => {
+    setShowOverlay((showOverlay) => !showOverlay);
+  }, [isLost]);
+
   const changeIsLost = () => {
     //change to check for current status and flip -> will also need to change button text
-    console.log(isLost);
-    if (isLost == true) {
+    console.log("kevxue swag", showOverlay);
+    if (isLost) {
       setIsPetLost(petID, false);
     } else {
       setIsPetLost(petID, true);
     }
+  };
+
+  const notifyUsers = () => {
+    notifyNearbyUsers(petID);
   };
 
   const GetLocation = () => {
@@ -84,16 +102,7 @@ const LocationService = ({ userID, petID }) => {
     });
   };
 
-  useEffect(() => {
-    const getAuthState = async () => {
-      const data = await isUserAuthenticated();
-      setIsAuthed(data);
-    };
-    getAuthState();
-  }, []);
-
   const LocationButtons = () => {
-    //TODO:: make better
     if (isAuthed && window.location.pathname.split("/")[1] != "tag") {
       return (
         <>
@@ -103,6 +112,19 @@ const LocationService = ({ userID, petID }) => {
             value={buttonText}
             onClick={changeIsLost}
           />
+          {isLost && showOverlay && (
+            <div className="notify-overlay">
+              <div className="notify-box">
+                <p>Do You Want To Notify Local Users About Your Lost Pet?</p>
+                <button id="yes-btn" onClick={notifyUsers}>
+                  Notify
+                </button>
+                <button id="no-btn" onClick={() => setShowOverlay(false)}>
+                  No
+                </button>
+              </div>
+            </div>
+          )}
         </>
       );
     } else {

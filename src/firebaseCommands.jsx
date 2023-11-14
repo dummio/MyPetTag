@@ -50,6 +50,7 @@ export async function authStateChangedWrapper() {
 export async function addNewUserToDatabase(
   firstname_,
   lastname_,
+  zipcode_,
   email,
   password,
   phone
@@ -64,13 +65,34 @@ export async function addNewUserToDatabase(
     );
     const uid = userCredential.user.uid;
 
+    if(!zipcode_) {
+      zipcode_ = '';
+    }
+
     await setDoc(doc(db, "users", uid), {
       firstname: firstname_,
       lastname: lastname_,
+      zipcode: zipcode_,
       uid: uid,
       phone: phone,
       email: email,
     });
+
+    if(zipcode_) {
+      console.log("@kevxue", zipcode_);
+      const zipcodeRef = await doc(db, "zipcodes", zipcode_);
+      const zipcodeDocSnap = await getDoc(zipcodeRef);
+      if(!zipcodeDocSnap.exists()) {
+        await setDoc(doc(db, "zipcodes", zipcode_), {
+          users: [uid],
+        });
+      }
+      else {
+        await updateDoc(zipcodeRef, {
+          users: arrayUnion(uid),
+        });
+      }
+    }
     return uid;
   } catch (error) {
     console.log("Error occurred writing new user to firebase : ", error);
@@ -536,11 +558,18 @@ export async function readUserAlerts() {
 }
 
 //write
-export async function writeUserAlert(uid, pid, message) {
+export async function writeUserAlert(uid, pid, message, pet) {
   try {
     const userDocRef = doc(db, "users", uid);
     const userDocSnap = await getDoc(userDocRef);
-    const petName = await getPetData(uid, pid, ["name"]);
+    let petName = "";
+    if(pid === -1) {
+      //change to read from pet tuple
+      petName = pet;
+    }
+    else {
+      petName = await getPetData(uid, pid, ["name"]);
+    }
     const dateObj = new Date();
     let month = dateObj.getUTCMonth() + 1;
     let day = dateObj.getUTCDate();
@@ -650,4 +679,27 @@ export async function getUserDocRef() {
   //console.log(uid);
   const userDocRef = doc(db, "users", uid);
   return userDocRef;
+}
+
+//maybe pet is only petname maybe include entire pet tuple idk
+export async function notifyNearbyUsers(pet) {
+  const uid = await authStateChangedWrapper();
+  const userDocRef = doc(db, "users", uid);
+  const userDocSnap = await getDoc(userDocRef);
+  const zipcode = userDocSnap.data().zipcode;
+  if(zipcode === '') {
+    console.log("OPERATION COULD NOT BE PERFORMED BECAUSE USER DID NOT PROVIDE ZIPCODE");
+  }
+
+  const zipCodeDocRef = doc(db, "zipcodes", zipcode);
+  const zipcodeDocSnap = await getDoc(zipCodeDocRef);
+  const localUsers = zipcodeDocSnap.data().users;
+  //ADD MORE SPECIFIC IDENTIFIERS IN STRING (BREED, NAME, MAYBE PICTURE????)
+  const message = "Local animal recently lost!"
+  localUsers.forEach(element => {
+    if(element === uid) {
+      return;
+    }
+    writeUserAlert(element, -1, message, pet);
+  });
 }
