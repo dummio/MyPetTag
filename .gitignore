@@ -14,8 +14,18 @@
 # env
 .env
 
+# test
+test/node_modules/
+test/test-results/
+test/playwright-report/
+test/blob-report/
+test/playwright/.cache/
+
 # firebase
 /.firebase
+
+#iOS
+/ios/MyPetTag/MyPetTag.xcodeproj/xcuserdata
 
 # misc
 .DS_Store
