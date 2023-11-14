@@ -4,7 +4,7 @@
  */
 
 // Import React Modules
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 // Import CSS
 import "./loginForm.css";
@@ -12,7 +12,9 @@ import logo from "../../../images/paw.png";
 
 //import firebase helper function
 import { login, isUserAuthenticated } from "../../../firebaseCommands";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+
+import { RememberTagContext } from "../../providers/rememberTagProvider";
 
 /**
  * Login form for MyPetTag, checks to see if user exists and is authenticated.
@@ -20,6 +22,9 @@ import { useNavigate } from "react-router-dom";
  * @returns HTML Element
  */
 const LoginForm = () => {
+  const { rememberedTag, setRemeberedTag } = useContext(RememberTagContext);
+  console.log("The remembered tag in login.jsx: ", rememberedTag);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [authState, setAuthState] = useState(false);
@@ -48,7 +53,11 @@ const LoginForm = () => {
       let userId = response;
       if (userId) {
         setAuthState(true);
-        navigate(`/user/account`, { replace: true });
+        if (rememberedTag) {
+          navigate(`/tag/${rememberedTag}/create`, { replace: true });
+        } else {
+          navigate(`/user/account`, { replace: true });
+        }
       } else {
         setAuthState(false);
         ErrorHandle();
@@ -117,8 +126,8 @@ const LoginForm = () => {
         />
       </form>
       <div className="login-links">
-        <a href="/forgot">Forgot Password?</a>
-        <a href="/register">Register</a>
+        <Link to="/forgot">Forgot Password?</Link>
+        <Link to="/register">Register</Link>
       </div>
     </div>
   );

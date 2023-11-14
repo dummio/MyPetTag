@@ -13,7 +13,7 @@ import {
   authStateChangedWrapper,
   getPetHealthConditions,
 } from "../../../firebaseCommands";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { storage } from "../../../firebase-config";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
@@ -80,9 +80,12 @@ const PetCreate = () => {
 
   const [showLoad, setShowLoad] = useState(false);
 
+  const [currentTag, setCurrentTag] = useState("");
+
   const navigate = useNavigate();
 
   useEffect(() => {
+    setCurrentTag(window.location.pathname.split("/")[2]);
     async function fetchAuth() {
       const isAuthed = await isUserAuthenticated();
       if (!isAuthed) {
@@ -408,6 +411,33 @@ const PetCreate = () => {
       )}
       <form id="create-form">
         <h1 id="create-form-title">Add New Pet</h1>
+        <p
+          style={{
+            fontSize: "20px",
+            textAlign: "center",
+            maxWidth: "500px",
+          }}
+        >
+          Using tag {currentTag}
+          <br />
+          {currentTag && (
+            <Link
+              to="/input-code"
+              onClick={() => {
+                console.log("NAV NAV NAV NAVIGATIONG KM;ASDFLKJ");
+                navigate("/input-code", { replace: true });
+              }}
+              // onClick={() => navigate("../create", { replace: true })}
+              style={{
+                textDecoration: "none",
+                borderBottom: "2px solid #0f5738",
+                color: "black",
+              }}
+            >
+              Click here to use a different tag
+            </Link>
+          )}
+        </p>
         <h2
           onClick={() => {
             setPetInfoHide(!petInfoHide);
