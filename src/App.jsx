@@ -28,35 +28,38 @@ import LogOut from "./components/logout/logout";
 import InputCode from "./components/pages/tagCodeInput";
 import PetRegister from "./components/pages/petRegister";
 import AccountEdit from "./components/pages/accountEdit";
+import { RememberTagProvider } from "./components/providers/rememberTagProvider";
 
 const App = () => {
   return (
     <div className="body-wrapper">
-      <Routes>
-        <Route path="/" element={<Navigate replace to="/login" />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/logout" element={<LogOut />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/forgot" element={<ForgotPassword />} />
-        <Route path="/reset-password" element={<ResetForm />} />
-        <Route path="/input-code" element={<InputCode />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/tag" element={<Tag />}>
-          <Route path=":tagId" element={<TagId />}>
-            <Route path="profile" element={<PetProfile />} />
-            <Route path="create" element={<PetRegister />} />
+      <RememberTagProvider>
+        <Routes>
+          <Route path="/" element={<Navigate replace to="/login" />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/logout" element={<LogOut />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/forgot" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetForm />} />
+          <Route path="/input-code" element={<InputCode />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/tag" element={<Tag />}>
+            <Route path=":tagId" element={<TagId />}>
+              <Route path="profile" element={<PetProfile />} />
+              <Route path="create" element={<PetRegister />} />
+            </Route>
           </Route>
-        </Route>
-        <Route path="/user" element={<User />}>
-          <Route path="pet/:petId" element={<PetId />}>
-            <Route path="profile" element={<PetProfile />} />
-            <Route path="edit" element={<PetProfileEdit />} />
+          <Route path="/user" element={<User />}>
+            <Route path="pet/:petId" element={<PetId />}>
+              <Route path="profile" element={<PetProfile />} />
+              <Route path="edit" element={<PetProfileEdit />} />
+            </Route>
+            <Route path="account" element={<Account />} />
+            <Route path="settings" element={<AccountEdit />} />
           </Route>
-          <Route path="account" element={<Account />} />
-          <Route path="settings" element={<AccountEdit />} />
-        </Route>
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </RememberTagProvider>
     </div>
   );
 };

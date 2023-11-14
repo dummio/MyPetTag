@@ -4,7 +4,7 @@
  */
 
 // Import React Modules
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
   addNewUserToDatabase,
   isUserAuthenticated,
@@ -19,6 +19,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleQuestion } from "@fortawesome/free-solid-svg-icons";
 import PasswordModal from "../../modals/passwordModal";
 
+import { RememberTagContext } from "../../providers/rememberTagProvider";
+
 /**
  * Registration form allowing new users to register for MyPetTag
  * Saves all information in firebase and creates a new account.
@@ -26,6 +28,9 @@ import PasswordModal from "../../modals/passwordModal";
  * @returns HTML element
  */
 const RegisterForm = () => {
+  const { rememberedTag, setRemeberedTag } = useContext(RememberTagContext);
+  console.log("Remembered tag in register: ", rememberedTag);
+
   const [canSubmit, setCanSubmit] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
@@ -46,9 +51,17 @@ const RegisterForm = () => {
       )
         .then((response) => {
           var uid = response;
+          console.log(
+            "remembered tag after adding user to db: ",
+            rememberedTag
+          );
           if (uid) {
-            var path = `/user/account`;
-            navigate(path, { replace: true });
+            if (rememberedTag) {
+              navigate(`/tag/${rememberedTag}/create`, { replace: true });
+            } else {
+              var path = `/user/account`;
+              navigate(path, { replace: true });
+            }
           }
         })
         .catch((err) => {
