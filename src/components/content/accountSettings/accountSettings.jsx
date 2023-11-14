@@ -34,7 +34,6 @@ import PasswordModal from '../../modals/passwordModal';
  * @returns Account Settings HTML element.
  */
 const AccountSettings = () => {
-  const [pageReady, setPageReady] = useState(false);
   const [isAuthed, setIsAuthed] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [currentEmail, setCurrentEmail] = useState();
@@ -45,7 +44,7 @@ const AccountSettings = () => {
     register,
     watch,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty, isSubmitting, isLoading },
   } = useForm({
     mode: 'onTouched',
     defaultValues: getInitialValues,
@@ -60,13 +59,12 @@ const AccountSettings = () => {
         const email = userData[1];
         setCurrentEmail(email);
 
-        setPageReady(true);
         return {
           firstName: userDoc.firstname,
           lastName: userDoc.lastname,
           userPhone: userDoc.phone,
           userEmail: email,
-          zipcode: userDoc.zipcode ?? "",
+          zipcode: userDoc.zipcode ?? '',
         };
       }
       return {};
@@ -76,39 +74,64 @@ const AccountSettings = () => {
     }
   }
 
-  async function formSubmit(data) {
-    let emailSuccess = true;
-    let passwordSuccess = true;
-    if (data.userEmail !== currentEmail || !_.isEmpty(data.newPassword)) {
-      let reauthenticatedUser = await reauthenticateCurrentUser(data.password);
-      if (reauthenticatedUser) {
-        if (data.userEmail !== currentEmail)
-          emailSuccess = await changeAccountEmail(data.userEmail);
-        if (!_.isEmpty(data.newPassword))
-          passwordSuccess = await changeAccountPassword(data.newPassword);
-      } else {
-        alert(
-          'Failed to save account settings.\n\n' +
-            "Please check that you're inputting your current password correctly."
-        );
-        return;
-      }
-    }
+  function formSubmit(data) {
+    return new Promise((resolve) => {
+      const Status = {
+        AUTH_ERROR: 'AUTH_ERROR',
+        UPDATE_ERROR: 'UPDATE_ERROR',
+        SUCCESS: 'SUCCESS',
+      };
 
-    const userInfo = {
-      firstname: data.firstName,
-      lastname: data.lastName,
-      phone: data.userPhone,
-      zipcode: data.zipcode,
-    };
+      const updateChanges = async (data) => {
+        let emailSuccess = true;
+        let passwordSuccess = true;
+        console.log(currentEmail);
+        console.log(data.newPassword);
+        if (data.userEmail !== currentEmail || !_.isEmpty(data.newPassword)) {
+          let reauthenticatedUser = await reauthenticateCurrentUser(data.password);
+          if (reauthenticatedUser) {
+            if (data.userEmail !== currentEmail)
+              emailSuccess = await changeAccountEmail(data.userEmail);
+            if (!_.isEmpty(data.newPassword))
+              passwordSuccess = await changeAccountPassword(data.newPassword);
+          } else {
+            return Status.AUTH_ERROR;
+          }
+        }
 
-    let infoSuccess = await updateAccountInfo(userInfo);
+        const userInfo = {
+          firstname: data.firstName,
+          lastname: data.lastName,
+          phone: data.userPhone,
+          zipcode: data.zipcode,
+        };
 
-    console.log('Info success: ', infoSuccess);
-    console.log('Email success: ', emailSuccess);
-    if (infoSuccess && emailSuccess && passwordSuccess)
-      setTimeout(() => navigate('/user/account'), 500);
-    else console.error('Updating account failed.');
+        let infoSuccess = await updateAccountInfo(userInfo);
+
+        return infoSuccess && emailSuccess && passwordSuccess
+          ? Status.SUCCESS
+          : Status.UPDATE_ERROR;
+      };
+
+      updateChanges(data).then((rc) => {
+        switch (rc) {
+          case Status.AUTH_ERROR:
+            alert(
+              'Failed to save account settings.\n\n' +
+                "Please check that you're inputting your current password correctly."
+            );
+            resolve();
+            break;
+          case Status.UPDATE_ERROR:
+            console.error('Updating account failed.');
+            resolve();
+            break;
+          default:
+          case Status.SUCCESS:
+            setTimeout(() => navigate('/user/account'), 500);
+        }
+      });
+    });
   }
 
   useEffect(() => {
@@ -120,7 +143,7 @@ const AccountSettings = () => {
     getAuthState();
   }, [navigate]);
 
-  if (!pageReady || !isAuthed) return null;
+  if (!isAuthed || isLoading) return null;
 
   return (
     <div id="account-settings-container">
@@ -132,41 +155,48 @@ const AccountSettings = () => {
       </div>
       <div id="settings-title-container">
         <h1 id="settings-title">Account Settings</h1>
-        <p id="settings-title-sub">
-          Edit account and security settings.
-        </p>
+        <p id="settings-title-sub">Edit account and security settings.</p>
       </div>
       <form id="settings-form" onSubmit={handleSubmit(formSubmit)}>
         <span style={{ color: '#ff0000' }}>* indicates a required field</span>
-        <br/>
-        <label>First Name<span style={{ color: '#ff0000' }}>*</span></label>
+        <br />
+        <label>
+          First Name<span style={{ color: '#ff0000' }}>*</span>
+        </label>
         <div className="error-container">
           {errors.firstName && _.get(errors, 'firstName.message')}
         </div>
         <input
           className="form-input"
           type="text"
+          autoComplete='given-name'
           {...register('firstName', {
             required: 'First Name cannot be blank.',
           })}
         />
-        <label>Last Name<span style={{ color: '#ff0000' }}>*</span></label>
+        <label>
+          Last Name<span style={{ color: '#ff0000' }}>*</span>
+        </label>
         <div className="error-container">
           {errors.firstName && _.get(errors, 'firstName.message')}
         </div>
         <input
           className="form-input"
           type="text"
+          autoComplete='family-name'
           {...register('lastName', {
             required: 'Last Name cannot be blank.',
           })}
         />
-        <label>Phone<span style={{ color: '#ff0000' }}>*</span></label>
+        <label>
+          Phone<span style={{ color: '#ff0000' }}>*</span>
+        </label>
         <div className="error-container">{_.get(errors, 'userPhone.message')}</div>
         <input
           className="form-input"
           type="tel"
           placeholder="Phone Number"
+          autoComplete="tel"
           {...register('userPhone', {
             pattern: {
               value: Patterns.PHONE_REGEX,
@@ -175,12 +205,15 @@ const AccountSettings = () => {
             required: 'Phone cannot be blank.',
           })}
         />
-        <label>Email<span style={{ color: '#ff0000' }}>*</span></label>
+        <label>
+          Email<span style={{ color: '#ff0000' }}>*</span>
+        </label>
         <div className="error-container">{_.get(errors, 'userEmail.message')}</div>
         <input
           className="form-input"
           type="email"
           placeholder="email@example.com"
+          autoComplete="email"
           {...register('userEmail', {
             pattern: {
               value: Patterns.EMAIL_REGEX,
@@ -190,19 +223,18 @@ const AccountSettings = () => {
         />
         <label>Zip Code</label>
         <p className="label-subtext">For MyPetTag lost pet alert network.</p>
-        <div className="error-container">
-          {errors.address && _.get(errors, "zipcode.message")}
-        </div>
+        <div className="error-container">{errors.address && _.get(errors, 'zipcode.message')}</div>
         <input
           className="form-input"
           type="text"
-          {...register("zipcode", {
+          placeholder="12345"
+          autoComplete="postal-code"
+          {...register('zipcode', {
             pattern: {
               value: Patterns.ZIPCODE_REGEX,
               message: 'Enter a valid zip code.',
             },
           })}
-          placeholder="12345"
         />
         <label>
           Change Password{' '}
@@ -213,6 +245,7 @@ const AccountSettings = () => {
           className="form-input"
           type="password"
           placeholder="New Password"
+          autoComplete="new-password"
           {...register('newPassword', {
             pattern: {
               value: Patterns.PASSWORD_REGEX,
@@ -225,6 +258,7 @@ const AccountSettings = () => {
           className="form-input"
           type="password"
           placeholder="Confirm Password"
+          autoComplete="new-password"
           {...register('confirmPassword', {
             validate: (confirmPass) => {
               let newPass = watch('newPassword');
@@ -236,12 +270,15 @@ const AccountSettings = () => {
         />
         {(watch('userEmail') !== currentEmail || !_.isEmpty(watch('newPassword'))) && (
           <>
-            <label>Current Password <span style={{ color: '#ff0000' }}>*</span></label>
+            <label>
+              Current Password <span style={{ color: '#ff0000' }}>*</span>
+            </label>
             <div className="error-container">{_.get(errors, 'password.message')}</div>
             <input
               className="form-input"
               type="password"
               placeholder="Current Password"
+              autoComplete="current-password"
               {...register('password', {
                 validate: (currentPassword) => {
                   let email = watch('userEmail');
@@ -261,7 +298,7 @@ const AccountSettings = () => {
           <button id="cancel-btn" type="button" onClick={() => navigate('/user/account')}>
             Cancel
           </button>
-          <input id="save-btn" type="submit" value="Save" />
+          <input id="save-btn" type="submit" value="Save" disabled={isSubmitting} />
         </div>
       </form>
       <PasswordModal showModal={showPasswordModal} setShowModal={setShowPasswordModal} />
