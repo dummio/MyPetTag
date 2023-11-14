@@ -6,6 +6,10 @@
 // Import React Modules
 import React, { useState, useEffect } from "react";
 import PetProfileButton from "./petProfileButton";
+import { useForm } from 'react-hook-form';
+import { useNavigate } from "react-router-dom";
+import _ from "lodash";
+
 
 // Import CSS
 import "./accountInfo.css";
@@ -19,9 +23,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 //import firebase helper function
-import { getUserData, removePetFromDatabase } from "../../../firebaseCommands";
+import { getUserData, removePetFromDatabase, updatePrivacyPrefs } from "../../../firebaseCommands";
 
-import { useNavigate } from "react-router-dom";
 
 /**
  * Handles all information about a users account filling in and updating data
@@ -43,6 +46,18 @@ const AccountInformation = () => {
   const [showConfirmation, setShowConfirmation] = useState(false);
 
   const navigate = useNavigate();
+
+  const {
+    control,
+    register,
+    watch,
+    handleSubmit,
+    formState: { errors, isDirty },
+  } = useForm({
+    mode: "onTouched",
+    defaultValues: getInitialValues,
+  });
+
   useEffect(() => {
     // Fetch user data when the component mounts
     async function fetchUserData() {
@@ -102,6 +117,35 @@ const AccountInformation = () => {
     setDeleting(false);
   };
 
+  async function formSubmit(data) {
+    let success = await updatePrivacyPrefs(data);
+    if (!success)
+      alert("Failed to update privacy preferences.")
+    else
+      setTimeout(() => navigate(0), 500);
+  }
+
+  async function getInitialValues() {
+    try {
+      const userData = await getUserData();
+
+      if (userData) {
+        const userDoc = userData[0];
+
+        // setPageReady(true);
+        return {
+          emailAlerts: userDoc.emailAlerts ?? true,
+          textAlerts: userDoc.textAlerts ?? true,
+          mobileAlerts: userDoc.mobileAlerts ?? true,
+        };
+      }
+      return {};
+    } catch (error) {
+      console.error('Error retrieving privacy prefs:\n', error);
+      return {};
+    }
+  }
+
   return (
     <div id="account-container">
       <div id="company-name-container">
@@ -147,18 +191,44 @@ const AccountInformation = () => {
             <p>Phone: {realUser ? realUser.phone : user.Phone}</p>
           </div>
 
-          <div id="user-options-container">
-            <div id="checkbox-container">
-              <input className="form-checkbox" type="checkbox" />
-              <input className="form-checkbox" type="checkbox" />
-              <input className="form-checkbox" type="checkbox" />
+          <form id="user-prefs-form" onSubmit={handleSubmit(formSubmit)}>
+            <div id="user-prefs-container">
+              <div id="checkbox-container">
+                <input
+                  className="form-checkbox"
+                  type="checkbox"
+                  {...register("emailAlerts")}
+                />
+                <input
+                  className="form-checkbox"
+                  type="checkbox"
+                  {...register("textAlerts")}
+                />
+                <input
+                  className="form-checkbox"
+                  type="checkbox"
+                  {...register("mobileAlerts")}
+                />
+              </div>
+              <div id="checkbox-text-container">
+                <p>Allow MyPetTag to send you email alerts.</p>
+                <p>Allow MyPetTag to send you text alerts.</p>
+                <p>Allow MyPetTag to send you mobile alerts.</p>
+              </div>
             </div>
-            <div id="checkbox-text-container">
-              <p>Allow MyPetTag to send you email alerts.</p>
-              <p>Allow MyPetTag to send you text alerts.</p>
-              <p>Allow MyPetTag to send you mobile alerts.</p>
-            </div>
-          </div>
+            { isDirty &&
+              <div id="privacy-form-btns">
+                <button
+                  id="prefs-cancel-btn"
+                  type="button"
+                  onClick={() => navigate(0)}
+                >
+                  Cancel
+                </button>
+                <input id="prefs-save-btn" type="submit" value="Save" />
+              </div>
+            }
+          </form>
         </div>
       </div>
 

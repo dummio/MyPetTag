@@ -66,6 +66,7 @@ const AccountSettings = () => {
           lastName: userDoc.lastname,
           userPhone: userDoc.phone,
           userEmail: email,
+          zipcode: userDoc.zipcode ?? "",
         };
       }
       return {};
@@ -98,6 +99,7 @@ const AccountSettings = () => {
       firstname: data.firstName,
       lastname: data.lastName,
       phone: data.userPhone,
+      zipcode: data.zipcode,
     };
 
     let infoSuccess = await updateAccountInfo(userInfo);
@@ -185,6 +187,22 @@ const AccountSettings = () => {
               message: 'Enter a valid email.',
             },
           })}
+        />
+        <label>Zip Code (optional)</label>
+        <p className="label-subtext">Will be used for notifying about nearby lost pets if set.</p>
+        <div className="error-container">
+          {errors.address && _.get(errors, "zipcode.message")}
+        </div>
+        <input
+          className="form-input"
+          type="text"
+          {...register("zipcode", {
+            pattern: {
+              value: Patterns.ZIPCODE_REGEX,
+              message: 'Enter a valid zip code.',
+            },
+          })}
+          placeholder="12345"
         />
         <label>
           Change Password{' '}

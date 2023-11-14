@@ -87,7 +87,8 @@ export async function updateAccountInfo(data) {
   let accountInfo = {
     firstname: data.firstname,
     lastname: data.lastname,
-    phone: data.phone
+    phone: data.phone,
+    zipcode: data.zipcode
   };
 
   let updatedFields = _.omitBy(accountInfo, _.isNil);
@@ -105,6 +106,36 @@ export async function updateAccountInfo(data) {
 
   } catch (error) {
     console.error("Failed to update user account info: ", error);
+    return false;
+  }
+}
+
+export async function updatePrivacyPrefs(data) {
+  if (_.isEmpty(data)) {
+    throw new Error("Cannot update privacy prefs with non-existent data.");
+  }
+
+  let privacyPrefs = {
+    emailAlerts: data.emailAlerts,
+    textAlerts: data.textAlerts,
+    mobileAlerts: data.mobileAlerts,
+  };
+
+  let updatedFields = _.omitBy(privacyPrefs, _.isNil);
+
+  if (_.isEmpty(updatedFields)) {
+    throw new Error("No data given to update user account with.");
+  }
+
+  try {
+    const uid = await authStateChangedWrapper();
+    const userDocRef = doc(db, "users", uid);
+
+    updateDoc(userDocRef, updatedFields);
+    return true;
+
+  } catch (error) {
+    console.error("Failed to update user privacy prefs: ", error);
     return false;
   }
 }

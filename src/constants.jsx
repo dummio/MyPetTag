@@ -6,4 +6,6 @@ const PHONE_REGEX =
 
 const PASSWORD_REGEX = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/;
 
-export const Patterns = { EMAIL_REGEX, PHONE_REGEX, PASSWORD_REGEX };
+const ZIPCODE_REGEX = /^\d{5}(?:[-\s]\d{4})?$/;
+
+export const Patterns = { EMAIL_REGEX, PHONE_REGEX, PASSWORD_REGEX, ZIPCODE_REGEX };

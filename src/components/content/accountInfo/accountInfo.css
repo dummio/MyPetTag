@@ -63,7 +63,7 @@
   margin: 0px 0px 10px 0px;
 }
 
-#user-options-container {
+#user-prefs-container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -193,4 +193,50 @@
   border: solid 2px #0f5738;
   transition: border 0.15s ease-in;
   color: black;
+}
+
+#privacy-form-btns {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#prefs-save-btn {
+  height: 50px;
+  width: 135px;
+  background-color: #003a21;
+  border-radius: 16px;
+  border: none;
+  box-shadow: 0px 8px 10px 0px rgba(0, 0, 0, 0.25);
+  color: #f0f0f0;
+  font-size: 24px;
+  font-family: inherit;
+  margin-bottom: 8px;
+  transition: transform 0.1s;
+}
+
+#prefs-save-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 2px 2px 18px 0px rgba(0, 0, 0, 0.75);
+}
+
+#prefs-cancel-btn {
+  height: 50px;
+  width: 135px;
+  background-color: #0f5738;
+  border-radius: 16px;
+  border: none;
+  box-shadow: 0px 8px 10px 0px rgba(0, 0, 0, 0.25);
+  color: #f0f0f0;
+  font-size: 24px;
+  font-family: inherit;
+  margin-bottom: 8px;
+  transition: transform 0.1s;
+}
+
+#prefs-cancel-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 2px 2px 18px 0px rgba(0, 0, 0, 0.75);
 }
