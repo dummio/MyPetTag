@@ -92,7 +92,7 @@ const TagCodeInputEditForm = () => {
   function route(tagContent) {
     if (tagContent !== null && tagContent[0] === '' && tagContent[1] === '') {
       console.log(tagContent);
-      navigate(`/tag/${tagCode}/create`, { replace: true });
+      navigate(`/tag/${tagCode}/create`);
     } else {
       console.log('Tag was taken or tag code input error');
       // alert("Invalid tag");

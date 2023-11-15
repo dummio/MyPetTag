@@ -45,7 +45,7 @@ const PetRegister = () => {
   console.log("PID THAT WE GOT: ", pID);
   const navigate = useNavigate();
   if (pID !== "empty") {
-    navigate("/", { replace: true });
+    navigate("/");
   }
 
   return (

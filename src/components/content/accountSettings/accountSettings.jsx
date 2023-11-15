@@ -41,7 +41,7 @@ const AccountSettings = () => {
     // Fetch user data when the component mounts
     async function fetchUserData() {
       const userData = await getUserData().catch((error) => {
-        navigate("/*", { replace: true });
+        navigate("/*");
       });
       if (userData) {
         setUser(userData[0]);
