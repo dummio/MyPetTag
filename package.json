@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@capacitor/assets": "^3.0.1",
     "@capacitor/cli": "^5.5.1"
   },
   "scripts": {
