@@ -3,10 +3,6 @@ body.barcode-scanning-active {
   background: transparent;
 }
 
-.barcode-scanner-modal {
-  visibility: visible;
-}
-
 #input-container {
   display: flex;
   flex-direction: column;
@@ -87,15 +83,6 @@ body.barcode-scanning-active {
   align-items: center;
 }
 
-#btn-spacer {
-  height: 50px;
-  width: 20px;
-}
-
-#qr-scan-btn {
-  visibility: visible;
-}
-
 #submit-btn, #qr-scan-btn {
   height: 50px;
   width: 100%;
@@ -106,7 +93,30 @@ body.barcode-scanning-active {
   color: #f0f0f0;
   font-size: 24px;
   font-family: inherit;
+}
+
+body.barcode-scanning-active #qr-scan-btn {
+  position: fixed;
+  width: 135px;
+  height: 50px;
+  left: 50%;
+  bottom: 20px;
+  transform: translate(-50%, -50%);
+  margin: 0 auto;
+  background-color: #ff0000;
+}
+
+#qr-scan-btn {
+  visibility: visible;
+}
+
+#submit-btn {
   transition: transform 0.1s;
+}
+
+#btn-spacer {
+  height: 50px;
+  width: 20px;
 }
 
 #submit-btn:hover, #qr-scan-btn:hover {

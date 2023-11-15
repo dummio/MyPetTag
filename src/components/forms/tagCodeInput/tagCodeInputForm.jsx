@@ -116,6 +116,7 @@ const TagCodeInputEditForm = () => {
       if (camera === 'granted' || camera === 'limited') {
         document.querySelector('body')?.classList.add('barcode-scanning-active');
         await mlkit.BarcodeScanner.addListener('barcodeScanned', async (result) => {
+          setIsScanning(false);
           await mlkit.BarcodeScanner.removeAllListeners();
           await mlkit.BarcodeScanner.stopScan();
           let barcode = result.barcode;
@@ -135,7 +136,6 @@ const TagCodeInputEditForm = () => {
           } else {
             error = true;
           }
-          setIsScanning(false);
 
           if (error) alert('Unsupported QR Code Scanned');
         });
