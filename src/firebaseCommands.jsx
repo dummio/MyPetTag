@@ -13,12 +13,15 @@ import {
 import { ref, deleteObject } from "firebase/storage";
 
 import {
-  getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
+  updatePassword,
+  updateEmail,
   signOut,
   onAuthStateChanged,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
 } from "firebase/auth";
 
 import _ from "lodash";
@@ -54,7 +57,6 @@ export async function addNewUserToDatabase(
   password,
   phone
 ) {
-  //const auth = getAuth();
   //change to point to database
   try {
     const userCredential = await createUserWithEmailAndPassword(
@@ -74,6 +76,105 @@ export async function addNewUserToDatabase(
     return uid;
   } catch (error) {
     console.log("Error occurred writing new user to firebase : ", error);
+  }
+}
+
+export async function updateAccountInfo(data) {
+  if (_.isEmpty(data)) {
+    throw new Error('Cannot update account info with non-existent data.');
+  }
+
+  let accountInfo = {
+    firstname: data.firstname,
+    lastname: data.lastname,
+    phone: data.phone,
+    zipcode: data.zipcode,
+  };
+
+  let updatedFields = _.omitBy(accountInfo, _.isNil);
+
+  if (_.isEmpty(updatedFields)) {
+    throw new Error('No data given to update user account with.');
+  }
+
+  try {
+    const uid = await authStateChangedWrapper();
+    const userDocRef = doc(db, 'users', uid);
+
+    updateDoc(userDocRef, updatedFields);
+    return true;
+  } catch (error) {
+    console.error('Failed to update user account info: ', error);
+    return false;
+  }
+}
+
+export async function updatePrivacyPrefs(data) {
+  if (_.isEmpty(data)) {
+    throw new Error('Cannot update privacy prefs with non-existent data.');
+  }
+
+  let privacyPrefs = {
+    emailAlerts: data.emailAlerts,
+    textAlerts: data.textAlerts,
+    mobileAlerts: data.mobileAlerts,
+  };
+
+  let updatedFields = _.omitBy(privacyPrefs, _.isNil);
+
+  if (_.isEmpty(updatedFields)) {
+    throw new Error('No data given to update user account with.');
+  }
+
+  try {
+    const uid = await authStateChangedWrapper();
+    const userDocRef = doc(db, 'users', uid);
+
+    updateDoc(userDocRef, updatedFields);
+    return true;
+  } catch (error) {
+    console.error('Failed to update user privacy prefs: ', error);
+    return false;
+  }
+}
+
+export async function changeAccountEmail(newEmail) {
+  try {
+    const user = auth.currentUser;
+
+    if (newEmail === user.email) {
+      console.debug('Email has not changed. Skipping...');
+      return true;
+    }
+
+    return updateEmail(user, newEmail)
+      .then(() => {
+        return true;
+      })
+      .catch((error) => {
+        console.error('Failed to update user email: ', error);
+        return false;
+      });
+  } catch (error) {
+    console.error('Failed to update user email: ', error);
+    return false;
+  }
+}
+
+export async function changeAccountPassword(newPassword) {
+  try {
+    const user = auth.currentUser;
+
+    return updatePassword(user, newPassword)
+      .then(() => {
+        return true;
+      })
+      .catch((error) => {
+        console.error('Failed to update user password: ', error);
+        return false;
+      });
+  } catch (error) {
+    console.error('Failed to update user password: ', error);
   }
 }
 
@@ -111,6 +212,16 @@ export async function logout() {
       console.log("Error occurred logging out : ", error);
       return false;
     });
+}
+
+export async function reauthenticateCurrentUser(password) {
+  try {
+    const cred = EmailAuthProvider.credential(auth.currentUser.email, password);
+    return await reauthenticateWithCredential(auth.currentUser, cred);
+  } catch(error) {
+    console.debug("Failed to reauthenticate user: ", error);
+    return null;
+  }
 }
 
 /**
@@ -329,7 +440,6 @@ export async function getUserData() {
     const userDocRef = doc(db, "users", uid_t);
     const userDocSnap = await getDoc(userDocRef);
     if (userDocSnap.exists()) {
-      console.log("USER DATA FROM getUserData:", userDocSnap.data());
       return [userDocSnap.data(), auth.currentUser.email];
     } else {
       console.log("User not found");
