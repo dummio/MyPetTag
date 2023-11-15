@@ -29,10 +29,12 @@ import InputCode from "./components/pages/tagCodeInput";
 import PetRegister from "./components/pages/petRegister";
 import AccountEdit from "./components/pages/accountEdit";
 import { RememberTagProvider } from "./components/providers/rememberTagProvider";
+import AppListener from "./appListener";
 
 const App = () => {
   return (
     <div className="body-wrapper">
+      <AppListener />
       <RememberTagProvider>
         <Routes>
           <Route path="/" element={<Navigate replace to="/login" />} />

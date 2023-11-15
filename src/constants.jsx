@@ -8,4 +8,6 @@ const PASSWORD_REGEX = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}
 
 const ZIPCODE_REGEX = /^\d{5}(?:[-\s]\d{4})?$/;
 
-export const Patterns = { EMAIL_REGEX, PHONE_REGEX, PASSWORD_REGEX, ZIPCODE_REGEX };
+const TAG_URL_REGEX = /^\/tag\/[a-zA-Z0-9]{6}((\/(profile\/?)?)?)?$/;
+
+export const Patterns = { EMAIL_REGEX, PHONE_REGEX, PASSWORD_REGEX, ZIPCODE_REGEX, TAG_URL_REGEX };

@@ -202,7 +202,7 @@ const AccountInformation = () => {
               icon={faPlus}
               style={{ height: '31px', marginRight: '12px', cursor: 'pointer' }}
               onClick={() => {
-                navigate('/input-code', { replace: true });
+                navigate("/input-code");
               }}
             />
 

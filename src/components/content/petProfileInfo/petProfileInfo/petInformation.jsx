@@ -85,7 +85,7 @@ const PetInformation = ({ userID, petID }) => {
         "isLost",
         "conds",
       ]).catch((error) => {
-        navigate("/*", { replace: true });
+        navigate("/*");
       });
       if (petData) {
         setPetName(petData["name"]);

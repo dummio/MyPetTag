@@ -139,7 +139,7 @@ const AccountSettings = () => {
       if (!authenticated) navigate('/*');
     }
     getAuthState();
-  }, [navigate]);
+  }, []);
 
   if (!isAuthed || isLoading) return null;
 

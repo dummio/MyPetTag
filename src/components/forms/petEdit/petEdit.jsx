@@ -307,7 +307,7 @@ const PetEdit = () => {
     updatePetInDatabase(pet)
       .then((success) => {
         const path = `/user/account`;
-        setTimeout(navigate(path, { replace: true }), 1000);
+        setTimeout(navigate(path), 1000);
       })
       .catch((err) => {
         console.error(err);
