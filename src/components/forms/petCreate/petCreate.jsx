@@ -4,7 +4,7 @@
  */
 
 // Import React
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import {
   addPetToDatabase,
   getPetBreeds,
@@ -30,6 +30,8 @@ import {
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 
+import { RememberTagContext } from "../../providers/rememberTagProvider";
+
 // Import Modules
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
@@ -48,6 +50,7 @@ const PetCreate = () => {
 
   // Pet Data States
   const [image, setImage] = useState(null);
+  const [prevImage, setPrevImage] = useState(null);
   const [petName, setPetName] = useState(null);
   const [petSpecies, setPetSpecies] = useState(null);
   const [petBreed, setPetBreed] = useState(null);
@@ -81,6 +84,8 @@ const PetCreate = () => {
   const [showLoad, setShowLoad] = useState(false);
 
   const [currentTag, setCurrentTag] = useState("");
+
+  const { rememberedTag, setRemeberedTag } = useContext(RememberTagContext);
 
   const navigate = useNavigate();
 
@@ -141,12 +146,17 @@ const PetCreate = () => {
   };
 
   const UploadImage = (e) => {
-    console.log("IN UPLOAD IMAGE");
     e.preventDefault();
     let file = e.target.files[0];
 
     if (file && file.type.startsWith("image/")) {
-      let image = URL.createObjectURL(file);
+      // Remember the previous image:
+      if (image) {
+        setPrevImage(new File([image], image.name, { type: image.type }));
+      } else {
+        setPrevImage(null);
+      }
+
       /* The cropper only displays if the selected file has changed.
        * If the user selects the same file, the cropper wouldn't open,
        * but we want it to open, so we set the file name value to null. */
@@ -288,8 +298,11 @@ const PetCreate = () => {
         imageURL,
         pdfURL
       )
-        // Step 4: Navigate to user account page
+        // Step 4: Navigate to user account page. Make sure to clear the remembered tag
+        // if the user got here by scanning a new tag
         .then((response) => {
+          localStorage.setItem("rememberedTag", "");
+          setRemeberedTag("");
           const path = `/user/account`;
           setShowLoad(false);
           setTimeout(navigate(path, { replace: true }), 1000);
@@ -406,7 +419,14 @@ const PetCreate = () => {
       {/* Conditionally render CropEasy */}
       {openCrop && (
         <CropEasy
-          {...{ photoURL, openCrop, setOpenCrop, setPhotoURL, setImage }}
+          {...{
+            photoURL,
+            openCrop,
+            setOpenCrop,
+            setPhotoURL,
+            setImage,
+            prevImage,
+          }}
         />
       )}
       <form id="create-form">
@@ -424,7 +444,6 @@ const PetCreate = () => {
             <Link
               to="/input-code"
               onClick={() => {
-                console.log("NAV NAV NAV NAVIGATIONG KM;ASDFLKJ");
                 navigate("/input-code", { replace: true });
               }}
               // onClick={() => navigate("../create", { replace: true })}

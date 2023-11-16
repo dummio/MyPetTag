@@ -135,15 +135,8 @@ const PetProfile = () => {
         "The remmebered tag in petProfile.jsx (after setting): ",
         rememberedTag
       );
+      localStorage.setItem("rememberedTag", scannedTagID);
 
-      // // Create a URL object from the current URL
-      // const url = new URL(window.location.href);
-
-      // // Set the query parameter with the extracted value
-      // url.search = `parameterName=${scannedTagID}`;
-
-      // // Navigate to the new URL with the added query parameter
-      // navigate(`/?scannedTag=${scannedTagID}`, { replace: true });
       return (
         <React.Fragment>
           <NavBar />

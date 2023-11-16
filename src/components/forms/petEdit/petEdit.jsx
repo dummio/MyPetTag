@@ -61,6 +61,7 @@ const PetEdit = () => {
   const [medicalPDF, setMedicalPDF] = useState(null);
   const [originalImage, setOriginalImage] = useState(null);
   const [image, setImage] = useState(null);
+  const [prevImage, setPrevImage] = useState(null);
 
   const navigate = useNavigate();
 
@@ -359,6 +360,12 @@ const PetEdit = () => {
     let file = e.target.files[0];
 
     if (file && file.type.startsWith("image/")) {
+      // Remember the previous image:
+      if (image) {
+        setPrevImage(new File([image], image.name, { type: image.type }));
+      } else {
+        setPrevImage(null);
+      }
       let img = URL.createObjectURL(file);
       /* The cropper only displays if the selected file has changed.
        * If the user selects the same file, the cropper wouldn't open,
@@ -402,6 +409,7 @@ const PetEdit = () => {
   };
 
   const ClearPDF = () => {
+    setPdfURL("");
     setMedicalPDF(null);
     document.getElementById("pdf-file-btn").value = null;
   };
@@ -430,7 +438,14 @@ const PetEdit = () => {
         {/* Conditionally render CropEasy */}
         {openCrop && (
           <CropEasy
-            {...{ photoURL, openCrop, setOpenCrop, setPhotoURL, setImage }}
+            {...{
+              photoURL,
+              openCrop,
+              setOpenCrop,
+              setPhotoURL,
+              setImage,
+              prevImage,
+            }}
           />
         )}
         <form id="edit-form" onSubmit={handleSubmit(formSubmit)}>
@@ -808,6 +823,12 @@ const PetEdit = () => {
               />
 
               <label>Upload Medical History PDF</label>
+              {pdfURL && (
+                <p style={{ marginTop: "0" }}>
+                  Note: Uploading a PDF will override your previously uploaded
+                  PDF
+                </p>
+              )}
               <input
                 id="pdf-file-btn"
                 // ref={pdfInputRef}
@@ -819,7 +840,7 @@ const PetEdit = () => {
                 // style={{ display: "none" }}
               />
 
-              {medicalPDF !== null && (
+              {pdfURL && (
                 <input
                   id="clear-pdf-btn"
                   type="button"
