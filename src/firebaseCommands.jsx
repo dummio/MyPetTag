@@ -565,11 +565,12 @@ export async function writeUserAlert(uid, pid, message, pet) {
     let petName = "";
     if(pid === -1) {
       //change to read from pet tuple
-      petName = pet;
+      petName = {"name": pet};
     }
     else {
       petName = await getPetData(uid, pid, ["name"]);
     }
+    console.log(pid, petName);
     const dateObj = new Date();
     let month = dateObj.getUTCMonth() + 1;
     let day = dateObj.getUTCDate();
@@ -689,17 +690,19 @@ export async function notifyNearbyUsers(pet) {
   const zipcode = userDocSnap.data().zipcode;
   if(zipcode === '') {
     console.log("OPERATION COULD NOT BE PERFORMED BECAUSE USER DID NOT PROVIDE ZIPCODE");
+    return;
   }
 
   const zipCodeDocRef = doc(db, "zipcodes", zipcode);
   const zipcodeDocSnap = await getDoc(zipCodeDocRef);
   const localUsers = zipcodeDocSnap.data().users;
   //ADD MORE SPECIFIC IDENTIFIERS IN STRING (BREED, NAME, MAYBE PICTURE????)
-  const message = "Local animal recently lost!"
+  const message = "Local pet recently lost!"
+  const title = "Notification"
   localUsers.forEach(element => {
     if(element === uid) {
       return;
     }
-    writeUserAlert(element, -1, message, pet);
+    writeUserAlert(element, -1, message, title);
   });
 }

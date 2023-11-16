@@ -102,3 +102,8 @@
   margin-bottom: 25px;
   transition: transform 0.1s;
 }
+
+#yes-btn:hover, #no-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 2px 2px 18px 0px rgba(0, 0, 0, 0.75);
+}

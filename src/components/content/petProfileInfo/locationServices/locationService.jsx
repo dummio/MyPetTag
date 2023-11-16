@@ -67,7 +67,6 @@ const LocationService = ({ userID, petID }) => {
 
   const changeIsLost = () => {
     //change to check for current status and flip -> will also need to change button text
-    console.log("kevxue swag", showOverlay);
     if (isLost) {
       setIsPetLost(petID, false);
     } else {
@@ -77,6 +76,7 @@ const LocationService = ({ userID, petID }) => {
 
   const notifyUsers = () => {
     notifyNearbyUsers(petID);
+    setShowOverlay((showOverlay) => !showOverlay);
   };
 
   const GetLocation = () => {
