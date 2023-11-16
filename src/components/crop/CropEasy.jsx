@@ -20,6 +20,7 @@ const CropEasy = ({
   setOpenCrop,
   setPhotoURL,
   setImage,
+  prevImage,
 }) => {
   //   const { setAlert, setLoading } = useAuth();
   const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -55,6 +56,18 @@ const CropEasy = ({
 
     // setLoading(false);
   };
+
+  const cancelCrop = () => {
+    console.log("Setting image back to previous: ", prevImage);
+    setImage(prevImage);
+    if (prevImage) {
+      setPhotoURL(URL.createObjectURL(prevImage));
+    } else {
+      setPhotoURL("");
+    }
+    setOpenCrop(false);
+  };
+
   return (
     <>
       {openCrop ? (
@@ -117,7 +130,7 @@ const CropEasy = ({
                   style={{ backgroundColor: "#0f5738", borderRadius: "12px" }}
                   variant="contained"
                   startIcon={<Cancel />}
-                  onClick={() => setOpenCrop(false)}
+                  onClick={cancelCrop}
                 >
                   Cancel
                 </Button>

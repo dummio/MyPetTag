@@ -50,6 +50,7 @@ const PetCreate = () => {
 
   // Pet Data States
   const [image, setImage] = useState(null);
+  const [prevImage, setPrevImage] = useState(null);
   const [petName, setPetName] = useState(null);
   const [petSpecies, setPetSpecies] = useState(null);
   const [petBreed, setPetBreed] = useState(null);
@@ -145,12 +146,17 @@ const PetCreate = () => {
   };
 
   const UploadImage = (e) => {
-    console.log("IN UPLOAD IMAGE");
     e.preventDefault();
     let file = e.target.files[0];
 
     if (file && file.type.startsWith("image/")) {
-      let image = URL.createObjectURL(file);
+      // Remember the previous image:
+      if (image) {
+        setPrevImage(new File([image], image.name, { type: image.type }));
+      } else {
+        setPrevImage(null);
+      }
+
       /* The cropper only displays if the selected file has changed.
        * If the user selects the same file, the cropper wouldn't open,
        * but we want it to open, so we set the file name value to null. */
@@ -413,7 +419,14 @@ const PetCreate = () => {
       {/* Conditionally render CropEasy */}
       {openCrop && (
         <CropEasy
-          {...{ photoURL, openCrop, setOpenCrop, setPhotoURL, setImage }}
+          {...{
+            photoURL,
+            openCrop,
+            setOpenCrop,
+            setPhotoURL,
+            setImage,
+            prevImage,
+          }}
         />
       )}
       <form id="create-form">
