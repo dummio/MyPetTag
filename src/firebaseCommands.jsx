@@ -3,11 +3,11 @@ import {
   doc,
   updateDoc,
   setDoc,
-  collection,
+  addDoc,
   getDoc,
   arrayUnion,
-  runTransaction,
   writeBatch,
+  collection,
 } from "firebase/firestore";
 
 import { ref, deleteObject } from "firebase/storage";
@@ -65,8 +65,8 @@ export async function addNewUserToDatabase(
     );
     const uid = userCredential.user.uid;
 
-    if(!zipcode_) {
-      zipcode_ = '';
+    if (!zipcode_) {
+      zipcode_ = "";
     }
 
     await setDoc(doc(db, "users", uid), {
@@ -78,16 +78,15 @@ export async function addNewUserToDatabase(
       email: email,
     });
 
-    if(zipcode_) {
+    if (zipcode_) {
       console.log("@kevxue", zipcode_);
       const zipcodeRef = await doc(db, "zipcodes", zipcode_);
       const zipcodeDocSnap = await getDoc(zipcodeRef);
-      if(!zipcodeDocSnap.exists()) {
+      if (!zipcodeDocSnap.exists()) {
         await setDoc(doc(db, "zipcodes", zipcode_), {
           users: [uid],
         });
-      }
-      else {
+      } else {
         await updateDoc(zipcodeRef, {
           users: arrayUnion(uid),
         });
@@ -563,11 +562,10 @@ export async function writeUserAlert(uid, pid, message, pet) {
     const userDocRef = doc(db, "users", uid);
     const userDocSnap = await getDoc(userDocRef);
     let petName = "";
-    if(pid === -1) {
+    if (pid === -1) {
       //change to read from pet tuple
-      petName = {"name": pet};
-    }
-    else {
+      petName = { name: pet };
+    } else {
       petName = await getPetData(uid, pid, ["name"]);
     }
     console.log(pid, petName);
@@ -595,6 +593,10 @@ export async function writeUserAlert(uid, pid, message, pet) {
       await updateDoc(userDocRef, {
         alerts: arrayUnion(alert),
       });
+    }
+    const phoneNum = userDocSnap.data().phone;
+    if(phoneNum) {
+      sendSMS(phoneNum, petName.name + " : " + message);
     }
   } catch (error) {
     console.log(error);
@@ -688,8 +690,10 @@ export async function notifyNearbyUsers(pet) {
   const userDocRef = doc(db, "users", uid);
   const userDocSnap = await getDoc(userDocRef);
   const zipcode = userDocSnap.data().zipcode;
-  if(zipcode === '') {
-    console.log("OPERATION COULD NOT BE PERFORMED BECAUSE USER DID NOT PROVIDE ZIPCODE");
+  if (zipcode === "") {
+    console.log(
+      "OPERATION COULD NOT BE PERFORMED BECAUSE USER DID NOT PROVIDE ZIPCODE"
+    );
     return;
   }
 
@@ -697,12 +701,30 @@ export async function notifyNearbyUsers(pet) {
   const zipcodeDocSnap = await getDoc(zipCodeDocRef);
   const localUsers = zipcodeDocSnap.data().users;
   //ADD MORE SPECIFIC IDENTIFIERS IN STRING (BREED, NAME, MAYBE PICTURE????)
-  const message = "Local pet recently lost!"
-  const title = "Notification"
-  localUsers.forEach(element => {
-    if(element === uid) {
+  const title = "Notification";
+  const petInfo = await getPetData(uid, pet, ["name", "breed"]);
+  console.log(petInfo);
+  const petName = petInfo.name;
+  const petBreed = petInfo.breed !== null ? petInfo.breed : "pet";
+  const message = `Local ${petBreed} named ${petName} recently lost!`;
+  localUsers.forEach((element) => {
+    if (element === uid) {
       return;
     }
     writeUserAlert(element, -1, message, title);
   });
+}
+
+async function sendSMS(phoneNum, message) {
+  const messagesRef = collection(db, "messages");
+  try {
+    await addDoc(messagesRef, {
+      to: phoneNum,
+      body: message,
+    });
+
+    console.log("SMS sent successfully");
+  } catch (error) {
+    console.error("Error sending SMS:", error);
+  }
 }
