@@ -15,6 +15,7 @@ import "./tagCodeInputForm.css";
 
 //import firebase command
 import { checkTagIdTaken } from "../../../firebaseCommands";
+import { RememberTagContext } from "../../providers/rememberTagProvider";
 
 async function loadQrScanner() {
   let { BarcodeScanner, BarcodeFormat, LensFacing } = await import(
@@ -26,8 +27,6 @@ async function loadQrScanner() {
     LensFacing,
   };
 }
-
-import { RememberTagContext } from "../../providers/rememberTagProvider";
 
 const TagCodeInputEditForm = () => {
   const [tagCode, setTagCodeReg] = useState("");
