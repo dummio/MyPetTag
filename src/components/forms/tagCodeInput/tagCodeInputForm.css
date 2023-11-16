@@ -1,3 +1,8 @@
+body.barcode-scanning-active {
+  visibility: hidden;
+  background: transparent;
+}
+
 #input-container {
   display: flex;
   flex-direction: column;
@@ -71,8 +76,16 @@
   visibility: hidden;
 }
 
-#submit-btn {
+#tag-form-btns {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+
+#submit-btn, #qr-scan-btn {
   height: 50px;
+  width: 100%;
   background-color: #0f5738;
   border-radius: 16px;
   border: none;
@@ -80,11 +93,33 @@
   color: #f0f0f0;
   font-size: 24px;
   font-family: inherit;
-  margin-bottom: 23px;
+}
+
+body.barcode-scanning-active #qr-scan-btn {
+  position: fixed;
+  width: 135px;
+  height: 50px;
+  left: 50%;
+  bottom: 20px;
+  transform: translate(-50%, -50%);
+  margin: 0 auto;
+  background-color: #ff0000;
+}
+
+#qr-scan-btn {
+  visibility: visible;
+}
+
+#submit-btn {
   transition: transform 0.1s;
 }
 
-#submit-btn:hover {
+#btn-spacer {
+  height: 50px;
+  width: 20px;
+}
+
+#submit-btn:hover, #qr-scan-btn:hover {
   transform: translateY(-2px);
   box-shadow: 2px 2px 18px 0px rgba(0, 0, 0, 0.75);
 }
