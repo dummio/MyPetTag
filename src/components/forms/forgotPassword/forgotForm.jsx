@@ -26,6 +26,7 @@ const ForgotForm = () => {
   const formReset = () => {
     if (canSubmit) {
       sendPasswordReset(values.email);
+      localStorage.setItem("userEmail", values.email);
       setIsSubmitted(canSubmit);
     }
   };
@@ -34,6 +35,9 @@ const ForgotForm = () => {
 
   useEffect(() => {
     let errorText = document.getElementById("error-container");
+    if (!errorText) {
+      return;
+    }
     if (Object.keys(errors).length === 0 && Object.keys(values).length !== 0) {
       setCanSubmit(true);
       errorText.innerHTML = "";
@@ -52,34 +56,33 @@ const ForgotForm = () => {
 
   if (isSubmitted) {
     return <ForgotConfirmation />;
-  } else {
-    return (
-      <div id="forgot-container">
-        <img
-          className="logo"
-          src={logo}
-          alt="MyPetTag"
-          width={250}
-          height={250}
-        />
-        <div className="company-title">
-          My<span style={{ color: "#75af96" }}>PetTag</span>
-        </div>
-        <form id="forgot-form" onSubmit={handleSubmit}>
-          <label>Email</label>
-          <input
-            className="form-input"
-            type="email"
-            name="email"
-            required
-            onChange={handleChange}
-          />
-          <div id="error-container"></div>
-          <input id="forgot-btn" type="submit" value="Submit" />
-        </form>
-      </div>
-    );
   }
+  return (
+    <div id="forgot-container">
+      <img
+        className="logo"
+        src={logo}
+        alt="MyPetTag"
+        width={250}
+        height={250}
+      />
+      <div className="company-title">
+        My<span style={{ color: "#75af96" }}>PetTag</span>
+      </div>
+      <form id="forgot-form" onSubmit={handleSubmit}>
+        <label>Email</label>
+        <input
+          className="form-input"
+          type="email"
+          name="email"
+          required
+          onChange={handleChange}
+        />
+        <div id="error-container"></div>
+        <input id="forgot-btn" type="submit" value="Submit" />
+      </form>
+    </div>
+  );
 };
 
 export default ForgotForm;

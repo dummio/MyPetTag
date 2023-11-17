@@ -25,7 +25,7 @@ test/playwright/.cache/
 /.firebase
 
 #iOS
-/ios/MyPetTag/MyPetTag.xcodeproj/xcuserdata
+/ios/MyPetTag/MyPetTag.xcodeproj/project.xcworkspace/xcuserdata
 
 # misc
 .DS_Store
