@@ -196,26 +196,25 @@ const AboutInfo = () => {
             height={150}
           />
           <h2>Sameer Khan</h2>
-          <h4>BS Computer Science</h4>
+          <h4>BS/MS Computer Science</h4>
           <div className="profile-interests">
             <p>
-              DevOps Engineer @ OpenText, AWS, Kubernetes, React.js, MERN stack,
-              Terraform
+              Software Engineer Intern @ L3Harris | gRPC, Node.js, Deep Learning
             </p>
           </div>
           <div className="profile-contact">
             <div className="contact-icon">
-              <a href="https://github.com/FouL06">
+              <a href="https://github.com/Sameer-H-Khan">
                 <FontAwesomeIcon icon={faGithub} />
               </a>
             </div>
             <div className="contact-icon">
-              <a href="mailto:ashtonfoulger@gmail.com">
+              <a href="mailto:khan.sameerh2002@gmail.com">
                 <FontAwesomeIcon icon={faEnvelope} />
               </a>
             </div>
             <div className="contact-icon">
-              <a href="https://www.linkedin.com/in/ashton-foulger/">
+              <a href="https://www.linkedin.com/in/sameer-khan-uofu/">
                 <FontAwesomeIcon icon={faLinkedin} />
               </a>
             </div>
