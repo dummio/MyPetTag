@@ -38,6 +38,12 @@ const RegisterForm = () => {
 
   const navigate = useNavigate();
 
+  // Prevents scanned new tag from being forgotten if register page is reloaded
+  useEffect(() => {
+    const tagFromLocalStorage = localStorage.getItem("rememberedTag");
+    setRemeberedTag(tagFromLocalStorage);
+  });
+
   /**
    * Submits Register Form, and send all information to firebase database
    * creates user and navigates to pet registration.

@@ -42,6 +42,12 @@ const LoginForm = () => {
     fetchAuth();
   }, []);
 
+  // Prevents scanned new tag from being forgotten if login page is reloaded
+  useEffect(() => {
+    const tagFromLocalStorage = localStorage.getItem("rememberedTag");
+    setRemeberedTag(tagFromLocalStorage);
+  });
+
   /**
    * Submits form input values to firebase and directs user to account page after auth.
    *
