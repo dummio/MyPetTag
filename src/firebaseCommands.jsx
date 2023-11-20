@@ -3,11 +3,11 @@ import {
   doc,
   updateDoc,
   setDoc,
-  collection,
+  addDoc,
   getDoc,
   arrayUnion,
-  runTransaction,
   writeBatch,
+  collection,
 } from "firebase/firestore";
 
 import { ref, deleteObject } from "firebase/storage";
@@ -53,6 +53,7 @@ export async function authStateChangedWrapper() {
 export async function addNewUserToDatabase(
   firstname_,
   lastname_,
+  zipcode_,
   email,
   password,
   phone
@@ -66,13 +67,33 @@ export async function addNewUserToDatabase(
     );
     const uid = userCredential.user.uid;
 
+    if (!zipcode_) {
+      zipcode_ = "";
+    }
+
     await setDoc(doc(db, "users", uid), {
       firstname: firstname_,
       lastname: lastname_,
+      zipcode: zipcode_,
       uid: uid,
       phone: phone,
       email: email,
     });
+
+    if (zipcode_) {
+      console.log("@kevxue", zipcode_);
+      const zipcodeRef = await doc(db, "zipcodes", zipcode_);
+      const zipcodeDocSnap = await getDoc(zipcodeRef);
+      if (!zipcodeDocSnap.exists()) {
+        await setDoc(doc(db, "zipcodes", zipcode_), {
+          users: [uid],
+        });
+      } else {
+        await updateDoc(zipcodeRef, {
+          users: arrayUnion(uid),
+        });
+      }
+    }
     return uid;
   } catch (error) {
     console.log("Error occurred writing new user to firebase : ", error);
@@ -646,11 +667,18 @@ export async function readUserAlerts() {
 }
 
 //write
-export async function writeUserAlert(uid, pid, message) {
+export async function writeUserAlert(uid, pid, message, pet) {
   try {
     const userDocRef = doc(db, "users", uid);
     const userDocSnap = await getDoc(userDocRef);
-    const petName = await getPetData(uid, pid, ["name"]);
+    let petName = "";
+    if (pid === -1) {
+      //change to read from pet tuple
+      petName = { name: pet };
+    } else {
+      petName = await getPetData(uid, pid, ["name"]);
+    }
+    console.log(pid, petName);
     const dateObj = new Date();
     let month = dateObj.getUTCMonth() + 1;
     let day = dateObj.getUTCDate();
@@ -675,6 +703,10 @@ export async function writeUserAlert(uid, pid, message) {
       await updateDoc(userDocRef, {
         alerts: arrayUnion(alert),
       });
+    }
+    const phoneNum = userDocSnap.data().phone;
+    if(phoneNum) {
+      sendSMS(phoneNum, petName.name + " : " + message);
     }
   } catch (error) {
     console.log(error);
@@ -760,4 +792,49 @@ export async function getUserDocRef() {
   //console.log(uid);
   const userDocRef = doc(db, "users", uid);
   return userDocRef;
+}
+
+//maybe pet is only petname maybe include entire pet tuple idk
+export async function notifyNearbyUsers(pet) {
+  const uid = await authStateChangedWrapper();
+  const userDocRef = doc(db, "users", uid);
+  const userDocSnap = await getDoc(userDocRef);
+  const zipcode = userDocSnap.data().zipcode;
+  if (zipcode === "") {
+    console.log(
+      "OPERATION COULD NOT BE PERFORMED BECAUSE USER DID NOT PROVIDE ZIPCODE"
+    );
+    return;
+  }
+
+  const zipCodeDocRef = doc(db, "zipcodes", zipcode);
+  const zipcodeDocSnap = await getDoc(zipCodeDocRef);
+  const localUsers = zipcodeDocSnap.data().users;
+  //ADD MORE SPECIFIC IDENTIFIERS IN STRING (BREED, NAME, MAYBE PICTURE????)
+  const title = "Notification";
+  const petInfo = await getPetData(uid, pet, ["name", "breed"]);
+  console.log(petInfo);
+  const petName = petInfo.name;
+  const petBreed = petInfo.breed !== null ? petInfo.breed : "pet";
+  const message = `Local ${petBreed} named ${petName} recently lost!`;
+  localUsers.forEach((element) => {
+    if (element === uid) {
+      return;
+    }
+    writeUserAlert(element, -1, message, title);
+  });
+}
+
+async function sendSMS(phoneNum, message) {
+  const messagesRef = collection(db, "messages");
+  try {
+    await addDoc(messagesRef, {
+      to: phoneNum,
+      body: message,
+    });
+
+    console.log("SMS sent successfully");
+  } catch (error) {
+    console.error("Error sending SMS:", error);
+  }
 }

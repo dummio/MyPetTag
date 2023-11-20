@@ -55,9 +55,11 @@ const Alert = () => {
       const unsub = onSnapshot(
         myDoc,
         (docSnapshot) => {
-          const tempAlerts = docSnapshot.data().alerts;
-          setMessages(tempAlerts);
-          setCount(tempAlerts?.length);
+          if (docSnapshot && docSnapshot.data() && docSnapshot.data().alerts) {
+            const tempAlerts = docSnapshot.data().alerts;
+            setMessages(tempAlerts);
+            setCount(tempAlerts?.length);
+          }
         },
         (err) => {
           console.log(`Encountered error: ${err}`);
