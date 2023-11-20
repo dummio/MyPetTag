@@ -800,7 +800,7 @@ export async function notifyNearbyUsers(pet) {
   const userDocRef = doc(db, "users", uid);
   const userDocSnap = await getDoc(userDocRef);
   const zipcode = userDocSnap.data().zipcode;
-  if (zipcode === "") {
+  if (zipcode === "" || !zipcode) {
     console.log(
       "OPERATION COULD NOT BE PERFORMED BECAUSE USER DID NOT PROVIDE ZIPCODE"
     );
