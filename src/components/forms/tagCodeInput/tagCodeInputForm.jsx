@@ -78,7 +78,7 @@ const TagCodeInputEditForm = () => {
     async function loadDeviceInfo() {
       const info = await Device.getInfo();
       setDeviceInfo(info);
-      if (!mlkit /* && info.platform === 'android'*/) {
+      if (!mlkit && info.platform === 'android') {
         setMlkit(await loadQrScanner());
       }
       setPageReady(true);
@@ -165,8 +165,8 @@ const TagCodeInputEditForm = () => {
       document
         .querySelector("body")
         ?.classList.remove("barcode-scanning-active");
-      await mlkit.BarcodeScanner.removeAllListeners();
-      await mlkit.BarcodeScanner.stopScan();
+      await mlkit?.BarcodeScanner.removeAllListeners();
+      await mlkit?.BarcodeScanner.stopScan();
     }
 
     if (isScanning) {
