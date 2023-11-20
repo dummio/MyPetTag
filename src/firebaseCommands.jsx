@@ -102,7 +102,7 @@ export async function addNewUserToDatabase(
 
 export async function updateAccountInfo(data) {
   if (_.isEmpty(data)) {
-    throw new Error('Cannot update account info with non-existent data.');
+    throw new Error("Cannot update account info with non-existent data.");
   }
 
   let accountInfo = {
@@ -115,24 +115,24 @@ export async function updateAccountInfo(data) {
   let updatedFields = _.omitBy(accountInfo, _.isNil);
 
   if (_.isEmpty(updatedFields)) {
-    throw new Error('No data given to update user account with.');
+    throw new Error("No data given to update user account with.");
   }
 
   try {
     const uid = await authStateChangedWrapper();
-    const userDocRef = doc(db, 'users', uid);
+    const userDocRef = doc(db, "users", uid);
 
     updateDoc(userDocRef, updatedFields);
     return true;
   } catch (error) {
-    console.error('Failed to update user account info: ', error);
+    console.error("Failed to update user account info: ", error);
     return false;
   }
 }
 
 export async function updatePrivacyPrefs(data) {
   if (_.isEmpty(data)) {
-    throw new Error('Cannot update privacy prefs with non-existent data.');
+    throw new Error("Cannot update privacy prefs with non-existent data.");
   }
 
   let privacyPrefs = {
@@ -144,17 +144,17 @@ export async function updatePrivacyPrefs(data) {
   let updatedFields = _.omitBy(privacyPrefs, _.isNil);
 
   if (_.isEmpty(updatedFields)) {
-    throw new Error('No data given to update user account with.');
+    throw new Error("No data given to update user account with.");
   }
 
   try {
     const uid = await authStateChangedWrapper();
-    const userDocRef = doc(db, 'users', uid);
+    const userDocRef = doc(db, "users", uid);
 
     updateDoc(userDocRef, updatedFields);
     return true;
   } catch (error) {
-    console.error('Failed to update user privacy prefs: ', error);
+    console.error("Failed to update user privacy prefs: ", error);
     return false;
   }
 }
@@ -164,7 +164,7 @@ export async function changeAccountEmail(newEmail) {
     const user = auth.currentUser;
 
     if (newEmail === user.email) {
-      console.debug('Email has not changed. Skipping...');
+      console.debug("Email has not changed. Skipping...");
       return true;
     }
 
@@ -173,11 +173,11 @@ export async function changeAccountEmail(newEmail) {
         return true;
       })
       .catch((error) => {
-        console.error('Failed to update user email: ', error);
+        console.error("Failed to update user email: ", error);
         return false;
       });
   } catch (error) {
-    console.error('Failed to update user email: ', error);
+    console.error("Failed to update user email: ", error);
     return false;
   }
 }
@@ -191,11 +191,11 @@ export async function changeAccountPassword(newPassword) {
         return true;
       })
       .catch((error) => {
-        console.error('Failed to update user password: ', error);
+        console.error("Failed to update user password: ", error);
         return false;
       });
   } catch (error) {
-    console.error('Failed to update user password: ', error);
+    console.error("Failed to update user password: ", error);
   }
 }
 
@@ -239,7 +239,7 @@ export async function reauthenticateCurrentUser(password) {
   try {
     const cred = EmailAuthProvider.credential(auth.currentUser.email, password);
     return await reauthenticateWithCredential(auth.currentUser, cred);
-  } catch(error) {
+  } catch (error) {
     console.debug("Failed to reauthenticate user: ", error);
     return null;
   }
@@ -705,7 +705,7 @@ export async function writeUserAlert(uid, pid, message, pet) {
       });
     }
     const phoneNum = userDocSnap.data().phone;
-    if(phoneNum) {
+    if (phoneNum) {
       sendSMS(phoneNum, petName.name + " : " + message);
     }
   } catch (error) {
@@ -827,14 +827,44 @@ export async function notifyNearbyUsers(pet) {
 
 async function sendSMS(phoneNum, message) {
   const messagesRef = collection(db, "messages");
-  try {
-    await addDoc(messagesRef, {
-      to: phoneNum,
-      body: message,
-    });
+  const status = await getSMSAlertStatus();
+  if (status) {
+    try {
+      await addDoc(messagesRef, {
+        to: phoneNum,
+        body: message,
+      });
 
-    console.log("SMS sent successfully");
-  } catch (error) {
-    console.error("Error sending SMS:", error);
+      console.log("SMS sent successfully");
+    } catch (error) {
+      console.error("Error sending SMS:", error);
+    }
   }
+}
+
+export async function getEmailAlertStatus() {
+  const uid = await authStateChangedWrapper();
+  const userDocRef = doc(db, "users", uid);
+  const userDocSnap = await getDoc(userDocRef);
+  const data = userDocSnap.data();
+  if (data.emailAlerts !== null || data.emailAlerts) return true;
+  return false;
+}
+
+async function getSMSAlertStatus() {
+  const uid = await authStateChangedWrapper();
+  const userDocRef = doc(db, "users", uid);
+  const userDocSnap = await getDoc(userDocRef);
+  const data = userDocSnap.data();
+  if (data.textAlerts !== null || data.textAlerts) return true;
+  return false;
+}
+
+export async function getMobileAlertStatus() {
+  const uid = await authStateChangedWrapper();
+  const userDocRef = doc(db, "users", uid);
+  const userDocSnap = await getDoc(userDocRef);
+  const data = userDocSnap.data();
+  if (data.mobileAlerts !== null || data.mobileAlerts) return true;
+  return false;
 }

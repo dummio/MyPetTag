@@ -212,10 +212,10 @@ const RegisterForm = () => {
           required
           onChange={handleChange}
         />
-        <div id="register-checkbox-container">
+        {/* <div id="register-checkbox-container">
           <input className="form-checkbox" type="checkbox" />
           <p>Allow MyPetTag to send you email alerts.</p>
-        </div>
+        </div> */}
         <input
           id="register-btn"
           type="submit"
