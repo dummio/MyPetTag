@@ -174,12 +174,17 @@ const PetCreate = () => {
   };
 
   const UploadPDF = (e) => {
-    console.log("IN UPLOAD PDF");
     e.preventDefault();
     let file = e.target.files[0];
 
     if (file && file.type === "application/pdf") {
-      setMedicalPDF(file);
+      // Max size: 2.5 megabytes (A lil bit of wiggle room, actually 2550 bytes)
+      if (file.size < 2673868) {
+        setMedicalPDF(file);
+      } else {
+        alert("File too large. Max size: 2.5 MB");
+        document.getElementById("pdf-file-btn").value = null;
+      }
 
       /* The dialog defaults to only PDF types, but users can upload
        * a non-image file anyways, so this displays an error message. */
@@ -769,6 +774,7 @@ const PetCreate = () => {
               value={petHealthInfo}
             />
             <label>Upload Medical History PDF</label>
+            <p style={{ marginTop: "0px" }}>(Max Size: 2.5 MB)</p>
             <input
               id="pdf-file-btn"
               // ref={pdfInputRef}

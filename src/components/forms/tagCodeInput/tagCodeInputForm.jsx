@@ -14,7 +14,10 @@ import logo from "../../../images/paw.png";
 import "./tagCodeInputForm.css";
 
 //import firebase command
-import { checkTagIdTaken } from "../../../firebaseCommands";
+import {
+  checkTagIdTaken,
+  isUserAuthenticated,
+} from "../../../firebaseCommands";
 import { RememberTagContext } from "../../providers/rememberTagProvider";
 
 async function loadQrScanner() {
@@ -44,6 +47,16 @@ const TagCodeInputEditForm = () => {
     localStorage.setItem("rememberedTag", "");
     setRemeberedTag("");
   });
+
+  useEffect(() => {
+    async function fetchAuth() {
+      const isAuthed = await isUserAuthenticated();
+      if (!isAuthed) {
+        navigate("/", { replace: true });
+      }
+    }
+    fetchAuth();
+  }, []);
 
   const ValidateForm = () => {
     let isValid = false;
@@ -78,7 +91,7 @@ const TagCodeInputEditForm = () => {
     async function loadDeviceInfo() {
       const info = await Device.getInfo();
       setDeviceInfo(info);
-      if (!mlkit && info.platform === 'android') {
+      if (!mlkit && info.platform === "android") {
         setMlkit(await loadQrScanner());
       }
       setPageReady(true);
