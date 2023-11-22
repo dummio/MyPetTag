@@ -10,7 +10,6 @@ const AppListener = () => {
       if (deviceInfo.platform === 'android') {
         App.addListener('appUrlOpen', (event) => {
           const slug = event.url.split('mypettag-5970e.web.app').pop();
-          alert("Navigating to:\n" + slug);
           if (slug) {
             navigate(slug);
           }
