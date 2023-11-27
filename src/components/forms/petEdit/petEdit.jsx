@@ -75,10 +75,10 @@ const PetEdit = () => {
   }, [navigate]);
 
   async function getInitialValues() {
-    const uID = await authStateChangedWrapper();
-    const pID = Number(window.location.pathname.split("/")[3]);
-    setPetID(pID);
     try {
+      const uID = await authStateChangedWrapper();
+      const pID = Number(window.location.pathname.split("/")[3]);
+      setPetID(pID);
       const petData = await getPetData(uID, pID, [
         "name",
         "species",
