@@ -281,8 +281,8 @@ export async function addPetToDatabase(
   imageUrl_,
   medicalUrl_
 ) {
-  const uid = await authStateChangedWrapper();
   try {
+    const uid = await authStateChangedWrapper();
     const userDocRef = doc(db, "users", uid);
     const userDocSnap = await getDoc(userDocRef);
 
@@ -343,7 +343,7 @@ export async function addPetToDatabase(
     }
   } catch (error) {
     console.log("Error occured during pet registration: ", error);
-    console.log(uid);
+    // console.log(uid);
   }
 }
 
@@ -383,9 +383,8 @@ export async function updatePetInDatabase(petInfo) {
 }
 
 export async function removePetFromDatabase(petID) {
-  const uid = await authStateChangedWrapper();
-
   try {
+    const uid = await authStateChangedWrapper();
     const userDocRef = doc(db, "users", uid);
     const userDocSnap = await getDoc(userDocRef);
 
@@ -454,8 +453,8 @@ export async function removePetFromDatabase(petID) {
  * @returns
  */
 export async function getUserData() {
-  const uid_t = await authStateChangedWrapper();
   try {
+    const uid_t = await authStateChangedWrapper();
     console.log(uid_t);
     const userDocRef = doc(db, "users", uid_t);
     const userDocSnap = await getDoc(userDocRef);
@@ -477,11 +476,11 @@ export async function getUserData() {
  * @returns
  */
 export async function getPetData(uid, petID, keys) {
-  if (uid == null) {
-    console.log("whadaito: ", uid);
-    uid = await authStateChangedWrapper();
-  }
   try {
+    if (uid == null) {
+      console.log("whadaito: ", uid);
+      uid = await authStateChangedWrapper();
+    }
     const userDocRef = doc(db, "users", uid);
     const userDocSnap = await getDoc(userDocRef);
     let petData = {};
@@ -504,6 +503,7 @@ export async function getPetData(uid, petID, keys) {
           return petData;
         }
       }
+      console.log("the pet wasn't found");
     } else {
       console.log("whack");
       return null;
@@ -773,55 +773,68 @@ export async function getUserAndPetIDFromTag(tagID) {
 
 //for now there is no way to change pet lost status
 export async function setIsPetLost(pid, lost) {
-  const uid = await authStateChangedWrapper();
-  const userDocRef = await doc(db, "users", uid);
-  const userDocSnap = await getDoc(userDocRef);
-  const userDocData = userDocSnap.data();
-  for (let i = 0; i < userDocData.pets.length; i++) {
-    if (userDocData.pets[i]["petID"] == pid) {
-      userDocData.pets[i].isLost = lost;
+  try {
+    const uid = await authStateChangedWrapper();
+    const userDocRef = await doc(db, "users", uid);
+    const userDocSnap = await getDoc(userDocRef);
+    const userDocData = userDocSnap.data();
+    for (let i = 0; i < userDocData.pets.length; i++) {
+      if (userDocData.pets[i]["petID"] == pid) {
+        userDocData.pets[i].isLost = lost;
+      }
     }
+    await updateDoc(userDocRef, { pets: userDocData.pets });
+    window.location.reload();
+  } catch (error) {
+    console.debug("error setting pet to lost: ", error);
   }
-  await updateDoc(userDocRef, { pets: userDocData.pets });
-  window.location.reload();
 }
 
 export async function getUserDocRef() {
-  const uid = await authStateChangedWrapper();
-  //console.log(uid);
-  const userDocRef = doc(db, "users", uid);
-  return userDocRef;
+  try {
+    const uid = await authStateChangedWrapper();
+    //console.log(uid);
+    const userDocRef = doc(db, "users", uid);
+    return userDocRef;
+  } catch (error) {
+    console.debug("Error getting user doc ref: ", error);
+    return null;
+  }
 }
 
 //maybe pet is only petname maybe include entire pet tuple idk
 export async function notifyNearbyUsers(pet) {
-  const uid = await authStateChangedWrapper();
-  const userDocRef = doc(db, "users", uid);
-  const userDocSnap = await getDoc(userDocRef);
-  const zipcode = userDocSnap.data().zipcode;
-  if (zipcode === "" || !zipcode) {
-    console.log(
-      "OPERATION COULD NOT BE PERFORMED BECAUSE USER DID NOT PROVIDE ZIPCODE"
-    );
-    return;
-  }
-
-  const zipCodeDocRef = doc(db, "zipcodes", zipcode);
-  const zipcodeDocSnap = await getDoc(zipCodeDocRef);
-  const localUsers = zipcodeDocSnap.data().users;
-  //ADD MORE SPECIFIC IDENTIFIERS IN STRING (BREED, NAME, MAYBE PICTURE????)
-  const title = "Notification";
-  const petInfo = await getPetData(uid, pet, ["name", "breed"]);
-  console.log(petInfo);
-  const petName = petInfo.name;
-  const petBreed = petInfo.breed !== null ? petInfo.breed : "pet";
-  const message = `Local ${petBreed} named ${petName} recently lost!`;
-  localUsers.forEach((element) => {
-    if (element === uid) {
+  try {
+    const uid = await authStateChangedWrapper();
+    const userDocRef = doc(db, "users", uid);
+    const userDocSnap = await getDoc(userDocRef);
+    const zipcode = userDocSnap.data().zipcode;
+    if (zipcode === "" || !zipcode) {
+      console.log(
+        "OPERATION COULD NOT BE PERFORMED BECAUSE USER DID NOT PROVIDE ZIPCODE"
+      );
       return;
     }
-    writeUserAlert(element, -1, message, title);
-  });
+
+    const zipCodeDocRef = doc(db, "zipcodes", zipcode);
+    const zipcodeDocSnap = await getDoc(zipCodeDocRef);
+    const localUsers = zipcodeDocSnap.data().users;
+    //ADD MORE SPECIFIC IDENTIFIERS IN STRING (BREED, NAME, MAYBE PICTURE????)
+    const title = "Notification";
+    const petInfo = await getPetData(uid, pet, ["name", "breed"]);
+    console.log(petInfo);
+    const petName = petInfo.name;
+    const petBreed = petInfo.breed !== null ? petInfo.breed : "pet";
+    const message = `Local ${petBreed} named ${petName} recently lost!`;
+    localUsers.forEach((element) => {
+      if (element === uid) {
+        return;
+      }
+      writeUserAlert(element, -1, message, title);
+    });
+  } catch (error) {
+    console.log("Error notifying nearby users: ", error);
+  }
 }
 
 async function sendSMS(phoneNum, message) {
@@ -842,30 +855,42 @@ async function sendSMS(phoneNum, message) {
 }
 
 export async function getEmailAlertStatus() {
-  const uid = await authStateChangedWrapper();
-  const userDocRef = doc(db, "users", uid);
-  const userDocSnap = await getDoc(userDocRef);
-  const data = userDocSnap.data();
-  if (data.emailAlerts !== null || data.emailAlerts) return true;
-  return false;
+  try {
+    const uid = await authStateChangedWrapper();
+    const userDocRef = doc(db, "users", uid);
+    const userDocSnap = await getDoc(userDocRef);
+    const data = userDocSnap.data();
+    if (data.emailAlerts !== null || data.emailAlerts) return true;
+    return false;
+  } catch (error) {
+    console.log("Error getting email alerts: ", error);
+  }
 }
 
 async function getSMSAlertStatus() {
-  const uid = await authStateChangedWrapper();
-  const userDocRef = doc(db, "users", uid);
-  const userDocSnap = await getDoc(userDocRef);
-  const data = userDocSnap.data();
-  if (data.textAlerts !== null || data.textAlerts) return true;
-  return false;
+  try {
+    const uid = await authStateChangedWrapper();
+    const userDocRef = doc(db, "users", uid);
+    const userDocSnap = await getDoc(userDocRef);
+    const data = userDocSnap.data();
+    if (data.textAlerts !== null || data.textAlerts) return true;
+    return false;
+  } catch (error) {
+    console.log("Error getting SMS alerts: ", error);
+  }
 }
 
 export async function getMobileAlertStatus() {
-  const uid = await authStateChangedWrapper();
-  const userDocRef = doc(db, "users", uid);
-  const userDocSnap = await getDoc(userDocRef);
-  const data = userDocSnap.data();
-  if (data.mobileAlerts !== null || data.mobileAlerts) return true;
-  return false;
+  try {
+    const uid = await authStateChangedWrapper();
+    const userDocRef = doc(db, "users", uid);
+    const userDocSnap = await getDoc(userDocRef);
+    const data = userDocSnap.data();
+    if (data.mobileAlerts !== null || data.mobileAlerts) return true;
+    return false;
+  } catch (error) {
+    console.log("Error getting mobile alerts: ", error);
+  }
 }
 
 export async function changeZipCode(newZipCode) {

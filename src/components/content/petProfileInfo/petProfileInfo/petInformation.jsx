@@ -104,6 +104,8 @@ const PetInformation = ({ userID, petID }) => {
         sethealthConditions(petData["conds"]);
         setIsLost(petData["isLost"]);
         setShowModal(petData["isLost"]);
+      } else {
+        navigate("/*");
       }
     }
     fetchPetData();

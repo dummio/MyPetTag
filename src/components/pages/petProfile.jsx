@@ -64,6 +64,11 @@ const PetProfile = () => {
     async function fetchAuth() {
       const isAuthed = await isUserAuthenticated();
       setAuthed(isAuthed);
+      // If the user is not authenticated AND they're trying to view the authenticated
+      // version of a pet profile (where the URL doesn't have "tag"), navigate home
+      if (!isAuthed && window.location.pathname.split("/")[1] !== "tag") {
+        navigate("/", { replace: true });
+      }
     }
     fetchAuth();
   }, []);
@@ -125,16 +130,8 @@ const PetProfile = () => {
     }
     // Otherwise, navigate to the home page with the tagID as a query param
     else {
-      console.log("NON AUTHED THINGYMABOBERUNK");
-      // Extract the desired query parameter value
       const scannedTagID = window.location.pathname.split("/")[2];
-
-      console.log("The remmebered tag in petProfile.jsx: ", rememberedTag);
       setRemeberedTag(scannedTagID);
-      console.log(
-        "The remmebered tag in petProfile.jsx (after setting): ",
-        rememberedTag
-      );
       localStorage.setItem("rememberedTag", scannedTagID);
 
       return (

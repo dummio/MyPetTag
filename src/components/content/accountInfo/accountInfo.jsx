@@ -4,19 +4,28 @@
  */
 
 // Import React Modules
-import React, { useState, useEffect } from 'react';
-import PetProfileButton from './petProfileButton';
-import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import PetProfileButton from "./petProfileButton";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 // Import CSS
-import './accountInfo.css';
-import logo from '../../../images/paw.png';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPen, faPlus, faTrashCan, faX } from '@fortawesome/free-solid-svg-icons';
+import "./accountInfo.css";
+import logo from "../../../images/paw.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faPen,
+  faPlus,
+  faTrashCan,
+  faX,
+} from "@fortawesome/free-solid-svg-icons";
 
 //import firebase helper function
-import { getUserData, removePetFromDatabase, updatePrivacyPrefs } from '../../../firebaseCommands';
+import {
+  getUserData,
+  removePetFromDatabase,
+  updatePrivacyPrefs,
+} from "../../../firebaseCommands";
 
 /**
  * Handles all information about a users account filling in and updating data
@@ -26,9 +35,9 @@ import { getUserData, removePetFromDatabase, updatePrivacyPrefs } from '../../..
  */
 const AccountInformation = () => {
   const [user] = useState({
-    Name: 'Loading...',
-    Email: 'Loading...',
-    Phone: 'Loading...',
+    Name: "Loading...",
+    Email: "Loading...",
+    Phone: "Loading...",
   });
   const [realUser, setUser] = useState(null);
   const [realEmail, setEmail] = useState(null);
@@ -44,7 +53,7 @@ const AccountInformation = () => {
     handleSubmit,
     formState: { isDirty, isSubmitting, isLoading },
   } = useForm({
-    mode: 'onTouched',
+    mode: "onTouched",
     defaultValues: getInitialValues,
   });
 
@@ -52,7 +61,8 @@ const AccountInformation = () => {
     // Fetch user data when the component mounts
     async function fetchUserData() {
       const userData = await getUserData().catch((error) => {
-        navigate('/', { replace: true });
+        console.log("No user found, navigating home");
+        navigate("/", { replace: true });
       });
       if (userData) {
         setUser(userData[0]);
@@ -62,6 +72,9 @@ const AccountInformation = () => {
           Name: pet.name,
         }));
         setRealPet(userPets);
+      } else {
+        console.log("121212121212121No user found,");
+        navigate("/", { replace: true });
       }
     }
     fetchUserData();
@@ -89,9 +102,11 @@ const AccountInformation = () => {
   }
 
   const handlePetDeletion = async () => {
-    await removePetFromDatabase(selectedPet['id']);
+    await removePetFromDatabase(selectedPet["id"]);
 
-    const updatedRealPet = realPet.filter((userPet) => userPet.Key !== selectedPet['id']);
+    const updatedRealPet = realPet.filter(
+      (userPet) => userPet.Key !== selectedPet["id"]
+    );
     setRealPet(updatedRealPet);
 
     setSelectedPet(null);
@@ -103,7 +118,7 @@ const AccountInformation = () => {
     return new Promise((resolve) => {
       updatePrivacyPrefs(data).then((success) => {
         if (!success) {
-          alert('Failed to update privacy preferences.');
+          alert("Failed to update privacy preferences.");
           resolve();
         } else {
           setTimeout(() => {
@@ -129,7 +144,7 @@ const AccountInformation = () => {
       }
       return {};
     } catch (error) {
-      console.error('Error retrieving privacy prefs:\n', error);
+      console.error("Error retrieving privacy prefs:\n", error);
       return {};
     }
   }
@@ -138,32 +153,43 @@ const AccountInformation = () => {
     <div id="account-container">
       <div id="company-name-container">
         <h1>
-          My<span style={{ color: '#75af96' }}>PetTag</span>
+          My<span style={{ color: "#75af96" }}>PetTag</span>
         </h1>
-        <img className="logo" src={logo} alt="MyPetTag" width={55} height={55} />
+        <img
+          className="logo"
+          src={logo}
+          alt="MyPetTag"
+          width={55}
+          height={55}
+        />
       </div>
       <div id="user-information-container">
         <div id="user-name-container">
           <h1 id="welcome-text">Welcome</h1>
           <h1>
-            {realUser ? realUser.firstname : user.Name.split(' ').splice(0, 1)}
+            {realUser ? realUser.firstname : user.Name.split(" ").splice(0, 1)}
             <FontAwesomeIcon
               style={{
-                fontSize: '20px',
-                marginLeft: '15px',
-                cursor: 'pointer',
+                fontSize: "20px",
+                marginLeft: "15px",
+                cursor: "pointer",
               }}
               icon={faPen}
               //needs an onclick to edit users information
               onClick={() => {
-                navigate('../settings', { replace: false });
+                navigate("../settings", { replace: false });
               }}
             />
           </h1>
         </div>
         <div id="user-container">
           <div id="user-info">
-            <p>Name: {realUser ? `${realUser.firstname} ${realUser.lastname}` : user.Name}</p>
+            <p>
+              Name:{" "}
+              {realUser
+                ? `${realUser.firstname} ${realUser.lastname}`
+                : user.Name}
+            </p>
             <p>Email: {realEmail ? realEmail : user.Email}</p>
             <p>Phone: {realUser ? realUser.phone : user.Phone}</p>
           </div>
@@ -171,9 +197,21 @@ const AccountInformation = () => {
             {!isLoading && (
               <div id="user-prefs-container">
                 <div id="checkbox-container">
-                  <input className="form-checkbox" type="checkbox" {...register('emailAlerts')} />
-                  <input className="form-checkbox" type="checkbox" {...register('textAlerts')} />
-                  <input className="form-checkbox" type="checkbox" {...register('mobileAlerts')} />
+                  <input
+                    className="form-checkbox"
+                    type="checkbox"
+                    {...register("emailAlerts")}
+                  />
+                  <input
+                    className="form-checkbox"
+                    type="checkbox"
+                    {...register("textAlerts")}
+                  />
+                  <input
+                    className="form-checkbox"
+                    type="checkbox"
+                    {...register("mobileAlerts")}
+                  />
                 </div>
                 <div id="checkbox-text-container">
                   <p>Allow MyPetTag to send you email alerts.</p>
@@ -184,10 +222,19 @@ const AccountInformation = () => {
             )}
             {!isLoading && isDirty && (
               <div id="privacy-form-btns">
-                <button id="prefs-cancel-btn" type="button" onClick={() => navigate(0)}>
+                <button
+                  id="prefs-cancel-btn"
+                  type="button"
+                  onClick={() => navigate(0)}
+                >
                   Cancel
                 </button>
-                <input id="prefs-save-btn" type="submit" value="Save" disabled={isSubmitting} />
+                <input
+                  id="prefs-save-btn"
+                  type="submit"
+                  value="Save"
+                  disabled={isSubmitting}
+                />
               </div>
             )}
           </form>
@@ -200,7 +247,7 @@ const AccountInformation = () => {
           <div id="pet-container-icons">
             <FontAwesomeIcon
               icon={faPlus}
-              style={{ height: '31px', marginRight: '12px', cursor: 'pointer' }}
+              style={{ height: "31px", marginRight: "12px", cursor: "pointer" }}
               onClick={() => {
                 navigate("/input-code");
               }}
@@ -208,7 +255,7 @@ const AccountInformation = () => {
 
             <FontAwesomeIcon
               icon={deleting ? faX : faTrashCan}
-              style={{ height: '31px', cursor: 'pointer' }}
+              style={{ height: "31px", cursor: "pointer" }}
               onClick={() => {
                 setDeleting(!deleting);
               }}
@@ -222,8 +269,9 @@ const AccountInformation = () => {
               <p>
                 Are you sure you want to delete <b>{selectedPet?.name}</b>?
               </p>
-              <p style={{ fontSize: '14px', color: 'rgb(235,35,35)' }}>
-                Warning: This will unassign the tag associated with your account.
+              <p style={{ fontSize: "14px", color: "rgb(235,35,35)" }}>
+                Warning: This will unassign the tag associated with your
+                account.
               </p>
               <button onClick={handlePetDeletion}>Yes</button>
               <button onClick={() => setShowConfirmation(false)}>No</button>
