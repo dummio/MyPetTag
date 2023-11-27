@@ -75,7 +75,7 @@ const AboutInfo = () => {
             </a>
           </li>
           <li>
-            <a href="">
+            <a href="/MyPetTag-release.apk">
               MyPetTag Android <FontAwesomeIcon icon={faAndroid} />
             </a>
           </li>
@@ -131,23 +131,23 @@ const AboutInfo = () => {
           <h4>BS Computer Science</h4>
           <div className="profile-interests">
             <p>
-              DevOps Engineer @ OpenText, AWS, Kubernetes, React.js, MERN stack,
-              Terraform
+              Software Development Engineer Intern @ Amazon, AWS, Firebase,
+              Databases
             </p>
           </div>
           <div className="profile-contact">
             <div className="contact-icon">
-              <a href="https://github.com/FouL06">
+              <a href="https://github.com/dummio">
                 <FontAwesomeIcon icon={faGithub} />
               </a>
             </div>
             <div className="contact-icon">
-              <a href="mailto:ashtonfoulger@gmail.com">
+              <a href="mailto:kx6023@gmail.com">
                 <FontAwesomeIcon icon={faEnvelope} />
               </a>
             </div>
             <div className="contact-icon">
-              <a href="https://www.linkedin.com/in/ashton-foulger/">
+              <a href="https://www.linkedin.com/in/kevin-xue-bb60421b2/">
                 <FontAwesomeIcon icon={faLinkedin} />
               </a>
             </div>
@@ -165,23 +165,22 @@ const AboutInfo = () => {
           <h4>BS Software Development</h4>
           <div className="profile-interests">
             <p>
-              DevOps Engineer @ OpenText, AWS, Kubernetes, React.js, MERN stack,
-              Terraform
+              DevOps Intern @ OpenText | Docker, Node.js, React, C/C++, Python
             </p>
           </div>
           <div className="profile-contact">
             <div className="contact-icon">
-              <a href="https://github.com/FouL06">
+              <a href="https://github.com/kylejcharlton">
                 <FontAwesomeIcon icon={faGithub} />
               </a>
             </div>
             <div className="contact-icon">
-              <a href="mailto:ashtonfoulger@gmail.com">
+              <a href="mailto:kyle@kcharlton.dev">
                 <FontAwesomeIcon icon={faEnvelope} />
               </a>
             </div>
             <div className="contact-icon">
-              <a href="https://www.linkedin.com/in/ashton-foulger/">
+              <a href="https://www.linkedin.com/in/kyle-j-charlton/">
                 <FontAwesomeIcon icon={faLinkedin} />
               </a>
             </div>

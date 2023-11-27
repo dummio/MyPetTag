@@ -12,6 +12,7 @@ import {
   changeAccountEmail,
   changeAccountPassword,
   reauthenticateCurrentUser,
+  changeZipCode,
 } from '../../../firebaseCommands';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -37,6 +38,7 @@ const AccountSettings = () => {
   const [isAuthed, setIsAuthed] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [currentEmail, setCurrentEmail] = useState();
+  const [currentZipCode, setCurrentZipCode] = useState();
 
   const navigate = useNavigate();
 
@@ -58,6 +60,8 @@ const AccountSettings = () => {
         const userDoc = userData[0];
         const email = userData[1];
         setCurrentEmail(email);
+        setCurrentZipCode(userDoc.zipcode);
+        console.log(currentZipCode);
 
         return {
           firstName: userDoc.firstname,
@@ -85,6 +89,9 @@ const AccountSettings = () => {
       const updateChanges = async (data) => {
         let emailSuccess = true;
         let passwordSuccess = true;
+        if(data.zipcode !== currentZipCode) {
+          await changeZipCode(data.zipcode);
+        }
         if (data.userEmail !== currentEmail || !_.isEmpty(data.newPassword)) {
           let reauthenticatedUser = await reauthenticateCurrentUser(data.password);
           if (reauthenticatedUser) {

@@ -81,7 +81,6 @@ export async function addNewUserToDatabase(
     });
 
     if (zipcode_) {
-      console.log("@kevxue", zipcode_);
       const zipcodeRef = await doc(db, "zipcodes", zipcode_);
       const zipcodeDocSnap = await getDoc(zipcodeRef);
       if (!zipcodeDocSnap.exists()) {
@@ -891,5 +890,34 @@ export async function getMobileAlertStatus() {
     return false;
   } catch (error) {
     console.log("Error getting mobile alerts: ", error);
+  }
+}
+
+export async function changeZipCode(newZipCode) {
+  const uid = await authStateChangedWrapper();
+  const userDocRef = doc(db, "users", uid);
+  const userDocSnap = await getDoc(userDocRef);
+  const oldZipCode = userDocSnap.data().zipcode;
+  const zipCodeDocRef = doc(db, "zipcodes", oldZipCode);
+  const zipCodeSnap = await getDoc(zipCodeDocRef);
+  const users = zipCodeSnap.data().users;
+  const updatedUids = users.filter((u) => u !== uid);
+
+  console.log(updatedUids);
+
+  await updateDoc(zipCodeDocRef, { users: updatedUids });
+
+  if (newZipCode) {
+    const zcRef = await doc(db, "zipcodes", newZipCode);
+    const zcSnap = await getDoc(zcRef);
+    if (!zcSnap.exists()) {
+      await setDoc(doc(db, "zipcodes", newZipCode), {
+        users: [uid],
+      });
+    } else {
+      await updateDoc(zcRef, {
+        users: arrayUnion(uid),
+      });
+    }
   }
 }
