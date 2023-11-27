@@ -75,7 +75,7 @@ const AboutInfo = () => {
             </a>
           </li>
           <li>
-            <a href="">
+            <a href="/MyPetTag-release.apk">
               MyPetTag Android <FontAwesomeIcon icon={faAndroid} />
             </a>
           </li>
