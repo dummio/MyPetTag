@@ -131,23 +131,23 @@ const AboutInfo = () => {
           <h4>BS Computer Science</h4>
           <div className="profile-interests">
             <p>
-              DevOps Engineer @ OpenText, AWS, Kubernetes, React.js, MERN stack,
-              Terraform
+              Software Development Engineer Intern @ Amazon, AWS, Firebase,
+              Databases
             </p>
           </div>
           <div className="profile-contact">
             <div className="contact-icon">
-              <a href="https://github.com/FouL06">
+              <a href="https://github.com/dummio">
                 <FontAwesomeIcon icon={faGithub} />
               </a>
             </div>
             <div className="contact-icon">
-              <a href="mailto:ashtonfoulger@gmail.com">
+              <a href="mailto:kx6023@gmail.com">
                 <FontAwesomeIcon icon={faEnvelope} />
               </a>
             </div>
             <div className="contact-icon">
-              <a href="https://www.linkedin.com/in/ashton-foulger/">
+              <a href="https://www.linkedin.com/in/kevin-xue-bb60421b2/">
                 <FontAwesomeIcon icon={faLinkedin} />
               </a>
             </div>
