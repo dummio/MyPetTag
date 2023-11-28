@@ -70,7 +70,7 @@ const AboutInfo = () => {
         <h2>Download:</h2>
         <ul>
           <li>
-            <a href="">
+            <a href="/MyPetTag">
               MyPetTag iOS <FontAwesomeIcon icon={faApple} />
             </a>
           </li>
