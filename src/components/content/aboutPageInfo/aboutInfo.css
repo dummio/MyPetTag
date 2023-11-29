@@ -39,6 +39,19 @@
   font-size: 20px;
 }
 
+#tutorial-container {
+  display: flex;
+  justify-content: center;
+  padding: 0px 30px;
+}
+
+iframe {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  border-radius: 16px;
+}
+
 #profile-cards-container {
   display: flex;
   flex-direction: row;

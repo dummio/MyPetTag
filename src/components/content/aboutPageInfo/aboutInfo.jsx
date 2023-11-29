@@ -81,7 +81,15 @@ const AboutInfo = () => {
           </li>
         </ul>
         <h2>Tutorial:</h2>
-        {/* Place YouTube Video of Project Tutorial */}
+        <div id="tutorial-container">
+          <iframe
+            src="https://www.youtube.com/embed/gGLt1KWdDAA?si=z3cacB37jshQU5Bh"
+            title="MyPetTag - Tutorial"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          ></iframe>
+        </div>
         <h2>Team Members:</h2>
       </div>
       <div id="profile-cards-container">
