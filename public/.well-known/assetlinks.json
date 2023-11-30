@@ -1,0 +1,5 @@
+[{
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target" : { "namespace": "android_app", "package_name": "com.mypettag.app",
+                 "sha256_cert_fingerprints": ["E8:0A:5B:6D:5F:15:C1:6B:46:19:52:62:5F:C0:6C:5A:54:9E:86:53:C2:D8:0A:A2:B1:5F:3E:91:EE:F1:A1:00"] }
+  }]
