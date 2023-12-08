@@ -704,9 +704,9 @@ export async function writeUserAlert(uid, pid, message, pet) {
       });
     }
     const phoneNum = userDocSnap.data().phone;
-    if (phoneNum) {
-      sendSMS(phoneNum, petName.name + " : " + message);
-    }
+    // if (phoneNum) {
+    //   sendSMS(phoneNum, petName.name + " : " + message);
+    // }
   } catch (error) {
     console.log(error);
   }
